@@ -36,6 +36,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 sendMessage.setChatId(chatID).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/" + commands[1] + "/members?limit=50"));
                 runCommand(sendMessage);
             }
+            if (commands[0].equals("hallo")) {
+                sendMessage.setChatId(chatID).setText("Hallo daar!\nIk ben Inf0_Bot en ik ben gemaakt door David");
+                runCommand(sendMessage);
+            }
             if (messageText.contains("homo")) {
                 sendMessage.setChatId(chatID).setText("Bam is de grootste homo! :)");
                 runCommand(sendMessage);
