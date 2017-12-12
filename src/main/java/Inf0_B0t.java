@@ -1,7 +1,4 @@
 import botCommands.clans.Clan;
-import botCommands.utility.PROC;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -30,11 +27,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             SendMessage sendMessage = new SendMessage();
 
             if (commands[0].equals("/info")) {
+                commands[1] = commands[1].startsWith("#") ? "%23" + commands[1].substring(1) : commands[1];
                 sendMessage.setChatId(chatID).setText(Clan.getClanInfo("https://api.clashofclans.com/v1/clans?name=" + commands[1]));
                 runCommand(sendMessage);
             }
             if (commands[0].equals("/clandonaties")) {
-                sendMessage.setChatId(chatID).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members?limit=50"));
+                commands[1] = commands[1].startsWith("#") ? "%23" + commands[1].substring(1) : commands[1];
+                sendMessage.setChatId(chatID).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/" + commands[1] + "/members?limit=50"));
                 runCommand(sendMessage);
             }
             if (messageText.contains("homo")) {
