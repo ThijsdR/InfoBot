@@ -14,6 +14,12 @@
             <artifactId>telegrambots</artifactId>
             <version>LATEST</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>
