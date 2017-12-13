@@ -101,6 +101,16 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             runCommand(cmdBuilder.getSendMessage());
         }
 
+        /* CoC brabant2.0 specifieke commando's */
+        if (cmdBuilder.getCommands()[0].equals("/claninfobrabant")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(Clan.getClanInfo("https://api.clashofclans.com/v1/clans?name=%23J0C9CPY"));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getCommands()[0].equals("/clandonatiesbrabant")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members?limit=50"));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+
         /* NS commando's */
         if (cmdBuilder.getTreinCommands()[0].equals("/treintijden")) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getTreinCommands()[1]));

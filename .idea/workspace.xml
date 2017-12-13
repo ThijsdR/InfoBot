@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97043969-7920-45ec-a8e9-b6a97cd1aef9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_vdurmont_emoji_java_3_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/weather/CurrentWeather.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/InfoBot.iml" afterPath="$PROJECT_DIR$/InfoBot.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" afterPath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Main.java" afterPath="$PROJECT_DIR$/src/main/java/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSPrijzen.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSPrijzen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSReisadviezen.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSReisadviezen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utility/IConstants.java" afterPath="$PROJECT_DIR$/src/main/java/utility/IConstants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utility/PROC.java" afterPath="$PROJECT_DIR$/src/main/java/utility/PROC.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -54,8 +42,8 @@
       <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="114" column="64" lean-forward="false" selection-start-line="114" selection-start-column="64" selection-end-line="114" selection-end-column="64" />
+            <state relative-caret-position="986">
+              <caret line="109" column="105" lean-forward="true" selection-start-line="109" selection-start-column="105" selection-end-line="109" selection-end-column="105" />
               <folding />
             </state>
           </provider>
@@ -355,7 +343,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31148000" />
+    <option name="totallyTimeSpent" value="31531000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -760,8 +748,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="114" column="64" lean-forward="false" selection-start-line="114" selection-start-column="64" selection-end-line="114" selection-end-column="64" />
+        <state relative-caret-position="986">
+          <caret line="109" column="105" lean-forward="true" selection-start-line="109" selection-start-column="105" selection-end-line="109" selection-end-column="105" />
           <folding />
         </state>
       </provider>
