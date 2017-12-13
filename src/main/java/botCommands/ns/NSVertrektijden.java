@@ -38,7 +38,8 @@ public class NSVertrektijden {
             vertrekTijden.append("\n").append(trein.getTreinSoort());
             vertrekTijden.append("\n-> ").append(trein.getEindBestemming());
             vertrekTijden.append("\nSpoor: ").append(trein.getVertrekSpoor());
-            vertrekTijden.append("\n").append(trein.getVertrekTijd().getHours()).append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
+            vertrekTijden.append("\n").append(String.format("%02d", trein.getVertrekTijd().getHours()))
+                    .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
 
             if (trein.getVertrekVertragingMinuten() != 0) {
                 vertrekTijden.append(" +").append(trein.getVertrekVertragingMinuten());

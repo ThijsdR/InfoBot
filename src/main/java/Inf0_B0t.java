@@ -1,5 +1,7 @@
 import botCommands.CommandBuilder;
 import botCommands.clashofclans.clans.Clan;
+import botCommands.ns.NSStationslijst;
+import botCommands.ns.NSStoringenWerkzaamheden;
 import botCommands.ns.NSVertrektijden;
 import nl.pvanassen.ns.NsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -99,8 +101,12 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo daar!\nIk ben Inf0_Bot en ik ben gemaakt door David");
             runCommand(cmdBuilder.getSendMessage());
         }
-        if (cmdBuilder.getTreinCommands()[0].equals("/trein")) {
+        if (cmdBuilder.getTreinCommands()[0].equals("/treintijden")) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getTreinCommands()[1]));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getTreinCommands()[0].equals("/treinstoringen")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSStoringenWerkzaamheden.getStoringen(nsApi));
             runCommand(cmdBuilder.getSendMessage());
         }
         if (cmdBuilder.getMessageText().contains("homo")) {
