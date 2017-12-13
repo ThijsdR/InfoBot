@@ -2,38 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97043969-7920-45ec-a8e9-b6a97cd1aef9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__nl_pvanassen_ns_api_1_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_lang3_3_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_slf4j_slf4j_api_1_7_13.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSPrijzen.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSReisadviezen.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStationslijst.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/utility/IConstants.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clans/Clan.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/Clan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clans/ClanTag.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTag.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clans/ClanTagCurrentWar.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTagCurrentWar.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clans/ClanTagMembers.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTagMembers.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clans/ClanTagWarlog.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTagWarlog.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/leagues/League.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/League.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/leagues/LeagueID.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/LeagueID.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/leagues/LeagueIDSeason.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/LeagueIDSeason.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/leagues/LeagueIDSeasonID.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/LeagueIDSeasonID.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/locations/Location.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/Location.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/locations/LocationID.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationID.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/locations/LocationIDClanRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDClanRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/locations/LocationIDClanVersusRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDClanVersusRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/locations/LocationIDPlayerRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDPlayerRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/locations/LocationIDPlayerVersusRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDPlayerVersusRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/players/PlayerTag.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/players/PlayerTag.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/utility/PROC.java" afterPath="$PROJECT_DIR$/src/main/java/utility/PROC.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/thijs.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/thijs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/InfoBot.iml" afterPath="$PROJECT_DIR$/InfoBot.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" afterPath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Main.java" afterPath="$PROJECT_DIR$/src/main/java/Main.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -43,19 +16,17 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/InfoBot$Main.coverage" NAME="Main Coverage Results" MODIFIED="1513164192926" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="492">
-              <caret line="87" column="60" lean-forward="true" selection-start-line="87" selection-start-column="60" selection-end-line="87" selection-end-column="60" />
-              <folding>
-                <marker date="1513160394321" expanded="false" signature="1374:1385" ph=" { " />
-                <marker date="1513160394321" expanded="false" signature="1408:1414" ph=" }" />
-                <marker date="1513160394321" expanded="false" signature="1496:1507" ph=" { " />
-                <marker date="1513160394321" expanded="false" signature="1562:1568" ph=" }" />
-              </folding>
+            <state relative-caret-position="782">
+              <caret line="73" column="56" lean-forward="true" selection-start-line="73" selection-start-column="56" selection-end-line="73" selection-end-column="56" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -63,9 +34,14 @@
       <file leaf-file-name="CommandBuilder.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="12" lean-forward="false" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
-              <folding />
+            <state relative-caret-position="289">
+              <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+              <folding>
+                <element signature="e#970#971#0" expanded="true" />
+                <element signature="e#1006#1007#0" expanded="true" />
+                <element signature="e#1065#1066#0" expanded="true" />
+                <element signature="e#1115#1116#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -73,11 +49,9 @@
       <file leaf-file-name="NSVertrektijden.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="22" column="51" lean-forward="true" selection-start-line="22" selection-start-column="51" selection-end-line="22" selection-end-column="51" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="748">
+              <caret line="50" column="52" lean-forward="true" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -98,7 +72,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/utility/PROC.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
-              <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -120,7 +94,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/utility/IConstants.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
-              <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+              <caret line="5" column="1" lean-forward="false" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -130,7 +104,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/Commands.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="102">
-              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -405,7 +379,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15493000" />
+    <option name="totallyTimeSpent" value="19467000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -422,6 +396,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20058997" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32995737" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -480,12 +455,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
           <caret line="34" column="77" lean-forward="true" selection-start-line="34" selection-start-column="77" selection-end-line="34" selection-end-column="77" />
-          <folding>
-            <marker date="1513160394321" expanded="false" signature="1374:1385" ph=" { " />
-            <marker date="1513160394321" expanded="false" signature="1408:1414" ph=" }" />
-            <marker date="1513160394321" expanded="false" signature="1496:1507" ph=" { " />
-            <marker date="1513160394321" expanded="false" signature="1562:1568" ph=" }" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -529,12 +499,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <marker date="1513160394321" expanded="false" signature="1374:1385" ph=" { " />
-            <marker date="1513160394321" expanded="false" signature="1408:1414" ph=" }" />
-            <marker date="1513160394321" expanded="false" signature="1496:1507" ph=" { " />
-            <marker date="1513160394321" expanded="false" signature="1562:1568" ph=" }" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -696,7 +661,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/utility/PROC.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
-          <caret line="18" column="0" lean-forward="true" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -770,7 +735,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/Commands.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
-          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -778,39 +743,37 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/utility/IConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="5" column="1" lean-forward="true" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
+          <caret line="5" column="1" lean-forward="false" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="12" lean-forward="false" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
-          <folding />
+        <state relative-caret-position="289">
+          <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+          <folding>
+            <element signature="e#970#971#0" expanded="true" />
+            <element signature="e#1006#1007#0" expanded="true" />
+            <element signature="e#1065#1066#0" expanded="true" />
+            <element signature="e#1115#1116#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="87" column="60" lean-forward="true" selection-start-line="87" selection-start-column="60" selection-end-line="87" selection-end-column="60" />
-          <folding>
-            <marker date="1513160394321" expanded="false" signature="1374:1385" ph=" { " />
-            <marker date="1513160394321" expanded="false" signature="1408:1414" ph=" }" />
-            <marker date="1513160394321" expanded="false" signature="1496:1507" ph=" { " />
-            <marker date="1513160394321" expanded="false" signature="1562:1568" ph=" }" />
-          </folding>
+        <state relative-caret-position="782">
+          <caret line="73" column="56" lean-forward="true" selection-start-line="73" selection-start-column="56" selection-end-line="73" selection-end-column="56" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="51" lean-forward="true" selection-start-line="22" selection-start-column="51" selection-end-line="22" selection-end-column="51" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="748">
+          <caret line="50" column="52" lean-forward="true" selection-start-line="50" selection-start-column="52" selection-end-line="50" selection-end-column="52" />
+          <folding />
         </state>
       </provider>
     </entry>

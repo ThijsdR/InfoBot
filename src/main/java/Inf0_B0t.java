@@ -29,12 +29,11 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             /* Set variables */
             String messageText = update.getMessage().getText();
             String[] commands = messageText.split("\\s+");
+            String[] treinCommands = messageText.split("\\s+", 2);
             SendMessage sendMessage = new SendMessage();
             long chatID = update.getMessage().getChatId();
 
-            CommandBuilder cmdBuilder = new CommandBuilder(messageText, commands, sendMessage, chatID);
-
-            processCommand(cmdBuilder);
+            processCommand(new CommandBuilder(messageText, commands, treinCommands, sendMessage, chatID));
         }
     }
 
@@ -100,8 +99,8 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo daar!\nIk ben Inf0_Bot en ik ben gemaakt door David");
             runCommand(cmdBuilder.getSendMessage());
         }
-        if (cmdBuilder.getCommands()[0].equals("/trein")) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getCommands()[1]));
+        if (cmdBuilder.getTreinCommands()[0].equals("/trein")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getTreinCommands()[1]));
             runCommand(cmdBuilder.getSendMessage());
         }
         if (cmdBuilder.getMessageText().contains("homo")) {
