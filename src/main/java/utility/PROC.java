@@ -1,4 +1,4 @@
-package botCommands.utility;
+package utility;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 public class PROC {
-    public static String retrieveData(String urlString) {
+    public static String retrieveDataSupercellAPI(String urlString) {
         StringBuffer content = new StringBuffer();
 
         try {

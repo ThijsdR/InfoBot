@@ -1,8 +1,12 @@
-import botCommands.clans.Clan;
+import botCommands.CommandBuilder;
+import botCommands.clashofclans.clans.Clan;
+import botCommands.ns.NSVertrektijden;
+import nl.pvanassen.ns.NsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import utility.IConstants;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,6 +16,8 @@ import java.util.Date;
  *
  */
 public class Inf0_B0t extends TelegramLongPollingBot {
+
+    private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
 
     public void onUpdateReceived(Update update) {
 
@@ -23,27 +29,12 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             /* Set variables */
             String messageText = update.getMessage().getText();
             String[] commands = messageText.split("\\s+");
-            long chatID = update.getMessage().getChatId();
             SendMessage sendMessage = new SendMessage();
+            long chatID = update.getMessage().getChatId();
 
-            if (commands[0].equals("/info")) {
-                commands[1] = commands[1].startsWith("#") ? "%23" + commands[1].substring(1) : commands[1];
-                sendMessage.setChatId(chatID).setText(Clan.getClanInfo("https://api.clashofclans.com/v1/clans?name=" + commands[1]));
-                runCommand(sendMessage);
-            }
-            if (commands[0].equals("/clandonaties")) {
-                commands[1] = commands[1].startsWith("#") ? "%23" + commands[1].substring(1) : commands[1];
-                sendMessage.setChatId(chatID).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/" + commands[1] + "/members?limit=50"));
-                runCommand(sendMessage);
-            }
-            if (commands[0].equals("hallo")) {
-                sendMessage.setChatId(chatID).setText("Hallo daar!\nIk ben Inf0_Bot en ik ben gemaakt door David");
-                runCommand(sendMessage);
-            }
-            if (messageText.contains("homo")) {
-                sendMessage.setChatId(chatID).setText("Bam is de grootste homo! :)");
-                runCommand(sendMessage);
-            }
+            CommandBuilder cmdBuilder = new CommandBuilder(messageText, commands, sendMessage, chatID);
+
+            processCommand(cmdBuilder);
         }
     }
 
@@ -91,6 +82,31 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             execute(sendMessage);
         } catch (TelegramApiException tea) {
             tea.printStackTrace();
+        }
+    }
+
+    private void processCommand(CommandBuilder cmdBuilder) {
+        if (cmdBuilder.getCommands()[0].equals("/info")) {
+            cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(Clan.getClanInfo("https://api.clashofclans.com/v1/clans?name=" + cmdBuilder.getCommands()[1]));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getCommands()[0].equals("/clandonaties")) {
+            cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/" + cmdBuilder.getCommands()[1] + "/members?limit=50"));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getCommands()[0].equals("hallo")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo daar!\nIk ben Inf0_Bot en ik ben gemaakt door David");
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getCommands()[0].equals("/trein")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getCommands()[1]));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getMessageText().contains("homo")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Bam is de grootste homo! :)");
+            runCommand(cmdBuilder.getSendMessage());
         }
     }
 }

@@ -1,12 +1,12 @@
-package botCommands.clans;
+package botCommands.clashofclans.clans;
 
-import botCommands.utility.PROC;
+import utility.PROC;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Clan {
     public static String getClanDonaties(String urlString) {
-        JSONObject json = new JSONObject(PROC.retrieveData(urlString));
+        JSONObject json = new JSONObject(PROC.retrieveDataSupercellAPI(urlString));
         JSONArray jsonArray = json.getJSONArray("items");
 
         StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n");
@@ -24,7 +24,7 @@ public class Clan {
     }
 
     public static String getClanInfo(String urlString) {
-        JSONObject json = new JSONObject(PROC.retrieveData(urlString));
+        JSONObject json = new JSONObject(PROC.retrieveDataSupercellAPI(urlString));
         JSONArray jsonArray = json.getJSONArray("items");
 
         StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n");

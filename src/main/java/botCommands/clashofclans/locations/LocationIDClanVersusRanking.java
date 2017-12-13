@@ -1,4 +1,4 @@
-package botCommands.locations;
+package botCommands.clashofclans.locations;
 
 public class LocationIDClanVersusRanking {
 }
