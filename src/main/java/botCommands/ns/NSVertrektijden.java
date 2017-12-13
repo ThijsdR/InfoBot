@@ -1,5 +1,6 @@
 package botCommands.ns;
 
+import com.vdurmont.emoji.EmojiParser;
 import nl.pvanassen.ns.ApiRequest;
 import nl.pvanassen.ns.NsApi;
 import nl.pvanassen.ns.RequestBuilder;
@@ -31,7 +32,7 @@ public class NSVertrektijden {
 
         assert vertrekkendeTreinen != null;
 
-        vertrekTijden.append("Station: ").append(station);
+        vertrekTijden.append(EmojiParser.parseToUnicode("Station :station:: ")).append(station);
         vertrekTijden.append("\n========================");
 
         for (VertrekkendeTrein trein : vertrekkendeTreinen) {
@@ -42,7 +43,7 @@ public class NSVertrektijden {
                     .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
 
             if (trein.getVertrekVertragingMinuten() != 0) {
-                vertrekTijden.append(" +").append(trein.getVertrekVertragingMinuten());
+                vertrekTijden.append(" +").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + ":exclamation:"));
             }
 
             if (trein.isGewijzigdVertrekspoor()) {

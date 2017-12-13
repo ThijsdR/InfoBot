@@ -3,6 +3,7 @@ import botCommands.clashofclans.clans.Clan;
 import botCommands.ns.NSStationslijst;
 import botCommands.ns.NSStoringenWerkzaamheden;
 import botCommands.ns.NSVertrektijden;
+import botCommands.weather.CurrentWeather;
 import nl.pvanassen.ns.NsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
@@ -87,7 +88,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     private void processCommand(CommandBuilder cmdBuilder) {
-        if (cmdBuilder.getCommands()[0].equals("/info")) {
+
+        /* Clash of Clans commando's */
+        if (cmdBuilder.getCommands()[0].equals("/claninfo")) {
             cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(Clan.getClanInfo("https://api.clashofclans.com/v1/clans?name=" + cmdBuilder.getCommands()[1]));
             runCommand(cmdBuilder.getSendMessage());
@@ -97,16 +100,30 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(Clan.getClanDonaties("https://api.clashofclans.com/v1/clans/" + cmdBuilder.getCommands()[1] + "/members?limit=50"));
             runCommand(cmdBuilder.getSendMessage());
         }
-        if (cmdBuilder.getCommands()[0].equals("hallo")) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo daar!\nIk ben Inf0_Bot en ik ben gemaakt door David");
-            runCommand(cmdBuilder.getSendMessage());
-        }
+
+        /* NS commando's */
         if (cmdBuilder.getTreinCommands()[0].equals("/treintijden")) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getTreinCommands()[1]));
             runCommand(cmdBuilder.getSendMessage());
         }
         if (cmdBuilder.getTreinCommands()[0].equals("/treinstoringen")) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSStoringenWerkzaamheden.getStoringen(nsApi));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+
+        /* Weer commando's */
+        if (cmdBuilder.getTreinCommands()[0].equals("/weerhuidig")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CurrentWeather.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getTreinCommands()[1].replace(" ", "_") + ".json"));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+
+        /* Overige commando's */
+        if (cmdBuilder.getCommands()[0].equals("/help")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Een overzicht met alle commando's en uitleg volgt nog....");
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getCommands()[0].equals("/hallo")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("H4LL0 D44R!\n1K B3N Inf0_Bot 3N 1K B3N G3M44KT D00R David");
             runCommand(cmdBuilder.getSendMessage());
         }
         if (cmdBuilder.getMessageText().contains("homo")) {
