@@ -4,6 +4,7 @@ import botCommands.ns.NSStationslijst;
 import botCommands.ns.NSStoringenWerkzaamheden;
 import botCommands.ns.NSVertrektijden;
 import botCommands.weather.CurrentWeather;
+import botCommands.weather.WeatherForecast;
 import nl.pvanassen.ns.NsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
@@ -124,6 +125,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         /* Weer commando's */
         if (cmdBuilder.getTreinCommands()[0].equals("/weerhuidig")) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CurrentWeather.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getTreinCommands()[1].replace(" ", "_") + ".json"));
+            runCommand(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getTreinCommands()[0].equals("/weervoorspelling")) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(WeatherForecast.getForecast("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/forecast/q/nl/" + cmdBuilder.getTreinCommands()[1].replace(" ", "_") + ".json"));
             runCommand(cmdBuilder.getSendMessage());
         }
 
