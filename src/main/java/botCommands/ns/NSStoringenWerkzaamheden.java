@@ -1,5 +1,6 @@
 package botCommands.ns;
 
+import com.vdurmont.emoji.EmojiParser;
 import nl.pvanassen.ns.ApiRequest;
 import nl.pvanassen.ns.NsApi;
 import nl.pvanassen.ns.RequestBuilder;
@@ -25,7 +26,7 @@ public class NSStoringenWerkzaamheden {
 
         assert storingen != null;
         botResponse.append("Actuele storingen:");
-        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
 
         if (!storingen.getOngeplandeStoringen().isEmpty()) {
@@ -46,6 +47,8 @@ public class NSStoringenWerkzaamheden {
 
                 botResponse.append("\n------------------------------------");
             }
+        } else {
+            botResponse.append(EmojiParser.parseToUnicode("\nEr zijn momenteel GEEN storingen :grimacing::muscle:"));
         }
 
         return String.valueOf(botResponse);
