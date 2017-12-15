@@ -18,11 +18,14 @@ public class CR_Clan {
         botResponse.append("\nMembers: ").append(json.getString("memberCount"));
         botResponse.append("\nType: ").append(json.getString("typeName"));
         botResponse.append("\nCountry: ").append(jsonRegion.getString("name"));
-        botResponse.append("\n\n================================\n");
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+
 
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append("\n");
             botResponse.append(jsonArray.getJSONObject(i).getString("name")).append("(#").append(jsonArray.getJSONObject(i).getString("tag")).append(")");
+            botResponse.append("\nLevel: ").append(jsonArray.getJSONObject(i).getString("expLevel"));
+            botResponse.append("\nTrophies: ").append(jsonArray.getJSONObject(i).getString("trophies")).append("\n");
         }
 
         return botResponse.toString();
@@ -36,7 +39,8 @@ public class CR_Clan {
 
         botResponse.append("Clan: ").append(json.getString("name"));
         botResponse.append("\nTag: #").append(json.getString("tag"));
-        botResponse.append("\n\n================================\n");
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+
 
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append("\n");
@@ -48,16 +52,39 @@ public class CR_Clan {
     }
 
     public static String getClanDonations(String urlString) {
+        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        JSONArray jsonArray = json.getJSONArray("members");
 
-        // ToDo
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        botResponse.append("Clan: ").append(json.getString("name"));
+        botResponse.append("\nTag: #").append(json.getString("tag"));
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
-        return "";
+        for (int i = 0; i < jsonArray.length(); i++) {
+            botResponse.append("\n");
+            botResponse.append(jsonArray.getJSONObject(i).getString("name")).append("(#").append(jsonArray.getJSONObject(i).getString("tag")).append(")");
+            botResponse.append("Donations: ").append(jsonArray.getJSONObject(i).getString("donations")).append("\n");
+        }
+
+        return botResponse.toString();
     }
 
     public static String getClanchestContribution (String urlString) {
+        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        JSONArray jsonArray = json.getJSONArray("members");
 
-        // ToDo
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
 
-        return "";
+        botResponse.append("Clan: ").append(json.getString("name"));
+        botResponse.append("\nTag: #").append(json.getString("tag"));
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+            botResponse.append("\n");
+            botResponse.append(jsonArray.getJSONObject(i).getString("name")).append("(#").append(jsonArray.getJSONObject(i).getString("tag")).append(")");
+            botResponse.append("Crowns: ").append(jsonArray.getJSONObject(i).getString("clanChestCrowns")).append("\n");
+        }
+
+        return botResponse.toString();
     }
 }

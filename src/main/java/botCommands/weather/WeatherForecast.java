@@ -11,10 +11,9 @@ public class WeatherForecast {
         JSONObject txt = forecast.getJSONObject("txt_forecast");
         JSONArray forecastArray = txt.getJSONArray("forecastday");
 
-        StringBuilder botResponse = new StringBuilder();
-
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
         botResponse.append("Voorspelling:");
-        botResponse.append("\n================");
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
         for (int i = 0; i < forecastArray.length(); i++) {
             botResponse.append("\n\n");

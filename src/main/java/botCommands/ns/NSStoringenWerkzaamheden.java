@@ -21,34 +21,34 @@ public class NSStoringenWerkzaamheden {
             e.printStackTrace();
         }
 
-        StringBuilder actueleStoringen = new StringBuilder();
+        StringBuilder botResponse = new StringBuilder();
 
         assert storingen != null;
-        actueleStoringen.append("Actuele storingen:");
-        actueleStoringen.append("\n========================");
+        botResponse.append("Actuele storingen:");
+        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
 
         if (!storingen.getOngeplandeStoringen().isEmpty()) {
             for (Storing storing : storingen.getOngeplandeStoringen()) {
-                actueleStoringen.append("\n<< ").append(storing.getTraject()).append(" >>");
-                actueleStoringen.append("\n\n").append(storing.getReden());
+                botResponse.append("\n<< ").append(storing.getTraject()).append(" >>");
+                botResponse.append("\n\n").append(storing.getReden());
 
                 if (!storing.getBericht().isEmpty()) {
-                    actueleStoringen.append("\n\n").append(storing.getBericht());
+                    botResponse.append("\n\n").append(storing.getBericht());
                 }
 
-                actueleStoringen.append("\n\nLaatste update: ")
+                botResponse.append("\n\nLaatste update: ")
                         .append(String.format("%02d", storing.getDatum().getDay())).append("-")
                         .append(String.format("%02d", storing.getDatum().getMonth())).append("-")
                         .append(String.format("%02d", storing.getDatum().getYear())).append(" ")
                         .append(String.format("%02d", storing.getDatum().getHours())).append(":")
                         .append(String.format("%02d", storing.getDatum().getMinutes()));
 
-                actueleStoringen.append("\n------------------------------------");
+                botResponse.append("\n------------------------------------");
             }
         }
 
-        return String.valueOf(actueleStoringen);
+        return String.valueOf(botResponse);
     }
 
     /* NIET GEBRUIKEN!!! */
@@ -63,34 +63,32 @@ public class NSStoringenWerkzaamheden {
             e.printStackTrace();
         }
 
-        StringBuilder actueleWerkzaamheden = new StringBuilder();
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        botResponse.append("Actuele werkzaamheden:");
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
         assert werkzaamheden != null;
-        actueleWerkzaamheden.append("Actuele werkzaamheden:");
-        actueleWerkzaamheden.append("\n========================");
-
-
         if (!werkzaamheden.getGeplandeStoringen().isEmpty()) {
             for (Storing werkzaamheid : werkzaamheden.getGeplandeStoringen()) {
-                actueleWerkzaamheden.append("\n<< ").append(werkzaamheid.getTraject()).append(" >>");
-                actueleWerkzaamheden.append("\n\n").append(werkzaamheid.getPeriode());
+                botResponse.append("\n<< ").append(werkzaamheid.getTraject()).append(" >>");
+                botResponse.append("\n\n").append(werkzaamheid.getPeriode());
 
                 if (!werkzaamheid.getReden().isEmpty()) {
-                    actueleWerkzaamheden.append("\n\n").append(werkzaamheid.getReden());
+                    botResponse.append("\n\n").append(werkzaamheid.getReden());
                 }
 
                 if (!werkzaamheid.getAdvies().isEmpty()) {
-                    actueleWerkzaamheden.append("\n\n").append(werkzaamheid.getAdvies());
+                    botResponse.append("\n\n").append(werkzaamheid.getAdvies());
                 }
 
                 if (!werkzaamheid.getBericht().isEmpty()) {
-                    actueleWerkzaamheden.append("\n\n").append(werkzaamheid.getBericht());
+                    botResponse.append("\n\n").append(werkzaamheid.getBericht());
                 }
 
-                actueleWerkzaamheden.append("\n------------------------------------");
+                botResponse.append("\n------------------------------------");
             }
         }
 
-        return String.valueOf(actueleWerkzaamheden);
+        return String.valueOf(botResponse);
     }
 }

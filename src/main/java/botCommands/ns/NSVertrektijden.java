@@ -28,37 +28,35 @@ public class NSVertrektijden {
             e.printStackTrace();
         }
 
-        StringBuilder vertrekTijden = new StringBuilder();
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        botResponse.append(EmojiParser.parseToUnicode("Station :station:: ")).append(station);
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
         assert vertrekkendeTreinen != null;
-
-        vertrekTijden.append(EmojiParser.parseToUnicode("Station :station:: ")).append(station);
-        vertrekTijden.append("\n========================");
-
         for (VertrekkendeTrein trein : vertrekkendeTreinen) {
-            vertrekTijden.append("\n").append(trein.getTreinSoort());
-            vertrekTijden.append("\n-> ").append(trein.getEindBestemming());
-            vertrekTijden.append("\nSpoor: ").append(trein.getVertrekSpoor());
-            vertrekTijden.append("\n").append(String.format("%02d", trein.getVertrekTijd().getHours()))
+            botResponse.append("\n").append(trein.getTreinSoort());
+            botResponse.append("\n-> ").append(trein.getEindBestemming());
+            botResponse.append("\nSpoor: ").append(trein.getVertrekSpoor());
+            botResponse.append("\n").append(String.format("%02d", trein.getVertrekTijd().getHours()))
                     .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
 
             if (trein.getVertrekVertragingMinuten() != 0) {
-                vertrekTijden.append(" +").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + ":exclamation:"));
+                botResponse.append(" +").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + ":exclamation:"));
             }
 
             if (trein.isGewijzigdVertrekspoor()) {
-                vertrekTijden.append("\n\n-> Gewijzigd vertrekspoor! <-");
+                botResponse.append("\n\n-> Gewijzigd vertrekspoor! <-");
             }
 
             if (!trein.getOpmerkingen().isEmpty()) {
                 for (String opmerking : trein.getOpmerkingen()) {
-                    vertrekTijden.append("\n").append(opmerking);
+                    botResponse.append("\n").append(opmerking);
                 }
             }
 
-            vertrekTijden.append("\n-~-~-~-~-~-~-~-~-~-~-~-~");
+            botResponse.append("\n-~-~-~-~-~-~-~-~-~-~-~-~");
         }
 
-        return String.valueOf(vertrekTijden);
+        return String.valueOf(botResponse);
     }
 }

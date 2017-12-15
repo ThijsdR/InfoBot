@@ -5,6 +5,7 @@ import botCommands.ns.NSStoringenWerkzaamheden;
 import botCommands.ns.NSVertrektijden;
 import botCommands.weather.CurrentWeather;
 import botCommands.weather.WeatherForecast;
+import com.vdurmont.emoji.EmojiParser;
 import nl.pvanassen.ns.NsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
@@ -43,7 +44,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     /**
-     *
      * @return  bot username
      */
     public String getBotUsername() {
@@ -51,7 +51,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     /**
-     *
      * @return  bot token
      */
     public String getBotToken() {
@@ -59,8 +58,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     /**
+     * Log de binnengekomen tekst
      *
-     * @param update
+     * @param update   Binnengekomen tekst
      */
     private void infoBotLog(Update update) {
         String userFirstName = update.getMessage().getChat().getFirstName();
@@ -91,110 +91,137 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
     private void processCommand(CommandBuilder cmdBuilder) {
 
-        /* Clash of Clans commando's */
-        if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANINFO.getCommand())) {
-            if (cmdBuilder.getCommands().length > 1) {
-                cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1]));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getDefaultURL()));
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-        if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANDONATIONS.getCommand())) {
-            if (cmdBuilder.getCommands().length > 1) {
-                cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1]));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getDefaultURL()));
-                runCommand(cmdBuilder.getSendMessage());
+        COMMAND_CONTROL :
+        {
+            /* Controleer of de tekst een commando is */
+            if (cmdBuilder.getCommands()[0].startsWith("/")) {
+
+                /* Clash of Clans commando's */
+                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANINFO.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1]));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANDONATIONS.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1]));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBER.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanMembers(Commands.COCCLANMEMBER.getEditableURL() + cmdBuilder.getCommands()[1]));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanMembers(Commands.COCCLANMEMBER.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+
+                /* Clash Royale commando's */
+                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANINFO.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanInfo(Commands.CRCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanInfo(Commands.CRCLANINFO.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANROLES.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanRoles(Commands.CRCLANROLES.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanRoles(Commands.CRCLANROLES.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANDONATIONS.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanDonations(Commands.CRCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanDonations(Commands.CRCLANDONATIONS.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANCHEST.getCommand())) {
+                    if (cmdBuilder.getCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanchestContribution(Commands.CRCLANCHEST.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanchestContribution(Commands.CRCLANCHEST.getDefaultURL()));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+
+                /* NS commando's */
+                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINTIJDEN.getCommand())) {
+                    if (cmdBuilder.getLocatieCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getLocatieCommands()[1]));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een treinstation in Nederland nodig...\n\nBijvoorbeeld: /treintijden Rotterdam Centraal");
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINSTORINGEN.getCommand())) {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSStoringenWerkzaamheden.getStoringen(nsApi));
+                    runCommand(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
+                }
+
+                /* Weer commando's */
+                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERHUIDIG.getCommand())) {
+                    if (cmdBuilder.getLocatieCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CurrentWeather.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weerhuidig Den Haag");
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERVOORSPELLING.getCommand())) {
+                    if (cmdBuilder.getLocatieCommands().length > 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(WeatherForecast.getForecast("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
+                        runCommand(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weervoorspelling Den Haag");
+                        runCommand(cmdBuilder.getSendMessage());
+                    } break COMMAND_CONTROL;
+                }
+
+                /* Overige commando's */
+                if (cmdBuilder.getCommands()[0].equals(Commands.HELP.getCommand())) {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Een overzicht met alle commando's en uitleg volgt nog....");
+                    runCommand(cmdBuilder.getSendMessage());
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.JOKE.getCommand())) {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(IConstants.JOKE);
+                    runCommand(cmdBuilder.getSendMessage());
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.HALLO.getCommand())) {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t");
+                    runCommand(cmdBuilder.getSendMessage());
+                } else {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(EmojiParser.parseToUnicode(":exclamation:ERROR: Ik ken dit commando helaas niet.\nStuur /help voor beschikbare commando's"));
+                    runCommand(cmdBuilder.getSendMessage());
+                }
             }
         }
 
-        /* Clash Royale commando's */
-        if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANINFO.getCommand())) {
-            if (cmdBuilder.getCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanInfo(Commands.CRCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanInfo(Commands.CRCLANINFO.getDefaultURL()));
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-        if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANROLES.getCommand())) {
-            if (cmdBuilder.getCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanRoles(Commands.CRCLANROLES.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanRoles(Commands.CRCLANROLES.getDefaultURL()));
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-        if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANDONATIONS.getCommand())) {
-            if (cmdBuilder.getCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanDonations(Commands.CRCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanDonations(Commands.CRCLANDONATIONS.getDefaultURL()));
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-        if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANCHEST.getCommand())) {
-            if (cmdBuilder.getCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanchestContribution(Commands.CRCLANCHEST.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanchestContribution(Commands.CRCLANCHEST.getDefaultURL()));
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-
-        /* NS commando's */
-        if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINTIJDEN.getCommand())) {
-            if (cmdBuilder.getLocatieCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getLocatieCommands()[1]));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een treinstation in Nederland nodig...\n\nBijvoorbeeld: /treintijden Rotterdam Centraal");
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-        if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINSTORINGEN.getCommand())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSStoringenWerkzaamheden.getStoringen(nsApi));
-            runCommand(cmdBuilder.getSendMessage());
-        }
-
-        /* Weer commando's */
-        if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERHUIDIG.getCommand())) {
-            if (cmdBuilder.getLocatieCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CurrentWeather.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weerhuidig Den Haag");
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-        if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERVOORSPELLING.getCommand())) {
-            if (cmdBuilder.getLocatieCommands().length > 1) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(WeatherForecast.getForecast("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
-                runCommand(cmdBuilder.getSendMessage());
-            } else {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weervoorspelling Den Haag");
-                runCommand(cmdBuilder.getSendMessage());
-            }
-        }
-
-        /* Overige commando's */
-        if (cmdBuilder.getCommands()[0].equals(Commands.HELP.getCommand())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Een overzicht met alle commando's en uitleg volgt nog....");
-            runCommand(cmdBuilder.getSendMessage());
-        }
-        if (cmdBuilder.getCommands()[0].equals(Commands.HALLO.getCommand())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("H4LL0 D44R!\n1K B3N Inf0_Bot 3N 1K B3N G3M44KT D00R David");
-            runCommand(cmdBuilder.getSendMessage());
-        }
         if (cmdBuilder.getMessageText().toLowerCase().contains("homo".toLowerCase())) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Bam is de grootste homo! :)");
             runCommand(cmdBuilder.getSendMessage());

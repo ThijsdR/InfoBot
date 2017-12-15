@@ -22,17 +22,15 @@ public class NSStationslijst {
             e.printStackTrace();
         }
 
-        StringBuilder stationslijst = new StringBuilder();
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        botResponse.append("Stations:");
+        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
 
         assert stations != null;
-
-        stationslijst.append("Stations:");
-        stationslijst.append("\n========================");
-
         for (Station station : stations) {
-            stationslijst.append("\n").append(station.getNamen().getMiddel());
+            botResponse.append("\n").append(station.getNamen().getMiddel());
         }
 
-        return String.valueOf(stationslijst);
+        return String.valueOf(botResponse);
     }
 }

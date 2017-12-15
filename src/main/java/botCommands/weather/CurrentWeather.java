@@ -9,14 +9,14 @@ public class CurrentWeather {
         JSONObject current = json.getJSONObject("current_observation");
         JSONObject location = current.getJSONObject("display_location");
 
-        StringBuilder huidigeVoorspelling = new StringBuilder();
-        huidigeVoorspelling.append(location.getString("full"));
-        huidigeVoorspelling.append(Weather_PROC.weatherIconChecker(current.getString("icon")));
-        huidigeVoorspelling.append("\n==========================");
-        huidigeVoorspelling.append("\nTemperatuur: ").append(current.getDouble("temp_c")).append(" *C");
-        huidigeVoorspelling.append("\nGevoelstemperatuur: ").append(current.getDouble("feelslike_c")).append(" *C");
-        huidigeVoorspelling.append("\nLuchtvochtigheid: ").append(current.getString("relative_humidity"));
+        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        botResponse.append(location.getString("full"));
+        botResponse.append(Weather_PROC.weatherIconChecker(current.getString("icon")));
+        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\nTemperatuur: ").append(current.getDouble("temp_c")).append(" *C");
+        botResponse.append("\nGevoelstemperatuur: ").append(current.getDouble("feelslike_c")).append(" *C");
+        botResponse.append("\nLuchtvochtigheid: ").append(current.getString("relative_humidity"));
 
-        return String.valueOf(huidigeVoorspelling);
+        return String.valueOf(botResponse);
     }
 }

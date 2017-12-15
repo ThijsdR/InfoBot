@@ -1,8 +1,9 @@
 package utility;
 
 public enum Commands {
-    COCCLANINFO("/cocclaninfo", "https://api.clashofclans.com/v1/clans?name=%23J0C9CPY", "https://api.clashofclans.com/v1/clans?name="),
-    COCCLANDONATIONS("/cocclandonations", "https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members?limit=50"),
+    COCCLANINFO("/cocclaninfo","https://api.clashofclans.com/v1/clans?name=","https://api.clashofclans.com/v1/clans?name=%23J0C9CPY"),
+    COCCLANDONATIONS("/cocclandonaties", "https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
+    COCCLANMEMBER("/cocclanmembers", "https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
     CRCLANINFO("/crclaninfo","http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8YLPJY"),
     CRCLANROLES("/crclanroles", "http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8YLPJY"),
     CRCLANDONATIONS("/crclandonations", "http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8YLPJY"),
@@ -12,6 +13,7 @@ public enum Commands {
     WEERHUIDIG("/weerhuidig"),
     WEERVOORSPELLING("/weervoorspelling"),
     HELP("/help"),
+    JOKE("/joke"),
     HALLO("/hallo");
 
     private final String command;
