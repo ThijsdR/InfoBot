@@ -1,4 +1,4 @@
 package botCommands.clashofclans.players;
 
-public class PlayerTag {
+public class CoC_PlayerTag {
 }

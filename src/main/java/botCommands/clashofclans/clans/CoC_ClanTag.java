@@ -1,4 +1,4 @@
 package botCommands.clashofclans.clans;
 
-public class ClanTagWarlog {
+public class CoC_ClanTag {
 }

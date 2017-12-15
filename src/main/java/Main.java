@@ -18,6 +18,6 @@ public class Main {
             tea.printStackTrace();
         }
 
-        System.out.println("Inf0_B0t succesfully booted up");
+        System.out.println("Inf0_B0t succesfully started");
     }
 }

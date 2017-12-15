@@ -6,14 +6,14 @@ public class CommandBuilder {
 
     private String messageText;
     private String[] commands;
-    private String[] treinCommands;
+    private String[] locatieCommands;
     private SendMessage sendMessage;
     private long chatID;
 
-    public CommandBuilder(String messageText, String[] commands, String[] treinCommands, SendMessage sendMessage, long chatID) {
+    public CommandBuilder(String messageText, String[] commands, String[] locatieCommands, SendMessage sendMessage, long chatID) {
         this.messageText = messageText;
         this.commands = commands;
-        this.treinCommands = treinCommands;
+        this.locatieCommands = locatieCommands;
         this.sendMessage = sendMessage;
         this.chatID = chatID;
     }
@@ -32,11 +32,11 @@ public class CommandBuilder {
         this.commands = commands;
     }
 
-    public String[] getTreinCommands() {
-        return treinCommands;
+    public String[] getLocatieCommands() {
+        return locatieCommands;
     }
-    public void setTreinCommands(String[] treinCommands) {
-        this.treinCommands = treinCommands;
+    public void setLocatieCommands(String[] locatieCommands) {
+        this.locatieCommands = locatieCommands;
     }
 
     public SendMessage getSendMessage() {

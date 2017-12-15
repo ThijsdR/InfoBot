@@ -1,4 +1,4 @@
 package botCommands.clashofclans.locations;
 
-public class LocationIDPlayerRanking {
+public class CoC_Location {
 }

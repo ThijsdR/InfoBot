@@ -1,4 +1,4 @@
 package botCommands.clashofclans.leagues;
 
-public class LeagueIDSeasonID {
+public class CoC_League {
 }

@@ -2,11 +2,11 @@ package botCommands.weather;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utility.PROC;
+import utility.Weather_PROC;
 
 public class WeatherForecast {
     public static String getForecast(String urlString) {
-        JSONObject json = new JSONObject(PROC.retrieveDataWeatherAPI(urlString));
+        JSONObject json = new JSONObject(Weather_PROC.retrieveDataWeatherAPI(urlString));
         JSONObject forecast = json.getJSONObject("forecast");
         JSONObject txt = forecast.getJSONObject("txt_forecast");
         JSONArray forecastArray = txt.getJSONArray("forecastday");
@@ -18,7 +18,7 @@ public class WeatherForecast {
 
         for (int i = 0; i < forecastArray.length(); i++) {
             botResponse.append("\n\n");
-            botResponse.append(forecastArray.getJSONObject(i).getString("title")).append(PROC.weatherIconChecker(forecastArray.getJSONObject(i).getString("icon")));
+            botResponse.append(forecastArray.getJSONObject(i).getString("title")).append(Weather_PROC.weatherIconChecker(forecastArray.getJSONObject(i).getString("icon")));
             botResponse.append("\n------------------------");
             botResponse.append("\n").append(forecastArray.getJSONObject(i).getString("fcttext_metric"));
         }
