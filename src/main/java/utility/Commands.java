@@ -14,9 +14,9 @@ public enum Commands {
     HELP("/help"),
     HALLO("/hallo");
 
-    private String command;
-    private String editableURL;
-    private String defaultURL;
+    private final String command;
+    private final String editableURL;
+    private final String defaultURL;
 
     Commands(String command) {
         this.command = command;

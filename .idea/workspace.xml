@@ -2,35 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97043969-7920-45ec-a8e9-b6a97cd1aef9" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_Clan.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/utility/CR_PROC.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/utility/CoC_PROC.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/utility/Weather_PROC.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/utility/PROC.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/Commands.java" afterPath="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/Clan.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTag.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTag.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTagCurrentWar.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagCurrentWar.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTagMembers.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagMembers.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/ClanTagWarlog.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagWarlog.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/League.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/CoC_League.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/LeagueID.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/CoC_LeagueID.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/LeagueIDSeason.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/CoC_LeagueIDSeason.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/LeagueIDSeasonID.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/CoC_LeagueIDSeasonID.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/Location.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/CoC_Location.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationID.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/CoC_LocationID.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDClanRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/CoC_LocationIDClanRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDClanVersusRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/CoC_LocationIDClanVersusRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDPlayerRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/CoC_LocationIDPlayerRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/LocationIDPlayerVersusRanking.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/locations/CoC_LocationIDPlayerVersusRanking.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/players/PlayerTag.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/players/CoC_PlayerTag.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" afterPath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Main.java" afterPath="$PROJECT_DIR$/src/main/java/Main.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/weather/CurrentWeather.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/weather/CurrentWeather.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/weather/WeatherForecast.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/weather/WeatherForecast.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utility/Commands.java" afterPath="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -77,49 +49,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2111">
-              <caret line="193" column="74" lean-forward="false" selection-start-line="193" selection-start-column="74" selection-end-line="193" selection-end-column="74" />
+            <state relative-caret-position="54">
+              <caret line="168" column="29" lean-forward="true" selection-start-line="168" selection-start-column="29" selection-end-line="168" selection-end-column="29" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CommandBuilder.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="41" column="32" lean-forward="true" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IConstants.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/utility/IConstants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="51" lean-forward="false" selection-start-line="6" selection-start-column="51" selection-end-line="6" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Commands.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Commands.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-51">
-              <caret line="8" column="98" lean-forward="false" selection-start-line="8" selection-start-column="98" selection-end-line="8" selection-end-column="98" />
-              <folding>
-                <element signature="e#1535#1536#0" expanded="true" />
-                <element signature="e#1565#1566#0" expanded="true" />
-                <element signature="e#1603#1604#0" expanded="true" />
-                <element signature="e#1637#1638#0" expanded="true" />
-                <element signature="e#1674#1675#0" expanded="true" />
-                <element signature="e#1707#1708#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="221">
+              <caret line="18" column="18" lean-forward="false" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -187,8 +132,8 @@
         <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" />
         <option value="$PROJECT_DIR$/src/main/java/utility/IConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
         <option value="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
       </list>
     </option>
   </component>
@@ -767,12 +712,12 @@
       <workItem from="1513082985594" duration="8521000" />
       <workItem from="1513150407456" duration="849000" />
       <workItem from="1513324451641" duration="728000" />
-      <workItem from="1513326514765" duration="11274000" />
+      <workItem from="1513326514765" duration="11437000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45466000" />
+    <option name="totallyTimeSpent" value="45629000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -1181,21 +1126,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="8" column="98" lean-forward="false" selection-start-line="8" selection-start-column="98" selection-end-line="8" selection-end-column="98" />
-          <folding>
-            <element signature="e#1535#1536#0" expanded="true" />
-            <element signature="e#1565#1566#0" expanded="true" />
-            <element signature="e#1603#1604#0" expanded="true" />
-            <element signature="e#1637#1638#0" expanded="true" />
-            <element signature="e#1674#1675#0" expanded="true" />
-            <element signature="e#1707#1708#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
@@ -1206,8 +1136,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2111">
-          <caret line="193" column="74" lean-forward="false" selection-start-line="193" selection-start-column="74" selection-end-line="193" selection-end-column="74" />
+        <state relative-caret-position="54">
+          <caret line="168" column="29" lean-forward="true" selection-start-line="168" selection-start-column="29" selection-end-line="168" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="18" column="18" lean-forward="false" selection-start-line="18" selection-start-column="18" selection-end-line="18" selection-end-column="18" />
           <folding />
         </state>
       </provider>
