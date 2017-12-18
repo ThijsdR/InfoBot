@@ -2,7 +2,6 @@ package botCommands.clashroyale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utility.CR_PROC;
 
 public class CR_Clan {
     public static String getClanInfo(String urlString) {

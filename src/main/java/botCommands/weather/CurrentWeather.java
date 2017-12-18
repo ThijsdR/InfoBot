@@ -1,7 +1,6 @@
 package botCommands.weather;
 
 import org.json.JSONObject;
-import utility.Weather_PROC;
 
 public class CurrentWeather {
     public static String getCurrentWeather(String urlString) {

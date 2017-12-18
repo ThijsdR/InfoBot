@@ -2,7 +2,6 @@ package botCommands.weather;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import utility.Weather_PROC;
 
 public class WeatherForecast {
     public static String getForecast(String urlString) {

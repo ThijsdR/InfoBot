@@ -2,7 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97043969-7920-45ec-a8e9-b6a97cd1aef9" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_github_virtuald_curvesapi_1_04.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_commons_commons_collections4_4_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_poi_poi_3_15.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_poi_poi_ooxml_3_15.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_poi_poi_ooxml_schemas_3_15.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_xmlbeans_xmlbeans_2_6_0.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Maven__stax_stax_api_1_0_1.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PlayerContainer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" afterPath="$PROJECT_DIR$/src/main/java/utility/CommandContainer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/utility/CR_PROC.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_PROC.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/utility/CoC_PROC.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PROC.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/utility/Weather_PROC.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/weather/Weather_PROC.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/InfoBot.iml" afterPath="$PROJECT_DIR$/InfoBot.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" afterPath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagMembers.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagMembers.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_Clan.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_Clan.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/weather/CurrentWeather.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/weather/CurrentWeather.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/weather/WeatherForecast.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/weather/WeatherForecast.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/utility/Commands.java" afterPath="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,11 +39,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Main.java">
+      <file leaf-file-name="CoC_Clan.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="20" column="56" lean-forward="false" selection-start-line="20" selection-start-column="56" selection-end-line="20" selection-end-column="56" />
+            <state relative-caret-position="476">
+              <caret line="136" column="48" lean-forward="true" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CoC_PROC.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PROC.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -30,8 +62,8 @@
       <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-48">
-              <caret line="94" column="9" lean-forward="true" selection-start-line="94" selection-start-column="9" selection-end-line="94" selection-end-column="9" />
+            <state relative-caret-position="425">
+              <caret line="229" column="87" lean-forward="false" selection-start-line="229" selection-start-column="87" selection-end-line="229" selection-end-column="87" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -39,11 +71,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="NSStoringenWerkzaamheden.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pom.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="816">
+              <caret line="51" column="21" lean-forward="false" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Commands.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" column="18" lean-forward="false" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NSStoringenWerkzaamheden.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="50" column="113" lean-forward="false" selection-start-line="50" selection-start-column="113" selection-end-line="50" selection-end-column="113" />
+            <state relative-caret-position="561">
+              <caret line="99" column="32" lean-forward="false" selection-start-line="99" selection-start-column="32" selection-end-line="99" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -61,6 +113,11 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>execute</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -88,7 +145,6 @@
         <option value="$PROJECT_DIR$/src/main/java/botCommands/ns/Vertrektijden.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/ns/NSReisadviezen.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/ns/NSPrijzen.java" />
-        <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/utility/CoC_Utils.java" />
         <option value="$PROJECT_DIR$/src/main/java/utility/CoC_PROC.java" />
         <option value="$PROJECT_DIR$/src/main/java/utility/PROC.java" />
@@ -97,15 +153,22 @@
         <option value="$PROJECT_DIR$/src/main/java/utility/CR_PROC.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java" />
         <option value="$PROJECT_DIR$/src/main/java/utility/IConstants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/weather/CurrentWeather.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStationslijst.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/weather/WeatherForecast.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_Clan.java" />
-        <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
+        <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagMembers.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utility/Commands.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/utility/CoC_PlayerHelper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PlayerHelper.java" />
+        <option value="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_PROC.java" />
+        <option value="$PROJECT_DIR$/src/main/java/botCommands/weather/Weather_PROC.java" />
+        <option value="$PROJECT_DIR$/src/main/java/utility/CommandBuilder.java" />
+        <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
       </list>
     </option>
   </component>
@@ -532,51 +595,6 @@
               <item name="botCommands" type="462c0819:PsiDirectoryNode" />
               <item name="clashofclans" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="InfoBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InfoBot" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="botCommands" type="462c0819:PsiDirectoryNode" />
-              <item name="clashofclans" type="462c0819:PsiDirectoryNode" />
-              <item name="clans" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="InfoBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InfoBot" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="botCommands" type="462c0819:PsiDirectoryNode" />
-              <item name="clashroyale" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="InfoBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InfoBot" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="botCommands" type="462c0819:PsiDirectoryNode" />
-              <item name="ns" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="InfoBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InfoBot" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="botCommands" type="462c0819:PsiDirectoryNode" />
-              <item name="weather" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="InfoBot" type="b2602c69:ProjectViewProjectNode" />
-              <item name="InfoBot" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="utility" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -721,12 +739,12 @@
       <workItem from="1513082985594" duration="8521000" />
       <workItem from="1513150407456" duration="849000" />
       <workItem from="1513324451641" duration="728000" />
-      <workItem from="1513326514765" duration="21979000" />
+      <workItem from="1513326514765" duration="35887000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56171000" />
+    <option name="totallyTimeSpent" value="70079000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -748,7 +766,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20058997" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20058997" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16364606" sideWeight="0.50430506" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -775,41 +793,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/weather/WeatherForecast.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="20" column="74" lean-forward="true" selection-start-line="20" selection-start-column="74" selection-end-line="20" selection-end-column="74" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="34" column="77" lean-forward="true" selection-start-line="34" selection-start-column="77" selection-end-line="34" selection-end-column="77" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/PROC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="26" column="23" lean-forward="false" selection-start-line="26" selection-start-column="23" selection-end-line="26" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="43" lean-forward="false" selection-start-line="10" selection-start-column="43" selection-end-line="10" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -822,7 +805,7 @@
         <state relative-caret-position="204">
           <caret line="14" column="37" lean-forward="true" selection-start-line="14" selection-start-column="37" selection-end-line="14" selection-end-column="37" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -857,13 +840,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
           <caret line="29" column="68" lean-forward="true" selection-start-line="29" selection-start-column="68" selection-end-line="29" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagMembers.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="27" lean-forward="false" selection-start-line="2" selection-start-column="27" selection-end-line="2" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -937,13 +913,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/players/CoC_PlayerTag.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/leagues/CoC_League.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -995,48 +964,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/Weather_PROC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="952">
-          <caret line="61" column="5" lean-forward="false" selection-start-line="61" selection-start-column="5" selection-end-line="61" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/utility/PROC.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/CoC_PROC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/CR_PROC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="48" lean-forward="true" selection-start-line="16" selection-start-column="48" selection-end-line="16" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/CommandBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="41" column="32" lean-forward="true" selection-start-line="41" selection-start-column="32" selection-end-line="41" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -1073,14 +1004,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="45" column="21" lean-forward="false" selection-start-line="45" selection-start-column="21" selection-end-line="45" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSStationslijst.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -1113,10 +1036,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="8" lean-forward="false" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
+        <state relative-caret-position="363">
+          <caret line="36" column="67" lean-forward="true" selection-start-line="36" selection-start-column="67" selection-end-line="36" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/players/CoC_PlayerTag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_ClanTagMembers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="81" lean-forward="false" selection-start-line="8" selection-start-column="81" selection-end-line="8" selection-end-column="81" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1131,39 +1070,117 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/telegram/telegrambots/3.5/telegrambots-3.5.jar!/org/telegram/telegrambots/bots/DefaultAbsSender.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="15" column="15" lean-forward="false" selection-start-line="15" selection-start-column="15" selection-end-line="15" selection-end-column="15" />
+        <state relative-caret-position="1003">
+          <caret line="707" column="64" lean-forward="false" selection-start-line="707" selection-start-column="57" selection-end-line="707" selection-end-column="64" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSVertrektijden.java">
+    <entry file="jar://$MAVEN_REPOSITORY$/org/telegram/telegrambots-meta/3.5/telegrambots-meta-3.5.jar!/org/telegram/telegrambots/bots/AbsSender.class">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="36" column="67" lean-forward="true" selection-start-line="36" selection-start-column="67" selection-end-line="36" selection-end-column="67" />
+        <state relative-caret-position="262">
+          <caret line="86" column="70" lean-forward="false" selection-start-line="86" selection-start-column="70" selection-end-line="86" selection-end-column="70" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="99" column="32" lean-forward="false" selection-start-line="99" selection-start-column="32" selection-end-line="99" selection-end-column="32" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/werkzaamheden.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2295">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="816">
+          <caret line="51" column="21" lean-forward="false" selection-start-line="51" selection-start-column="21" selection-end-line="51" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/weather/Weather_PROC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_PROC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PlayerContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+          <folding>
+            <element signature="e#884#885#0" expanded="true" />
+            <element signature="e#911#912#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utility/CommandContainer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="29" lean-forward="true" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+          <folding>
+            <element signature="e#1178#1179#0" expanded="true" />
+            <element signature="e#1212#1213#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/utility/Commands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="18" lean-forward="false" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-48">
-          <caret line="94" column="9" lean-forward="true" selection-start-line="94" selection-start-column="9" selection-end-line="94" selection-end-column="9" />
+        <state relative-caret-position="425">
+          <caret line="229" column="87" lean-forward="false" selection-start-line="229" selection-start-column="87" selection-end-line="229" selection-end-column="87" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/ns/NSStoringenWerkzaamheden.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PROC.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="50" column="113" lean-forward="false" selection-start-line="50" selection-start-column="113" selection-end-line="50" selection-end-column="113" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="68">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="136" column="48" lean-forward="true" selection-start-line="136" selection-start-column="48" selection-end-line="136" selection-end-column="48" />
+          <folding />
         </state>
       </provider>
     </entry>

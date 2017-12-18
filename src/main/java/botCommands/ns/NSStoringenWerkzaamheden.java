@@ -6,7 +6,9 @@ import nl.pvanassen.ns.NsApi;
 import nl.pvanassen.ns.RequestBuilder;
 import nl.pvanassen.ns.model.storingen.Storing;
 import nl.pvanassen.ns.model.storingen.Storingen;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 
 public class NSStoringenWerkzaamheden {
@@ -54,8 +56,8 @@ public class NSStoringenWerkzaamheden {
         return String.valueOf(botResponse);
     }
 
-    /* NIET GEBRUIKEN!!! */
-    public static String getWerkzaamheden(NsApi nsApi) {
+    public static File getWerkzaamheden(NsApi nsApi) {
+        File werkzaamhedenFile = new File("werkzaamheden.txt");
 
         ApiRequest<Storingen> request = RequestBuilder.getGeplandeWerkzaamheden();
         Storingen werkzaamheden = null;
@@ -92,6 +94,12 @@ public class NSStoringenWerkzaamheden {
             }
         }
 
-        return String.valueOf(botResponse);
+        try {
+            FileUtils.writeStringToFile(werkzaamhedenFile, botResponse.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return werkzaamhedenFile;
     }
 }

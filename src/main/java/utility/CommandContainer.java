@@ -1,8 +1,8 @@
-package botCommands;
+package utility;
 
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 
-public class CommandBuilder {
+public class CommandContainer {
 
     private String messageText;
     private String[] commands;
@@ -10,7 +10,7 @@ public class CommandBuilder {
     private SendMessage sendMessage;
     private long chatID;
 
-    public CommandBuilder(String messageText, String[] commands, String[] locatieCommands, SendMessage sendMessage, long chatID) {
+    public CommandContainer(String messageText, String[] commands, String[] locatieCommands, SendMessage sendMessage, long chatID) {
         this.messageText = messageText;
         this.commands = commands;
         this.locatieCommands = locatieCommands;

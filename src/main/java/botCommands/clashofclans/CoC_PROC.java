@@ -1,4 +1,4 @@
-package utility;
+package botCommands.clashofclans;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;

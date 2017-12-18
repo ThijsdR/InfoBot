@@ -1,4 +1,4 @@
-package utility;
+package botCommands.clashroyale;
 
 import java.io.BufferedReader;
 import java.io.IOException;
