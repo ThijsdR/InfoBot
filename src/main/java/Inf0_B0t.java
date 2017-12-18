@@ -153,6 +153,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
+                // ToDo: Check inbouwen!!
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];

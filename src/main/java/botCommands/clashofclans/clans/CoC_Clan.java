@@ -2,8 +2,7 @@ package botCommands.clashofclans.clans;
 
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
@@ -19,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,10 +109,18 @@ public class CoC_Clan {
      * @return
      */
     public static File getClanMembersFile(String urlString) {
-        File clanOverviewFile = new File("/tmp/ClanOverview.xlsx");
+        File clanOverviewFile = new File("ClanOverview.xlsx");
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Overzicht clan");
+
+        CellStyle style = workbook.createCellStyle();
+        style.setFillForegroundColor(IndexedColors.DARK_GREEN.getIndex());
+        style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+        Font font = workbook.createFont();
+        font.setColor(IndexedColors.WHITE.getIndex());
+        style.setFont(font);
 
         List<CoC_PlayerContainer> playersList = new ArrayList<>();
 
@@ -131,26 +139,62 @@ public class CoC_Clan {
             );
         }
 
-        int rowNum = 0;
+        int rowNum = 3;
+
+        Row descRow = sheet.createRow(1);
+
+        Cell posCell = descRow.createCell(1);
+        posCell.setCellValue("Position");
+        posCell.setCellStyle(style);
+
+        Cell nameCell = descRow.createCell(2);
+        nameCell.setCellValue("Name");
+        nameCell.setCellStyle(style);
+
+        Cell tagCell = descRow.createCell(3);
+        tagCell.setCellValue("Player tag");
+        tagCell.setCellStyle(style);
+
+        Cell levelCell = descRow.createCell(4);
+        levelCell.setCellValue("Exp level");
+        levelCell.setCellStyle(style);
+
+        Cell trophyCell = descRow.createCell(5);
+        trophyCell.setCellValue("Trophycount");
+        trophyCell.setCellStyle(style);
+
+        Cell roleCell = descRow.createCell(6);
+        roleCell.setCellValue("Role");
+        roleCell.setCellStyle(style);
+
+        Cell donateCell = descRow.createCell(7);
+        donateCell.setCellValue("Troops donated");
+        donateCell.setCellStyle(style);
+
+        Cell receiveCell = descRow.createCell(8);
+        receiveCell.setCellValue("Troops received");
+        receiveCell.setCellStyle(style);
 
         for (CoC_PlayerContainer player : playersList) {
             Row row = sheet.createRow(rowNum++);
-            int colNum = 0;
+            int colNum = 1;
 
             try {
-                BeanInfo beanInfo = Introspector.getBeanInfo(CoC_PlayerContainer.class);
-                for (PropertyDescriptor propertyDesc : beanInfo.getPropertyDescriptors()) {
-                    Object value = propertyDesc.getReadMethod().invoke(player);
+                for (Field field : player.getClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+                    Class type = field.getType();
+                    Object obj = field.get(player);
 
                     Cell cell = row.createCell(colNum++);
-                    if (value instanceof String) {
-                        cell.setCellValue((String) value);
-                    } else if (value instanceof Integer) {
-                        cell.setCellValue((Integer) value);
+                    if (type == String.class) {
+                        cell.setCellValue((String) obj);
+                    } else if (type == int.class) {
+                        cell.setCellValue((Integer) obj);
                     }
                     sheet.autoSizeColumn(colNum);
+
                 }
-            } catch (IntrospectionException | IllegalAccessException | InvocationTargetException e) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
