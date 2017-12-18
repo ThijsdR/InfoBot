@@ -160,13 +160,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
                         sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFile(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members"));
-                        sendDocumentrequest.setCaption("test bestand");
+                        sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest);
                     } else {
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
                         sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFile(Commands.COCCLANMEMBERSTOFILE.getDefaultURL()));
-                        sendDocumentrequest.setCaption("test bestand");
+                        sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;
                 }
