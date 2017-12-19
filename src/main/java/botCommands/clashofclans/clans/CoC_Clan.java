@@ -20,6 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +70,7 @@ public class CoC_Clan {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append("\n");
-            botResponse.append("-").append(i+1).append("-\n");
+            botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
             botResponse.append("Name: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
             botResponse.append("Tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
             botResponse.append(EmojiParser.parseToUnicode("Donations: :arrow_forward:")).append(jsonArray.getJSONObject(i).getInt("donations")).append("\n");
@@ -92,7 +94,7 @@ public class CoC_Clan {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append("\n");
-            botResponse.append("-").append(i+1).append("-\n");
+            botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
             botResponse.append("Name: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
             botResponse.append("Tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
             botResponse.append("Level: ").append(jsonArray.getJSONObject(i).getInt("expLevel")).append("\n");
@@ -108,14 +110,30 @@ public class CoC_Clan {
      * @param urlString
      * @return
      */
-    public static File getClanMembersFile(String urlString) {
-        File clanOverviewFile = new File("ClanOverview.xlsx");
+    public static File getClanMembersFileXLSX(String urlString) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
+
+        File clanOverviewFile = new File("clanoverview_logs/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanoverzicht.xlsx");
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Overzicht clan");
 
+        JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
+        JSONArray jsonArray = json.getJSONArray("items");
+
+        sheet.setMargin(Sheet.LeftMargin, 0.25);
+        sheet.setMargin(Sheet.RightMargin, 0.25);
+        sheet.setMargin(Sheet.TopMargin, 0.5);
+        sheet.setMargin(Sheet.BottomMargin, 0.5);
+
+        sheet.getFooter().setLeft("Clanoverzicht");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        sheet.getFooter().setRight(String.valueOf(sdf.format(timestamp)));
+
         CellStyle style = workbook.createCellStyle();
-        style.setFillForegroundColor(IndexedColors.DARK_GREEN.getIndex());
+        style.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
         style.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         Font font = workbook.createFont();
@@ -124,11 +142,8 @@ public class CoC_Clan {
 
         List<CoC_PlayerContainer> playersList = new ArrayList<>();
 
-        JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
-        JSONArray jsonArray = json.getJSONArray("items");
-
         for (int i = 0; i < jsonArray.length(); i++) {
-            playersList.add(new CoC_PlayerContainer((i+1),
+            playersList.add(new CoC_PlayerContainer(jsonArray.getJSONObject(i).getInt("clanRank"),
                         jsonArray.getJSONObject(i).getString("name"),
                         jsonArray.getJSONObject(i).getString("tag"),
                         jsonArray.getJSONObject(i).getInt("expLevel"),
@@ -139,45 +154,45 @@ public class CoC_Clan {
             );
         }
 
-        int rowNum = 3;
+        int rowNum = 1;
 
-        Row descRow = sheet.createRow(1);
+        Row descRow = sheet.createRow(0);
 
-        Cell posCell = descRow.createCell(1);
+        Cell posCell = descRow.createCell(0);
         posCell.setCellValue("Position");
         posCell.setCellStyle(style);
 
-        Cell nameCell = descRow.createCell(2);
+        Cell nameCell = descRow.createCell(1);
         nameCell.setCellValue("Name");
         nameCell.setCellStyle(style);
 
-        Cell tagCell = descRow.createCell(3);
+        Cell tagCell = descRow.createCell(2);
         tagCell.setCellValue("Player tag");
         tagCell.setCellStyle(style);
 
-        Cell levelCell = descRow.createCell(4);
+        Cell levelCell = descRow.createCell(3);
         levelCell.setCellValue("Exp level");
         levelCell.setCellStyle(style);
 
-        Cell trophyCell = descRow.createCell(5);
+        Cell trophyCell = descRow.createCell(4);
         trophyCell.setCellValue("Trophycount");
         trophyCell.setCellStyle(style);
 
-        Cell roleCell = descRow.createCell(6);
+        Cell roleCell = descRow.createCell(5);
         roleCell.setCellValue("Role");
         roleCell.setCellStyle(style);
 
-        Cell donateCell = descRow.createCell(7);
+        Cell donateCell = descRow.createCell(6);
         donateCell.setCellValue("Troops donated");
         donateCell.setCellStyle(style);
 
-        Cell receiveCell = descRow.createCell(8);
+        Cell receiveCell = descRow.createCell(7);
         receiveCell.setCellValue("Troops received");
         receiveCell.setCellStyle(style);
 
         for (CoC_PlayerContainer player : playersList) {
             Row row = sheet.createRow(rowNum++);
-            int colNum = 1;
+            int colNum = 0;
 
             try {
                 for (Field field : player.getClass().getDeclaredFields()) {
@@ -197,6 +212,10 @@ public class CoC_Clan {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
+        }
+
+        for (int i = 1; i < sheet.getLastRowNum(); i += 2) {
+            CoC_PROC.makeRowColor(workbook, sheet.getRow(i));
         }
 
         try {

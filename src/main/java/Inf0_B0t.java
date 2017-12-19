@@ -155,18 +155,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 }
                 // ToDo: Check inbouwen!!
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
+                    if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
 
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFile(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members"));
+                        sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members"));
                         sendDocumentrequest.setCaption("Clanleden overzicht");
-                        runCommandDocument(sendDocumentrequest);
+                        runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
+                    } if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].startsWith("#")){
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik na het commando nog een parameter nodig.\nBijvoorbeeld: /cocclanmembersfile #joc9cpy");
+                        runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
                     } else {
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFile(Commands.COCCLANMEMBERSTOFILE.getDefaultURL()));
+                        sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL()));
                         sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;

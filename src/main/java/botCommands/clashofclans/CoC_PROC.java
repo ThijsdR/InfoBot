@@ -1,5 +1,7 @@
 package botCommands.clashofclans;
 
+import org.apache.poi.ss.usermodel.*;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,5 +34,15 @@ public class CoC_PROC {
         }
 
         return String.valueOf(content);
+    }
+
+    public static void makeRowColor(Workbook wb, Row row) {
+        CellStyle style = wb.createCellStyle();
+        style.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        style.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+        for (int i = 0; i < row.getLastCellNum(); i++) {
+            row.getCell(i).setCellStyle(style);
+        }
     }
 }
