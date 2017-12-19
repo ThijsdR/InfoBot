@@ -3,6 +3,7 @@ package botCommands.clashofclans.clans;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -142,7 +144,17 @@ public class CoC_Clan {
 
         List<CoC_PlayerContainer> playersList = new ArrayList<>();
 
+        DecimalFormat format = new DecimalFormat(".##");
+
         for (int i = 0; i < jsonArray.length(); i++) {
+            double ratio;
+            if (jsonArray.getJSONObject(i).getInt("donationsReceived") == 0) {
+                ratio = 0;
+            } else {
+                ratio = jsonArray.getJSONObject(i).getDouble("donations") / jsonArray.getJSONObject(i).getDouble("donationsReceived");
+                ratio = Double.valueOf(format.format(ratio));
+            }
+
             playersList.add(new CoC_PlayerContainer(jsonArray.getJSONObject(i).getInt("clanRank"),
                         jsonArray.getJSONObject(i).getString("name"),
                         jsonArray.getJSONObject(i).getString("tag"),
@@ -150,7 +162,8 @@ public class CoC_Clan {
                         jsonArray.getJSONObject(i).getInt("trophies"),
                         jsonArray.getJSONObject(i).getString("role"),
                         jsonArray.getJSONObject(i).getInt("donations"),
-                        jsonArray.getJSONObject(i).getInt("donationsReceived"))
+                        jsonArray.getJSONObject(i).getInt("donationsReceived"),
+                        ratio)
             );
         }
 
@@ -159,7 +172,7 @@ public class CoC_Clan {
         Row descRow = sheet.createRow(0);
 
         Cell posCell = descRow.createCell(0);
-        posCell.setCellValue("Position");
+        posCell.setCellValue("Rank");
         posCell.setCellStyle(style);
 
         Cell nameCell = descRow.createCell(1);
@@ -175,7 +188,7 @@ public class CoC_Clan {
         levelCell.setCellStyle(style);
 
         Cell trophyCell = descRow.createCell(4);
-        trophyCell.setCellValue("Trophycount");
+        trophyCell.setCellValue("Trophies");
         trophyCell.setCellStyle(style);
 
         Cell roleCell = descRow.createCell(5);
@@ -183,12 +196,28 @@ public class CoC_Clan {
         roleCell.setCellStyle(style);
 
         Cell donateCell = descRow.createCell(6);
-        donateCell.setCellValue("Troops donated");
+        donateCell.setCellValue("Donated units");
         donateCell.setCellStyle(style);
 
         Cell receiveCell = descRow.createCell(7);
-        receiveCell.setCellValue("Troops received");
+        receiveCell.setCellValue("Received units");
         receiveCell.setCellStyle(style);
+
+        Cell ratioCell = descRow.createCell(8);
+        ratioCell.setCellValue("Ratio");
+        ratioCell.setCellStyle(style);
+
+        CellStyle cellStyleOdd = workbook.createCellStyle();
+        cellStyleOdd.setAlignment(HorizontalAlignment.CENTER);
+
+        CellStyle cellStyleEven = workbook.createCellStyle();
+        cellStyleEven.setAlignment(HorizontalAlignment.CENTER);
+        cellStyleEven.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        cellStyleEven.setFillPattern(CellStyle.SOLID_FOREGROUND);
+
+        CellStyle cellStyleString = workbook.createCellStyle();
+        cellStyleString.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+        cellStyleString.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         for (CoC_PlayerContainer player : playersList) {
             Row row = sheet.createRow(rowNum++);
@@ -202,20 +231,35 @@ public class CoC_Clan {
 
                     Cell cell = row.createCell(colNum++);
                     if (type == String.class) {
-                        cell.setCellValue((String) obj);
+                        if (cell.getRow().getRowNum() % 2 == 0) {
+                            cell.setCellStyle(cellStyleString);
+                            cell.setCellValue((String) obj);
+                        } else {
+                            cell.setCellValue((String) obj);
+                        }
                     } else if (type == int.class) {
-                        cell.setCellValue((Integer) obj);
+                        if (cell.getRow().getRowNum() % 2 == 0) {
+                            cell.setCellStyle(cellStyleEven);
+                            cell.setCellValue((Integer) obj);
+                        } else {
+                            cell.setCellStyle(cellStyleOdd);
+                            cell.setCellValue((Integer) obj);
+                        }
+                    } else if (type == double.class) {
+                        if (cell.getRow().getRowNum() % 2 == 0) {
+                            cell.setCellStyle(cellStyleEven);
+                            cell.setCellValue((Double) obj);
+                        } else {
+                            cell.setCellStyle(cellStyleOdd);
+                            cell.setCellValue((Double) obj);
+                        }
                     }
-                    sheet.autoSizeColumn(colNum);
 
+                    sheet.autoSizeColumn(colNum);
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-        }
-
-        for (int i = 1; i < sheet.getLastRowNum(); i += 2) {
-            CoC_PROC.makeRowColor(workbook, sheet.getRow(i));
         }
 
         try {

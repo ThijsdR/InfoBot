@@ -1,5 +1,7 @@
 package botCommands.clashofclans;
 
+import java.text.DecimalFormat;
+
 public class CoC_PlayerContainer {
     private int positionInClan;
     private String name;
@@ -9,8 +11,9 @@ public class CoC_PlayerContainer {
     private String clanRole;
     private int unitsDonated;
     private int unitsReceived;
+    private double ratio;
 
-    public CoC_PlayerContainer(int positionInClan, String name, String playerTag, int expLevel, int trophyCount, String clanRole, int unitsDonated, int unitsReceived) {
+    public CoC_PlayerContainer(int positionInClan, String name, String playerTag, int expLevel, int trophyCount, String clanRole, int unitsDonated, int unitsReceived, double ratio) {
         this.positionInClan = positionInClan;
         this.name = name;
         this.playerTag = playerTag;
@@ -19,6 +22,7 @@ public class CoC_PlayerContainer {
         this.clanRole = clanRole;
         this.unitsDonated = unitsDonated;
         this.unitsReceived = unitsReceived;
+        this.ratio = ratio;
     }
 
     public int getPositionInClan() {
@@ -51,5 +55,9 @@ public class CoC_PlayerContainer {
 
     public int getUnitsReceived() {
         return unitsReceived;
+    }
+
+    public double getRatio() {
+        return ratio;
     }
 }
