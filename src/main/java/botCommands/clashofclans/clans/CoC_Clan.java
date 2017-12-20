@@ -41,11 +41,8 @@ public class CoC_Clan {
         JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
         JSONArray jsonArray = json.getJSONArray("items");
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n");
-        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
-
+        StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
-            botResponse.append("\n");
             botResponse.append("Clan: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
             botResponse.append("Level: ").append(jsonArray.getJSONObject(i).getInt("clanLevel")).append("\n");
             botResponse.append("Clan tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
@@ -53,9 +50,10 @@ public class CoC_Clan {
             botResponse.append("Clan type: ").append(jsonArray.getJSONObject(i).getString("type")).append("\n");
             botResponse.append(EmojiParser.parseToUnicode("Members: :family:")).append(jsonArray.getJSONObject(i).getInt("members")).append("\n");
             botResponse.append("Country: ").append(jsonArray.getJSONObject(i).getJSONObject("location").getString("name")).append("\n");
+            botResponse.append("-~-~-~-~-~-~-~-~\n");
         }
 
-        return botResponse.toString();
+        return String.valueOf(botResponse);
     }
 
     /**
@@ -67,19 +65,17 @@ public class CoC_Clan {
         JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
         JSONArray jsonArray = json.getJSONArray("items");
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n");
-        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
-
+        StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
-            botResponse.append("\n");
             botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
             botResponse.append("Name: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
             botResponse.append("Tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
             botResponse.append(EmojiParser.parseToUnicode("Donations: :arrow_forward:")).append(jsonArray.getJSONObject(i).getInt("donations")).append("\n");
             botResponse.append(EmojiParser.parseToUnicode("Received: :arrow_backward:")).append(jsonArray.getJSONObject(i).getInt("donationsReceived")).append("\n");
+            botResponse.append("-~-~-~-~-~-~-~-~\n");
         }
 
-        return botResponse.toString();
+        return String.valueOf(botResponse);
     }
 
     /**
@@ -91,20 +87,18 @@ public class CoC_Clan {
         JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
         JSONArray jsonArray = json.getJSONArray("items");
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n");
-        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
-
+        StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
-            botResponse.append("\n");
             botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
             botResponse.append("Name: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
             botResponse.append("Tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
             botResponse.append("Level: ").append(jsonArray.getJSONObject(i).getInt("expLevel")).append("\n");
             botResponse.append(EmojiParser.parseToUnicode("Trophies: :trophy:")).append(jsonArray.getJSONObject(i).getInt("trophies")).append("\n");
             botResponse.append("Role: ").append(jsonArray.getJSONObject(i).getString("role")).append("\n");
+            botResponse.append("-~-~-~-~-~-~-~-~\n");
         }
 
-        return botResponse.toString();
+        return String.valueOf(botResponse);
     }
 
     /**
@@ -112,11 +106,16 @@ public class CoC_Clan {
      * @param urlString
      * @return
      */
-    public static File getClanMembersFileXLSX(String urlString) {
+    public static File getClanMembersFileXLSX(String urlString, boolean isPeriodicGenerated) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
 
-        File clanOverviewFile = new File("clanoverview_logs/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanoverzicht.xlsx");
+        File clanOverviewFile;
+        if (isPeriodicGenerated) {
+            clanOverviewFile = new File("clanoverview_logs/generated_reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
+        } else {
+            clanOverviewFile = new File("clanoverview_logs/logs/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanoverzicht.xlsx");
+        }
 
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Overzicht clan");
@@ -149,7 +148,7 @@ public class CoC_Clan {
         for (int i = 0; i < jsonArray.length(); i++) {
             double ratio;
             if (jsonArray.getJSONObject(i).getInt("donationsReceived") == 0) {
-                ratio = 0;
+                ratio = jsonArray.getJSONObject(i).getInt("donations");
             } else {
                 ratio = jsonArray.getJSONObject(i).getDouble("donations") / jsonArray.getJSONObject(i).getDouble("donationsReceived");
                 ratio = Double.valueOf(format.format(ratio));
