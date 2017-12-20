@@ -22,13 +22,13 @@ public class NSStationslijst {
             e.printStackTrace();
         }
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        StringBuilder botResponse = new StringBuilder();
         botResponse.append("Stations:");
-        botResponse.append("=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\n------------------------n");
 
         assert stations != null;
         for (Station station : stations) {
-            botResponse.append("\n").append(station.getNamen().getMiddel());
+            botResponse.append(station.getNamen().getMiddel()).append("\n");
         }
 
         return String.valueOf(botResponse);

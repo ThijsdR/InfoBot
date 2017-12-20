@@ -28,9 +28,9 @@ public class NSVertrektijden {
             e.printStackTrace();
         }
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        StringBuilder botResponse = new StringBuilder();
         botResponse.append(EmojiParser.parseToUnicode("Station :station:: ")).append(station);
-        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\n------------------------n");
 
         assert vertrekkendeTreinen != null;
         for (VertrekkendeTrein trein : vertrekkendeTreinen) {

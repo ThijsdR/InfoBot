@@ -11,7 +11,7 @@ public class H_Help {
         botResponse.append("/cocclandonaties - Donaties binnen een clan (clantag)\n");
         botResponse.append("/cocclanmembers - Leden binnen een clan (clantag)\n");
         botResponse.append("/cocclanmember - Informatie over een clanlid (clantag + naam)\n");
-        botResponse.append("/cocclanmemberfile - Een Excel document met alle informatie over de leden van een clan (clantag)\n\n");
+        botResponse.append("/cocclanmembersfile - Een Excel document met alle informatie over de leden van een clan (clantag)\n\n");
         botResponse.append("- Clash Royale -\n");
         botResponse.append("/crclaninfo - Informatie over de opgegeven clan (clantag)\n");
         botResponse.append("/crclanmembers - Leden binnen een clan (clantag)\n");
@@ -19,7 +19,7 @@ public class H_Help {
         botResponse.append("/crclandonations - Donaties binnen een clan (clantag)\n");
         botResponse.append("/crclanchest - Behaalde kronen voor de clankist binnen een clan (clantag)\n\n");
         botResponse.append("- Treinen -\n");
-        botResponse.append("/treintijden - Alle vertrekkende treinen vanaf het opgegeven station voor het komende uur (stationsnaam)\\n");
+        botResponse.append("/treintijden - Alle vertrekkende treinen vanaf het opgegeven station voor het komende uur (stationsnaam)\n");
         botResponse.append("/treinstoringen - Alle huidige storingen op het spoor\n");
         botResponse.append("/treinwerkzaamheden - Alle huidige en geplande werkzaamheden aan het spoor\n\n");
         botResponse.append("- Weer -\n");

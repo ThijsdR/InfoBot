@@ -68,9 +68,9 @@ public class NSStoringenWerkzaamheden {
             e.printStackTrace();
         }
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        StringBuilder botResponse = new StringBuilder();
         botResponse.append("Actuele werkzaamheden:");
-        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\n------------------------n");
 
         assert werkzaamheden != null;
         if (!werkzaamheden.getGeplandeStoringen().isEmpty()) {

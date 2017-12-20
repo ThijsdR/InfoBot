@@ -9,15 +9,6 @@ import java.util.Timer;
 public class Main {
     public static void main(String[] args) {
 
-        /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
-        Timer timer = new Timer();
-        Calendar date = Calendar.getInstance();
-        date.set(Calendar.HOUR, 3);
-        date.set(Calendar.MINUTE, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MILLISECOND, 0);
-        timer.schedule(new ReportGenerator(), date.getTime(), 1000 * 60 * 60 * 24);
-
         /* Initialize Api Context */
         ApiContextInitializer.init();
 

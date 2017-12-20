@@ -1,3 +1,5 @@
+import botCommands.clashofclans.CoC_PROC;
+import botCommands.clashofclans.CoC_ServerState;
 import botCommands.help.H_Help;
 import utility.CommandContainer;
 import botCommands.clashofclans.clans.CoC_Clan;
@@ -16,10 +18,16 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import utility.Commands;
 import utility.IConstants;
+import utility.ReportGenerator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Timer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -27,8 +35,41 @@ import java.util.Date;
 public class Inf0_B0t extends TelegramLongPollingBot {
 
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
+    private CoC_ServerState serverStatusCoC;
+
+    public Inf0_B0t() {
+        /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
+        Timer reportTimer = new Timer();
+        Calendar date = Calendar.getInstance();
+        date.set(Calendar.HOUR, 3);
+        date.set(Calendar.MINUTE, 0);
+        date.set(Calendar.SECOND, 0);
+        date.set(Calendar.MILLISECOND, 0);
+        reportTimer.schedule(new ReportGenerator(), date.getTime(), 1000 * 60 * 60 * 24);
+
+        Runnable serverChecker = new Runnable() {
+            @Override
+            public void run() {
+                serverStatusCoC = CoC_PROC.checkServerStatusCoC();
+
+                switch (serverStatusCoC) {
+                    case COCWENTOFFLINE:
+                        runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
+                        break;
+                    case COCWENTONLINE:
+                        runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
+                        break;
+                    default:
+                }
+            }
+        };
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
+    }
 
     public void onUpdateReceived(Update update) {
+        System.out.println("jup");
 
         /* Check if update has text */
         if (update.hasMessage() && update.getMessage().hasText()) {

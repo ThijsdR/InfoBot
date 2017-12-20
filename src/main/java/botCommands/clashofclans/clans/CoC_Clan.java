@@ -1,26 +1,18 @@
 package botCommands.clashofclans.clans;
 
+import botCommands.clashofclans.CoC_PROC;
+import botCommands.clashofclans.CoC_PlayerContainer;
 import com.vdurmont.emoji.EmojiParser;
-import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFDataFormat;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import botCommands.clashofclans.CoC_PROC;
-import botCommands.clashofclans.CoC_PlayerContainer;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
