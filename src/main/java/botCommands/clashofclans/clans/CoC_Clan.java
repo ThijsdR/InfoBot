@@ -2,6 +2,7 @@ package botCommands.clashofclans.clans;
 
 import botCommands.clashofclans.CoC_PROC;
 import botCommands.clashofclans.CoC_PlayerContainer;
+import botCommands.clashroyale.CR_PROC;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -30,8 +31,13 @@ public class CoC_Clan {
      * @return
      */
     public static String getClanInfo(String urlString) {
-        JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
 
         StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -54,8 +60,13 @@ public class CoC_Clan {
      * @return
      */
     public static String getClanDonaties(String urlString) {
-        JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
 
         StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -76,8 +87,13 @@ public class CoC_Clan {
      * @return
      */
     public static String getClanMembers(String urlString) {
-        JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
 
         StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -112,7 +128,8 @@ public class CoC_Clan {
         XSSFWorkbook workbook = new XSSFWorkbook();
         XSSFSheet sheet = workbook.createSheet("Overzicht clan");
 
-        JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
 
         sheet.setMargin(Sheet.LeftMargin, 0.25);

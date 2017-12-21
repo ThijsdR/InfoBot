@@ -70,23 +70,23 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         Runnable serverChecker = new Runnable() {
             @Override
             public void run() {
+
+                /* Controleer de status */
                 serverStatusCoC = CoC_PROC.checkServerStatusCoC();
 
                 switch (serverStatusCoC) {
-                    case COCWENTOFFLINE:
+                    case COCWENTOFFLINE:    // Server is offline gegaan
                         LOGGER.log(Level.WARNING, "Server went OFFLINE");
                         runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
-                        runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
                         break;
-                    case COCWENTONLINE:
+                    case COCWENTONLINE:     // Server is online gegaan
                         LOGGER.log(Level.WARNING, "Server went ONLINE");
                         runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
-                        runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
                         break;
-                    case COCOFFLINE:
+                    case COCOFFLINE:        // Server is offline
                         LOGGER.log(Level.FINE, "Server is OFFLINE");
                         break;
-                    case COCONLINE:
+                    case COCONLINE:         // Server is online
                         LOGGER.log(Level.FINE, "Server is ONLINE");
                         break;
                     default:
@@ -94,7 +94,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             }
         };
 
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        /* Service om de servercheck uit te voeren */
+        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+
+        /* Voer de check iedere minuut uit */
         executor.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
     }
 
@@ -108,6 +111,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         /* Check if update has text */
         if (update.hasMessage() && update.getMessage().hasText()) {
 
+            /* Log de ontvangen update */
             infoBotLog(update);
 
             /* Set variables */
@@ -117,6 +121,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             SendMessage sendMessage = new SendMessage();
             long chatID = update.getMessage().getChatId();
 
+            /* Verwerk het opgegeven commando */
             processCommand(new CommandContainer(messageText, commands, treinCommands, sendMessage, chatID));
         }
     }
@@ -141,24 +146,25 @@ public class Inf0_B0t extends TelegramLongPollingBot {
      * @param update   Ontvangen bericht
      */
     private void infoBotLog(Update update) {
-        String userFirstName = update.getMessage().getChat().getFirstName();
-        String userLastName = update.getMessage().getChat().getLastName();
-        String userUserName = update.getMessage().getChat().getUserName();
-        long userID = update.getMessage().getChat().getId();
-        String messageText = update.getMessage().getText();
-        long chatID = update.getMessage().getChatId();
-        boolean isGroupMessage = update.getMessage().isGroupMessage();
-
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
 
-        Object[] logMessage = new Object[] {dateFormat.format(date), userFirstName, userLastName, userUserName, userID, chatID, isGroupMessage, messageText};
-        LOGGER.log(Level.FINE, "[FROM: {1} {2}] [USERNAME: {3}] [USER_ID: {4}] [CHAT_ID: {5}] [GROUP MESSAGE: {6}] [MESSAGE TEXT: {7}]", logMessage);
+        Object[] log = new Object[]{dateFormat.format(new Date()),
+                update.getMessage().getChat().getFirstName(),
+                update.getMessage().getChat().getLastName(),
+                update.getMessage().getChat().getUserName(),
+                update.getMessage().getChat().getId(),
+                update.getMessage().getChatId(),
+                update.getMessage().isGroupMessage(),
+                update.getMessage().getText()
+        };
+
+        LOGGER.log(Level.FINE, "[FROM: {1} {2}] [USERNAME: {3}] [USER_ID: {4}] [CHAT_ID: {5}] [GROUP MESSAGE: {6}] [MESSAGE TEXT: {7}]", log);
     }
 
     /**
+     * Stuur aan de hand van een SendMessage een bericht terug naar een gebruiker/groep
      *
-     * @param sendMessage
+     * @param sendMessage   Bericht wat terug gestuurd moet worden
      */
     private void runCommandMessage(SendMessage sendMessage) {
         try {
@@ -169,8 +175,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     /**
+     * Stuur aan de hand van een SendDocument een document terug naar een gebruiker/groep
      *
-     * @param sendDocument
+     * @param sendDocument  Document wat terug gestuurd moet worden
      */
     private void runCommandDocument(SendDocument sendDocument) {
         try {
@@ -181,8 +188,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     /**
+     * Voer op basis van de invoer het bijpassende commando uit
      *
-     * @param cmdBuilder
+     * @param cmdBuilder    Bevat alle gegevens om een reactie te sturen
      */
     private void processCommand(CommandContainer cmdBuilder) {
 
@@ -194,6 +202,8 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////        Clash of Clans commando's      //////
                 ///////////////////////////////////////////////////
+
+                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -204,6 +214,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
+                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANDONATIONS.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -214,6 +225,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
+                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBER.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -224,6 +236,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
+                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 2 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         String clanTag = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -240,6 +253,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
+                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -260,8 +274,8 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;
                 }
-                //////     Einde Clash of Clans commando's   //////
 
+                //////     Einde Clash of Clans commando's   //////
 
 
                 ///////////////////////////////////////////////////

@@ -21,6 +21,11 @@ public class CoC_PROC {
             con.setRequestProperty("Content-Type", "application/json");
             con.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhmMzFmNjMxLWE2Y2YtNDI0NC04YjRiLTQ2YjQyM2Y1ZTVhMiIsImlhdCI6MTUxMzEwMjE1OCwic3ViIjoiZGV2ZWxvcGVyLzY3ZDQxYzE1LWIzN2EtMGMzNy0yMGViLTQ3Y2JjOTQzNWE3ZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjk1Ljk3LjExNS4xMjYiLCI3Ny4xNjMuMTguMzQiXSwidHlwZSI6ImNsaWVudCJ9XX0.YIF0QjSBnu422UCrInGQ_XHbl-2tjfVIoRYeWaYYlhiE-ImCV1gijpRSB_j5EsoGbV9Q1sRUNFFVHMP4cbIksw");
 
+            int responseCode = con.getResponseCode();
+            if (responseCode == 503) {
+                return "SERVER ERROR";
+            }
+
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
 

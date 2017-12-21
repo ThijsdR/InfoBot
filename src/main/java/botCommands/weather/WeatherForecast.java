@@ -10,14 +10,14 @@ public class WeatherForecast {
         JSONObject txt = forecast.getJSONObject("txt_forecast");
         JSONArray forecastArray = txt.getJSONArray("forecastday");
 
-        StringBuilder botResponse = new StringBuilder("Answer from Inf0_B0t:\n\n");
+        StringBuilder botResponse = new StringBuilder();
         botResponse.append("Voorspelling:");
-        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\n--------------------------");
 
         for (int i = 0; i < forecastArray.length(); i++) {
-            botResponse.append("\n\n");
+            botResponse.append("\n");
             botResponse.append(forecastArray.getJSONObject(i).getString("title")).append(Weather_PROC.weatherIconChecker(forecastArray.getJSONObject(i).getString("icon")));
-            botResponse.append("\n------------------------");
+            botResponse.append("\n-~-~-~-~-~-~-~-~");
             botResponse.append("\n").append(forecastArray.getJSONObject(i).getString("fcttext_metric"));
         }
 
