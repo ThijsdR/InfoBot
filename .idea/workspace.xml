@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="97043969-7920-45ec-a8e9-b6a97cd1aef9" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/clanoverview_logs/logs/2017-12-21_clanoverzicht.xlsx" afterPath="$PROJECT_DIR$/clanoverview_logs/logs/2017-12-21_clanoverzicht.xlsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" afterPath="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" afterPath="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/Main.java" afterPath="$PROJECT_DIR$/src/main/java/Main.java" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,33 +21,31 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="9" column="44" lean-forward="false" selection-start-line="9" selection-start-column="44" selection-end-line="9" selection-end-column="44" />
+            <state relative-caret-position="0">
+              <caret line="2" column="65" lean-forward="true" selection-start-line="2" selection-start-column="65" selection-end-line="2" selection-end-column="65" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CoC_Clan.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CoC_Clan.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
+            <state relative-caret-position="-680">
               <caret line="191" column="0" lean-forward="true" selection-start-line="191" selection-start-column="0" selection-end-line="191" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Inf0_B0t.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="84" column="17" lean-forward="true" selection-start-line="84" selection-start-column="17" selection-end-line="84" selection-end-column="17" />
+            <state relative-caret-position="1482">
+              <caret line="396" column="112" lean-forward="false" selection-start-line="396" selection-start-column="112" selection-end-line="396" selection-end-column="112" />
               <folding>
-                <element signature="e#2338#3760#0" expanded="true" />
-                <element signature="e#3759#3760#0" expanded="true" />
+                <element signature="e#2503#3925#0" expanded="true" />
+                <element signature="e#3924#3925#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -154,8 +152,8 @@
         <option value="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_PROC.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_Clan.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/CoC_PROC.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
         <option value="$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Inf0_B0t.java" />
       </list>
     </option>
   </component>
@@ -708,12 +706,12 @@
       <workItem from="1513082985594" duration="8521000" />
       <workItem from="1513150407456" duration="849000" />
       <workItem from="1513324451641" duration="728000" />
-      <workItem from="1513326514765" duration="85324000" />
+      <workItem from="1513326514765" duration="86428000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119516000" />
+    <option name="totallyTimeSpent" value="120620000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1176" extended-state="6" />
@@ -735,7 +733,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26745328" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26745328" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16364606" sideWeight="0.50430506" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1112,14 +1110,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="9" column="44" lean-forward="false" selection-start-line="9" selection-start-column="44" selection-end-line="9" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_PROC.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="612">
@@ -1136,17 +1126,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="84" column="17" lean-forward="true" selection-start-line="84" selection-start-column="17" selection-end-line="84" selection-end-column="17" />
-          <folding>
-            <element signature="e#2338#3760#0" expanded="true" />
-            <element signature="e#3759#3760#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashroyale/CR_Clan.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -1155,12 +1134,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="2" column="65" lean-forward="true" selection-start-line="2" selection-start-column="65" selection-end-line="2" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/botCommands/clashofclans/clans/CoC_Clan.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state relative-caret-position="-680">
           <caret line="191" column="0" lean-forward="true" selection-start-line="191" selection-start-column="0" selection-end-line="191" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Inf0_B0t.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1482">
+          <caret line="396" column="112" lean-forward="false" selection-start-line="396" selection-start-column="112" selection-end-line="396" selection-end-column="112" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="e#2503#3925#0" expanded="true" />
+            <element signature="e#3924#3925#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -38,12 +38,19 @@ import java.util.logging.SimpleFormatter;
  */
 public class Inf0_B0t extends TelegramLongPollingBot {
 
+    /* Logger */
     private static final Logger LOGGER = Logger.getLogger( Inf0_B0t.class.getName() );
 
+    /* Velden */
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
     private CoC_ServerState serverStatusCoC;
 
+    /**
+     * Constructor
+     */
     public Inf0_B0t() {
+
+        /* Set up LOGGER */
         LOGGER.setLevel(Level.ALL);
         ConsoleHandler handler = new ConsoleHandler();
         handler.setFormatter(new SimpleFormatter());
@@ -59,6 +66,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         date.set(Calendar.MILLISECOND, 0);
         reportTimer.schedule(new ReportGenerator(), date.getTime(), 1000 * 60 * 60 * 24);
 
+        /* Check elke minuut de serverstatus van Clash of Clans */
         Runnable serverChecker = new Runnable() {
             @Override
             public void run() {
@@ -90,6 +98,11 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         executor.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
     }
 
+    /**
+     * Ontvang het bericht en verwerk dit
+     *
+     * @param update    Ontvangen bericht
+     */
     public void onUpdateReceived(Update update) {
 
         /* Check if update has text */
@@ -123,9 +136,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     /**
-     * Log de binnengekomen tekst
+     * Log het binnengekomen bericht
      *
-     * @param update   Binnengekomen tekst
+     * @param update   Ontvangen bericht
      */
     private void infoBotLog(Update update) {
         String userFirstName = update.getMessage().getChat().getFirstName();
@@ -143,6 +156,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         LOGGER.log(Level.FINE, "[FROM: {1} {2}] [USERNAME: {3}] [USER_ID: {4}] [CHAT_ID: {5}] [GROUP MESSAGE: {6}] [MESSAGE TEXT: {7}]", logMessage);
     }
 
+    /**
+     *
+     * @param sendMessage
+     */
     private void runCommandMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
@@ -151,6 +168,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     *
+     * @param sendDocument
+     */
     private void runCommandDocument(SendDocument sendDocument) {
         try {
             sendDocument(sendDocument);
@@ -159,6 +180,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         }
     }
 
+    /**
+     *
+     * @param cmdBuilder
+     */
     private void processCommand(CommandContainer cmdBuilder) {
 
         COMMAND_CONTROL :
@@ -366,6 +391,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
         if (cmdBuilder.getMessageText().toLowerCase().contains("homo".toLowerCase())) {
             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Bam is de grootste homo! :)");
+            runCommandMessage(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getMessageText().toLowerCase().contains("slet".toLowerCase())) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Ed is een vieze slettebak! ;D");
             runCommandMessage(cmdBuilder.getSendMessage());
         }
     }
