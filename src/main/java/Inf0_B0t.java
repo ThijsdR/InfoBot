@@ -54,9 +54,12 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
                 switch (serverStatusCoC) {
                     case COCWENTOFFLINE:
+                        runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
                         runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
+
                         break;
                     case COCWENTONLINE:
+                        runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
                         runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
                         break;
                     default:
@@ -69,7 +72,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     }
 
     public void onUpdateReceived(Update update) {
-        System.out.println("jup");
 
         /* Check if update has text */
         if (update.hasMessage() && update.getMessage().hasText()) {
@@ -113,6 +115,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         long userID = update.getMessage().getChat().getId();
         String messageText = update.getMessage().getText();
         long chatID = update.getMessage().getChatId();
+        boolean isGroupMessage = update.getMessage().isGroupMessage();
 
         System.out.println("\n ----------------------------");
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -120,8 +123,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         System.out.println(dateFormat.format(date));
         System.out.println("Message from: " + userFirstName + " " + userLastName +
                 "\nUsername: " + userUserName +
-                "\nUser ID = " + Long.toString(userID) +
-                "\nChat ID = " + Long.toString(chatID) +
+                "\nUser ID = " + userID +
+                "\nChat ID = " + chatID +
+                "\nGroup Message: " + isGroupMessage +
                 "\n\n Text - " + messageText);
     }
 
