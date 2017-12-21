@@ -28,12 +28,12 @@ public class NSStoringenWerkzaamheden {
 
         assert storingen != null;
         botResponse.append("Actuele storingen:");
-        botResponse.append("\n=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n");
+        botResponse.append("\n------------------------\n");
 
 
         if (!storingen.getOngeplandeStoringen().isEmpty()) {
             for (Storing storing : storingen.getOngeplandeStoringen()) {
-                botResponse.append("\n<< ").append(storing.getTraject()).append(" >>");
+                botResponse.append("<< ").append(storing.getTraject()).append(" >>");
                 botResponse.append("\n\n").append(storing.getReden());
 
                 if (!storing.getBericht().isEmpty()) {
@@ -41,13 +41,13 @@ public class NSStoringenWerkzaamheden {
                 }
 
                 botResponse.append("\n\nLaatste update: ")
-                        .append(String.format("%02d", storing.getDatum().getDay())).append("-")
-                        .append(String.format("%02d", storing.getDatum().getMonth())).append("-")
-                        .append(String.format("%02d", storing.getDatum().getYear())).append(" ")
+                        .append(String.format("%02d", storing.getDatum().getDate())).append("-")
+                        .append(String.format("%02d", storing.getDatum().getMonth() + 1)).append("-")
+                        .append(String.format("%02d", storing.getDatum().getYear() - 100 + 2000)).append(" ")
                         .append(String.format("%02d", storing.getDatum().getHours())).append(":")
                         .append(String.format("%02d", storing.getDatum().getMinutes()));
 
-                botResponse.append("\n------------------------------------");
+                botResponse.append("\n-~-~-~-~-~-~-~-~\n");
             }
         } else {
             botResponse.append(EmojiParser.parseToUnicode("\nEr zijn momenteel GEEN storingen :grimacing::muscle:"));
@@ -75,7 +75,7 @@ public class NSStoringenWerkzaamheden {
         assert werkzaamheden != null;
         if (!werkzaamheden.getGeplandeStoringen().isEmpty()) {
             for (Storing werkzaamheid : werkzaamheden.getGeplandeStoringen()) {
-                botResponse.append("\n<< ").append(werkzaamheid.getTraject()).append(" >>");
+                botResponse.append("<< ").append(werkzaamheid.getTraject()).append(" >>");
                 botResponse.append("\n\n").append(werkzaamheid.getPeriode());
 
                 if (!werkzaamheid.getReden().isEmpty()) {
@@ -90,7 +90,7 @@ public class NSStoringenWerkzaamheden {
                     botResponse.append("\n\n").append(werkzaamheid.getBericht());
                 }
 
-                botResponse.append("\n------------------------------------");
+                botResponse.append("\n-~-~-~-~-~-~-~-~\n");
             }
         }
 
