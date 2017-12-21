@@ -187,11 +187,11 @@ public class CoC_Clan {
         roleCell.setCellStyle(style);
 
         Cell donateCell = descRow.createCell(6);
-        donateCell.setCellValue("Donated units");
+        donateCell.setCellValue("Donated");
         donateCell.setCellStyle(style);
 
         Cell receiveCell = descRow.createCell(7);
-        receiveCell.setCellValue("Received units");
+        receiveCell.setCellValue("Received");
         receiveCell.setCellStyle(style);
 
         Cell ratioCell = descRow.createCell(8);
