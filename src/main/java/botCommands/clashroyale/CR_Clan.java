@@ -5,7 +5,13 @@ import org.json.JSONObject;
 
 public class CR_Clan {
     public static String getClanInfo(String urlString) {
-        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        String returnJson = CR_PROC.retrieveDataRoyaleAPI(urlString);
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
+
+        JSONObject json = new JSONObject(returnJson);
         JSONObject jsonRegion = json.getJSONObject("region");
 
         StringBuilder botResponse = new StringBuilder();
@@ -20,7 +26,13 @@ public class CR_Clan {
     }
 
     public static String getClanMembers(String urlString) {
-        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        String returnJson = CR_PROC.retrieveDataRoyaleAPI(urlString);
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
+
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("members");
 
         StringBuilder botResponse = new StringBuilder();
@@ -39,7 +51,13 @@ public class CR_Clan {
     }
 
     public static String getClanRoles(String urlString) {
-        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        String returnJson = CR_PROC.retrieveDataRoyaleAPI(urlString);
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
+
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("members");
 
         StringBuilder botResponse = new StringBuilder();
@@ -58,7 +76,13 @@ public class CR_Clan {
     }
 
     public static String getClanDonations(String urlString) {
-        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        String returnJson = CR_PROC.retrieveDataRoyaleAPI(urlString);
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
+
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("members");
 
         StringBuilder botResponse = new StringBuilder();
@@ -76,7 +100,13 @@ public class CR_Clan {
     }
 
     public static String getClanchestContribution (String urlString) {
-        JSONObject json = new JSONObject(CR_PROC.retrieveDataRoyaleAPI(urlString));
+        String returnJson = CR_PROC.retrieveDataRoyaleAPI(urlString);
+
+        if (returnJson.equals("SERVER ERROR")) {
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
+        }
+
+        JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("members");
 
         StringBuilder botResponse = new StringBuilder();

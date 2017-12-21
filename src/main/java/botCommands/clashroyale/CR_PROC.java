@@ -16,6 +16,11 @@ public class CR_PROC {
                 con.setRequestMethod("GET");
                 con.setRequestProperty("Content-Type", "application/json");
 
+                int responseCode = con.getResponseCode();
+                if (responseCode == 403) {
+                    return "SERVER ERROR";
+                }
+
                 BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 String inputLine;
 

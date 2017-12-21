@@ -1,13 +1,11 @@
 package botCommands.clashofclans;
 
-import utility.IConstants;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class CoC_PROC {
     private static int httpsCode;
@@ -55,14 +53,15 @@ public class CoC_PROC {
             e.printStackTrace();
         }
 
-        if (isServerOnline && httpsCode == 403) {
+        if (isServerOnline && httpsCode == 503) {
             isServerOnline = false;
             return CoC_ServerState.COCWENTOFFLINE;
         }
-        if (!isServerOnline && httpsCode == 403) {
+        if (!isServerOnline && httpsCode == 503) {
             return CoC_ServerState.COCOFFLINE;
         }
         if (!isServerOnline && httpsCode == 200) {
+            isServerOnline = true;
             return CoC_ServerState.COCWENTONLINE;
         }
         else {

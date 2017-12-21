@@ -28,16 +28,28 @@ import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 /**
  *
  */
 public class Inf0_B0t extends TelegramLongPollingBot {
 
+    private static final Logger LOGGER = Logger.getLogger( Inf0_B0t.class.getName() );
+
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
     private CoC_ServerState serverStatusCoC;
 
     public Inf0_B0t() {
+        LOGGER.setLevel(Level.ALL);
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new SimpleFormatter());
+        handler.setLevel(Level.ALL);
+        LOGGER.addHandler(handler);
+
         /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
         Timer reportTimer = new Timer();
         Calendar date = Calendar.getInstance();
@@ -54,13 +66,20 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
                 switch (serverStatusCoC) {
                     case COCWENTOFFLINE:
+                        LOGGER.log(Level.WARNING, "Server went OFFLINE");
                         runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
                         runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
-
                         break;
                     case COCWENTONLINE:
+                        LOGGER.log(Level.WARNING, "Server went ONLINE");
                         runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
                         runCommandMessage(new SendMessage().setChatId((long) 315876545).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
+                        break;
+                    case COCOFFLINE:
+                        LOGGER.log(Level.FINE, "Server is OFFLINE");
+                        break;
+                    case COCONLINE:
+                        LOGGER.log(Level.FINE, "Server is ONLINE");
                         break;
                     default:
                 }
@@ -117,23 +136,18 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         long chatID = update.getMessage().getChatId();
         boolean isGroupMessage = update.getMessage().isGroupMessage();
 
-        System.out.println("\n ----------------------------");
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        System.out.println(dateFormat.format(date));
-        System.out.println("Message from: " + userFirstName + " " + userLastName +
-                "\nUsername: " + userUserName +
-                "\nUser ID = " + userID +
-                "\nChat ID = " + chatID +
-                "\nGroup Message: " + isGroupMessage +
-                "\n\n Text - " + messageText);
+
+        Object[] logMessage = new Object[] {dateFormat.format(date), userFirstName, userLastName, userUserName, userID, chatID, isGroupMessage, messageText};
+        LOGGER.log(Level.FINE, "[FROM: {1} {2}] [USERNAME: {3}] [USER_ID: {4}] [CHAT_ID: {5}] [GROUP MESSAGE: {6}] [MESSAGE TEXT: {7}]", logMessage);
     }
 
     private void runCommandMessage(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException tea) {
-            tea.printStackTrace();
+            LOGGER.log(Level.SEVERE, tea.toString(), tea);
         }
     }
 
@@ -141,7 +155,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         try {
             sendDocument(sendDocument);
         } catch (TelegramApiException tea) {
-            tea.printStackTrace();
+            LOGGER.log(Level.SEVERE, tea.toString(), tea);
         }
     }
 
