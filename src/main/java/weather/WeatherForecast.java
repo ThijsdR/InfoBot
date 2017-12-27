@@ -1,4 +1,4 @@
-package botCommands.weather;
+package weather;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

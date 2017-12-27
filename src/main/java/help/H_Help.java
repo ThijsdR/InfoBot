@@ -1,4 +1,4 @@
-package botCommands.help;
+package help;
 
 public class H_Help {
     public static String getHelp() {

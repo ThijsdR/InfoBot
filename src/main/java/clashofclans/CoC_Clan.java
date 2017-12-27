@@ -1,8 +1,7 @@
-package botCommands.clashofclans.clans;
+package clashofclans;
 
-import botCommands.clashofclans.CoC_PROC;
-import botCommands.clashofclans.CoC_PlayerContainer;
-import botCommands.clashroyale.CR_PROC;
+import clashofclans.CoC_PROC;
+import clashofclans.CoC_PlayerContainer;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;

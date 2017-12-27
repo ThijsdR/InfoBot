@@ -1,4 +1,4 @@
-package botCommands.ns;
+package ns;
 
 import com.vdurmont.emoji.EmojiParser;
 import nl.pvanassen.ns.ApiRequest;

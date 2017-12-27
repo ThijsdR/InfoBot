@@ -1,4 +1,4 @@
-package botCommands.clashroyale;
+package clashroyale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,7 +8,7 @@ public class CR_Clan {
         String returnJson = CR_PROC.retrieveDataRoyaleAPI(urlString);
 
         if (returnJson.equals("SERVER ERROR")) {
-            return "Ik kan de gevraagde data niet opvragen van de server...";
+            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
         }
 
         JSONObject json = new JSONObject(returnJson);
@@ -116,7 +116,7 @@ public class CR_Clan {
 
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append(jsonArray.getJSONObject(i).getString("name")).append(" (#").append(jsonArray.getJSONObject(i).getString("tag")).append(")");
-            botResponse.append("Crowns: ").append(jsonArray.getJSONObject(i).getInt("clanChestCrowns")).append("\n");
+            botResponse.append("\nCrowns: ").append(jsonArray.getJSONObject(i).getInt("clanChestCrowns")).append("\n");
             botResponse.append("-~-~-~-~-~-~-~-~\n");
 
         }

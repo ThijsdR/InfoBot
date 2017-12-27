@@ -1,4 +1,4 @@
-package botCommands.clashroyale;
+package clashroyale;
 
 import utility.IConstants;
 
@@ -21,7 +21,7 @@ public class CR_PROC {
                 con.setRequestProperty("auth", IConstants.CRAPIKEY);
 
                 int responseCode = con.getResponseCode();
-                if (responseCode == 403) {
+                if (responseCode == 503) {
                     return "SERVER ERROR";
                 }
 

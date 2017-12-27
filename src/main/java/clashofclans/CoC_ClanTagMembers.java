@@ -1,9 +1,9 @@
-package botCommands.clashofclans.clans;
+package clashofclans;
 
 import com.vdurmont.emoji.EmojiParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import botCommands.clashofclans.CoC_PROC;
+import clashofclans.CoC_PROC;
 
 public class CoC_ClanTagMembers {
     public static String getClanMemberInfo(String urlString, String memberName) {
@@ -27,7 +27,7 @@ public class CoC_ClanTagMembers {
         }
 
         if (!botResponePart.toString().isEmpty()) {
-            return "Answer from Inf0_B0t:\n" + "=+=+=+=+=+=+=+=+=+=+=+=+=+=+=\n" + botResponePart.toString();
+            return "Answer from Inf0_B0t:\n" + "--------------------------\n" + botResponePart.toString();
         } else {
             return "Geen resultaten gevonden\nZit het opgegeven lid wel in de clan?\nZorg dat eventuele hoofdletters ook goed staan.";
         }

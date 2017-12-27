@@ -1,4 +1,4 @@
-package botCommands.clashofclans;
+package clashofclans;
 
 public enum CoC_ServerState {
     COCWENTOFFLINE("<<Clash of Clans>>\nServer is OFFLINE gegaan!"),

@@ -1,4 +1,4 @@
-package botCommands.ns;
+package ns;
 
 /**
  * WIP

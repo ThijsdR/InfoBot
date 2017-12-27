@@ -1,4 +1,4 @@
-package botCommands.weather;
+package weather;
 
 import com.vdurmont.emoji.EmojiParser;
 

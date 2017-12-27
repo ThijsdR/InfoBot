@@ -1,11 +1,10 @@
-package botCommands.clashofclans;
+package clashofclans;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.logging.Logger;
 
 public class CoC_PROC {
     private static int httpsCode;

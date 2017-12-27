@@ -1,4 +1,4 @@
-package botCommands.ns;
+package ns;
 
 import nl.pvanassen.ns.ApiRequest;
 import nl.pvanassen.ns.NsApi;

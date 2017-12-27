@@ -1,6 +1,4 @@
-package botCommands.clashofclans;
-
-import java.text.DecimalFormat;
+package clashofclans;
 
 public class CoC_PlayerContainer {
     private int positionInClan;

@@ -1,6 +1,6 @@
 package utility;
 
-import botCommands.clashofclans.clans.CoC_Clan;
+import clashofclans.CoC_Clan;
 
 import java.util.TimerTask;
 
