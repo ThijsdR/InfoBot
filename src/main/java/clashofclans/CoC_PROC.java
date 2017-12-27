@@ -8,10 +8,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+/**
+ * Deze klasse bevat hulpmethode(s) voor de verschillende Clash of Clans klassen
+ */
 public class CoC_PROC {
+
+    /* Velden */
     private static int httpsCode;
     private static boolean isServerOnline = true;
 
+    /**
+     * Deze methode voert de verzoeken uit naar de server
+     *
+     * @param urlString     String om de request naar toe te sturen
+     * @return              Response van de server
+     */
     static String retrieveDataSupercellAPI(String urlString) {
         StringBuffer content = new StringBuffer();
 
@@ -44,14 +55,23 @@ public class CoC_PROC {
         return String.valueOf(content);
     }
 
+    /**
+     * Deze methode schopt als het ware tegen de server aan om te kijken of deze nog online is.
+     * De methode kijkt niet alleen of de server online of offline is,
+     * maar ook of de server net een andere status heeft ingenomen.
+     *
+     * @return      Huidige serverstatus
+     */
     public static CoC_ServerState checkServerStatusCoC() {
+
+        /* Probeer verbinding te maken met de server */
         try {
             URL url = new URL("https://api.clashofclans.com/v1/clans?name=%23J0C9CPY");
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-
             con.setRequestMethod("GET");
             con.setRequestProperty("Authorization", "Bearer " + IConstants.COCAPIKEY);
 
+            /* Het antwoord van de server in de vorm van een code */
             httpsCode = con.getResponseCode();
 
             con.disconnect();
@@ -59,6 +79,7 @@ public class CoC_PROC {
             e.printStackTrace();
         }
 
+        /* Onderneem actie aan de hand van de gekregen code */
         if (isServerOnline && httpsCode == 503) {
             isServerOnline = false;
             return CoC_ServerState.COCWENTOFFLINE;

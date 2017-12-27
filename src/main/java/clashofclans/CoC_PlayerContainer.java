@@ -1,6 +1,11 @@
 package clashofclans;
 
+/**
+ * Klasse om gegevens van een individuele speler in op te slaan
+ */
 public class CoC_PlayerContainer {
+
+    /* Velden */
     private int positionInClan;
     private String name;
     private String playerTag;
@@ -11,6 +16,7 @@ public class CoC_PlayerContainer {
     private int unitsReceived;
     private double ratio;
 
+    /* Constructor */
     CoC_PlayerContainer(int positionInClan, String name, String playerTag, int expLevel, int trophyCount, String clanRole, int unitsDonated, int unitsReceived, double ratio) {
         this.positionInClan = positionInClan;
         this.name = name;
@@ -23,6 +29,7 @@ public class CoC_PlayerContainer {
         this.ratio = ratio;
     }
 
+    /* Getters */
     public int getPositionInClan() {
         return positionInClan;
     }

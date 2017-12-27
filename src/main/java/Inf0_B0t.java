@@ -31,7 +31,8 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 /**
- *
+ * Het brein van Inf0_B0t.
+ * Hierin worden alle nodige handelingen verricht en commando's gecontroleerd.
  */
 public class Inf0_B0t extends TelegramLongPollingBot {
 
@@ -42,9 +43,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
     private CoC_ServerState serverStatusCoC;
 
-    /**
-     * Constructor
-     */
+    /* Constructor */
     public Inf0_B0t() {
 
         /* Set up LOGGER */
@@ -199,8 +198,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////        Clash of Clans commando's      //////
                 ///////////////////////////////////////////////////
-
-                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -211,7 +208,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANDONATIONS.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -222,7 +218,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBER.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -233,7 +228,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 2 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         String clanTag = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -250,7 +244,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                /*  */
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -271,9 +264,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;
                 }
-
                 //////     Einde Clash of Clans commando's   //////
-
 
                 ///////////////////////////////////////////////////
                 //////          Clash Royale commando's      //////
@@ -325,7 +316,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 }
                 //////     Einde Clash Royale commando's     //////
 
-
                 ///////////////////////////////////////////////////
                 //////          NS/trein commando's          //////
                 ///////////////////////////////////////////////////
@@ -351,7 +341,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 }
                 //////         Einde NS/trein commando's     //////
 
-
                 ///////////////////////////////////////////////////
                 //////      Weergerelateerde commando's      //////
                 ///////////////////////////////////////////////////
@@ -374,7 +363,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     } break COMMAND_CONTROL;
                 }
                 //////    Einde weergerelateerde commando's  //////
-
 
                 ///////////////////////////////////////////////////
                 //////          Overige commando's           //////

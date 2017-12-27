@@ -5,24 +5,32 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
- *
+ * Deze klasse bevat methode(s) welke betrekking hebben op de gehele clan
  */
 public class CoC_Clan {
 
     /**
+     * Deze methode wordt gebruikt om alle relevante informatie op te halen van de opgegeven clan.
+     * Van de clan wordt de naam, het clanlevel, de tag, de score, het type, het ledenaantal en de locatie opgevraagd
      *
-     * @param urlString
-     * @return
+     * @param urlString     String om de request naar toe te sturen
+     * @return              Een String met alle informatie omtrent de opgegeven clan
      */
     public static String getClanInfo(String urlString) {
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
 
+        /* Stuur aan de hand van de urlString een request naar de server */
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+
+        /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
             return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
         }
 
+        /* Haal alle benodigde data uit de response */
+        JSONObject json = new JSONObject(returnJson);
+        JSONArray jsonArray = json.getJSONArray("items");
+
+        /* Genereer het antwoord op basis van de response */
         StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append("Clan: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
@@ -39,19 +47,27 @@ public class CoC_Clan {
     }
 
     /**
+     * Deze methode haalt alle donatiegegevens op van de opgegeven clan.
+     * De hoeveelheid gedoneerde en ontvangen troepen worden getoond.
      *
-     * @param urlString
-     * @return
+     * @param urlString     String om de request naar toe te sturen
+     * @return              Een String met alle donatiegegevens van de opgegeven clan
      */
     public static String getClanDonaties(String urlString) {
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
 
+        /* Stuur aan de hand van de urlString een request naar de server */
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+
+        /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
             return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
         }
 
+        /* Haal alle benodigde data uit de response */
+        JSONObject json = new JSONObject(returnJson);
+        JSONArray jsonArray = json.getJSONArray("items");
+
+        /* Genereer het antwoord op basis van de response */
         StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
             botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
@@ -66,18 +82,25 @@ public class CoC_Clan {
     }
 
     /**
+     * Deze methode haalt alle relevante data op van clanleden van de opgegeven clan.
+     * De positie, de naam, de tag, het level, de trophies en de rol worden per lid opgehaald.
      *
-     * @param urlString
-     * @return
+     * @param urlString     String om de request naar toe te sturen
+     * @return              Alle relevante data omtrent de leden van de opgegeven clan
      */
     public static String getClanMembers(String urlString) {
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
 
+        /* Stuur aan de hand van de urlString een request naar de server */
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+
+        /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
             return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
         }
+
+        /* Haal alle benodigde data uit de response */
+        JSONObject json = new JSONObject(returnJson);
+        JSONArray jsonArray = json.getJSONArray("items");
 
         StringBuilder botResponse = new StringBuilder();
         for (int i = 0; i < jsonArray.length(); i++) {
