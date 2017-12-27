@@ -39,7 +39,7 @@ import java.util.logging.SimpleFormatter;
 public class Inf0_B0t extends TelegramLongPollingBot {
 
     /* Logger */
-    private static final Logger LOGGER = Logger.getLogger( Inf0_B0t.class.getName() );
+    private static final Logger LOGGER = Logger.getLogger(Inf0_B0t.class.getName());
 
     /* Velden */
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);

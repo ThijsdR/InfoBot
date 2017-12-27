@@ -1,5 +1,7 @@
 package botCommands.clashroyale;
 
+import utility.IConstants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,6 +17,8 @@ public class CR_PROC {
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
                 con.setRequestMethod("GET");
                 con.setRequestProperty("Content-Type", "application/json");
+                con.setRequestProperty("User-Agent", IConstants.CRUSERAGENT);
+                con.setRequestProperty("auth", IConstants.CRAPIKEY);
 
                 int responseCode = con.getResponseCode();
                 if (responseCode == 403) {
