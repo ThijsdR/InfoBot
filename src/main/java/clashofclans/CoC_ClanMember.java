@@ -5,7 +5,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import clashofclans.CoC_PROC;
 
-public class CoC_ClanTagMembers {
+public class CoC_ClanMember {
     public static String getClanMemberInfo(String urlString, String memberName) {
         JSONObject json = new JSONObject(CoC_PROC.retrieveDataSupercellAPI(urlString));
         JSONArray jsonArray = json.getJSONArray("items");

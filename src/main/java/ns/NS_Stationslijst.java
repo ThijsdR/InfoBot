@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * NIET GEBRUIKEN!!!
  */
-public class NSStationslijst {
+public class NS_Stationslijst {
     public static String getStationlijst(NsApi nsApi) {
         ApiRequest<Stations> request = RequestBuilder.getStations();
         Stations stations = null;

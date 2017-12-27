@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Weather_PROC {
+public class W_PROC {
     public static String retrieveDataWeatherAPI(String urlString) {
         StringBuffer content = new StringBuffer();
 

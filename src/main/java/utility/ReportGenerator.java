@@ -1,12 +1,12 @@
 package utility;
 
-import clashofclans.CoC_Clan;
+import clashofclans.CoC_ClanFile;
 
 import java.util.TimerTask;
 
 public class ReportGenerator extends TimerTask {
     @Override
     public void run() {
-        CoC_Clan.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true);
+        CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true);
     }
 }

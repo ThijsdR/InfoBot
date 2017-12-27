@@ -1,14 +1,11 @@
-import clashofclans.CoC_PROC;
-import clashofclans.CoC_ServerState;
+import clashofclans.*;
 import help.H_Help;
 import utility.CommandContainer;
-import clashofclans.CoC_Clan;
-import clashofclans.CoC_ClanTagMembers;
 import clashroyale.CR_Clan;
-import ns.NSStoringenWerkzaamheden;
-import ns.NSVertrektijden;
-import weather.CurrentWeather;
-import weather.WeatherForecast;
+import ns.NS_StoringenWerkzaamheden;
+import ns.NS_Vertrektijden;
+import weather.W_Current;
+import weather.W_Forecast;
 import com.vdurmont.emoji.EmojiParser;
 import nl.pvanassen.ns.NsApi;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
@@ -240,12 +237,12 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 2 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         String clanTag = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanTagMembers.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getEditableURL() + clanTag + "/members", cmdBuilder.getCommands()[2]));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getEditableURL() + clanTag + "/members", cmdBuilder.getCommands()[2]));
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     }
                     if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].contains("#")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanTagMembers.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getDefaultURL(), cmdBuilder.getCommands()[1]));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getDefaultURL(), cmdBuilder.getCommands()[1]));
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     } else {
@@ -260,7 +257,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false));
+                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false));
                         sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
                     } if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].startsWith("#")){
@@ -269,7 +266,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     } else {
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_Clan.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false));
+                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false));
                         sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;
@@ -334,7 +331,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINTIJDEN.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSVertrektijden.getVertrektijden(nsApi, cmdBuilder.getLocatieCommands()[1]));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NS_Vertrektijden.getVertrektijden(nsApi, cmdBuilder.getLocatieCommands()[1]));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
                         cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een treinstation in Nederland nodig...\n\nBijvoorbeeld: /treintijden Rotterdam Centraal");
@@ -342,13 +339,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     } break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINSTORINGEN.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NSStoringenWerkzaamheden.getStoringen(nsApi));
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NS_StoringenWerkzaamheden.getStoringen(nsApi));
                     runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINWERKZAAMHEDEN.getCommand())) {
                     SendDocument sendDocumentrequest = new SendDocument();
                     sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                    sendDocumentrequest.setNewDocument(NSStoringenWerkzaamheden.getWerkzaamheden(nsApi));
+                    sendDocumentrequest.setNewDocument(NS_StoringenWerkzaamheden.getWerkzaamheden(nsApi));
                     sendDocumentrequest.setCaption("Actuele en aankomende werkzaamheden");
                     runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
                 }
@@ -360,7 +357,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERHUIDIG.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CurrentWeather.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Current.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
                         cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weerhuidig Den Haag");
@@ -369,7 +366,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 }
                 if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERVOORSPELLING.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(WeatherForecast.getForecast("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Forecast.getForecast("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
                         cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weervoorspelling Den Haag");

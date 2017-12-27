@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class CR_PROC {
-        public static String retrieveDataRoyaleAPI(String urlString) {
+class CR_PROC {
+        static String retrieveDataRoyaleAPI(String urlString) {
             StringBuffer content = new StringBuffer();
 
             try {

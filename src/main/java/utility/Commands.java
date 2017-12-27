@@ -30,12 +30,6 @@ public enum Commands {
         this.defaultURL = null;
     }
 
-    Commands(String command, String editableURL) {
-        this.command = command;
-        this.editableURL = editableURL;
-        this.defaultURL = null;
-    }
-
     Commands(String command, String editableURL, String defaultURL) {
         this.command = command;
         this.editableURL = editableURL;

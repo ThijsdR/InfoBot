@@ -1,5 +1,7 @@
 package clashofclans;
 
+import utility.IConstants;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +12,7 @@ public class CoC_PROC {
     private static int httpsCode;
     private static boolean isServerOnline = true;
 
-    public static String retrieveDataSupercellAPI(String urlString) {
+    static String retrieveDataSupercellAPI(String urlString) {
         StringBuffer content = new StringBuffer();
 
         try {
@@ -18,7 +20,7 @@ public class CoC_PROC {
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhmMzFmNjMxLWE2Y2YtNDI0NC04YjRiLTQ2YjQyM2Y1ZTVhMiIsImlhdCI6MTUxMzEwMjE1OCwic3ViIjoiZGV2ZWxvcGVyLzY3ZDQxYzE1LWIzN2EtMGMzNy0yMGViLTQ3Y2JjOTQzNWE3ZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjk1Ljk3LjExNS4xMjYiLCI3Ny4xNjMuMTguMzQiXSwidHlwZSI6ImNsaWVudCJ9XX0.YIF0QjSBnu422UCrInGQ_XHbl-2tjfVIoRYeWaYYlhiE-ImCV1gijpRSB_j5EsoGbV9Q1sRUNFFVHMP4cbIksw");
+            con.setRequestProperty("Authorization", "Bearer " + IConstants.COCAPIKEY);
 
             int responseCode = con.getResponseCode();
             if (responseCode == 503) {
@@ -48,7 +50,7 @@ public class CoC_PROC {
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
 
             con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhmMzFmNjMxLWE2Y2YtNDI0NC04YjRiLTQ2YjQyM2Y1ZTVhMiIsImlhdCI6MTUxMzEwMjE1OCwic3ViIjoiZGV2ZWxvcGVyLzY3ZDQxYzE1LWIzN2EtMGMzNy0yMGViLTQ3Y2JjOTQzNWE3ZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjk1Ljk3LjExNS4xMjYiLCI3Ny4xNjMuMTguMzQiXSwidHlwZSI6ImNsaWVudCJ9XX0.YIF0QjSBnu422UCrInGQ_XHbl-2tjfVIoRYeWaYYlhiE-ImCV1gijpRSB_j5EsoGbV9Q1sRUNFFVHMP4cbIksw");
+            con.setRequestProperty("Authorization", "Bearer " + IConstants.COCAPIKEY);
 
             httpsCode = con.getResponseCode();
 

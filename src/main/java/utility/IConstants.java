@@ -1,11 +1,15 @@
 package utility;
 
+/* ToDo: Alles uit deze interface veilig maken en versleutelen */
 public interface IConstants {
-    String NSAPILOGIN = "tdrooij@gmail.com";
-    String NSAPIPASSWORD = "zzKVilagkiu4H1Ra_ECvKOW15AmXAajxulkVj6m1TZZwZq1ngcTMSw";
+    String COCAPIKEY = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjhmMzFmNjMxLWE2Y2YtNDI0NC04YjRiLTQ2YjQyM2Y1ZTVhMiIsImlhdCI6MTUxMzEwMjE1OCwic3ViIjoiZGV2ZWxvcGVyLzY3ZDQxYzE1LWIzN2EtMGMzNy0yMGViLTQ3Y2JjOTQzNWE3ZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjk1Ljk3LjExNS4xMjYiLCI3Ny4xNjMuMTguMzQiXSwidHlwZSI6ImNsaWVudCJ9XX0.YIF0QjSBnu422UCrInGQ_XHbl-2tjfVIoRYeWaYYlhiE-ImCV1gijpRSB_j5EsoGbV9Q1sRUNFFVHMP4cbIksw";
 
     String CRUSERAGENT = "Thijs_dR";
     String CRAPIKEY = "4a93ec43cc794fa388859b9b26d7942d1f01e1b5f1834476a7802a28d11774b3";
+
+    String NSAPILOGIN = "tdrooij@gmail.com";
+    String NSAPIPASSWORD = "zzKVilagkiu4H1Ra_ECvKOW15AmXAajxulkVj6m1TZZwZq1ngcTMSw";
+
 
     String WUNDERGROUNDAPIKEY = "4d416ede60429de4";
 

@@ -10,7 +10,7 @@ import nl.pvanassen.ns.model.vertrektijden.VertrekkendeTreinen;
 import java.io.IOException;
 
 
-public class NSVertrektijden {
+public class NS_Vertrektijden {
     /**
      *
      * @param nsApi     API gegevens

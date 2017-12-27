@@ -11,7 +11,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class NSStoringenWerkzaamheden {
+public class NS_StoringenWerkzaamheden {
 
     public static String getStoringen(NsApi nsApi) {
 

@@ -3,5 +3,5 @@ package ns;
 /**
  * WIP
  */
-public class NSPrijzen {
+public class NS_Prijzen {
 }

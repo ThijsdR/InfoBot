@@ -11,7 +11,7 @@ public class CoC_PlayerContainer {
     private int unitsReceived;
     private double ratio;
 
-    public CoC_PlayerContainer(int positionInClan, String name, String playerTag, int expLevel, int trophyCount, String clanRole, int unitsDonated, int unitsReceived, double ratio) {
+    CoC_PlayerContainer(int positionInClan, String name, String playerTag, int expLevel, int trophyCount, String clanRole, int unitsDonated, int unitsReceived, double ratio) {
         this.positionInClan = positionInClan;
         this.name = name;
         this.playerTag = playerTag;
