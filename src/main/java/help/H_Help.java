@@ -1,6 +1,15 @@
 package help;
 
+/**
+ * Deze klasse bevat methode(s) met betrekking tot het /help commando
+ */
 public class H_Help {
+
+    /**
+     * Deze methode geeft een overzicht terug van alle huidige beschikbare commando's van Inf0_B0t
+     *
+     * @return      Een overzicht van alle beschikbare commando's
+     */
     public static String getHelp() {
         StringBuilder botResponse = new StringBuilder();
 
