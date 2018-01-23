@@ -62,7 +62,7 @@ public class CoC_PROC {
      *
      * @return      Huidige serverstatus
      */
-    public static CoC_ServerState checkServerStatusCoC() {
+    public static CoC_ServerState getServerStatusCoC() {
 
         /* Probeer verbinding te maken met de server */
         try {

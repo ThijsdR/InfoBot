@@ -15,13 +15,14 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import utility.Commands;
 import utility.IConstants;
-import utility.ReportGenerator;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.Timer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +43,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     /* Velden */
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
     private CoC_ServerState serverStatusCoC;
+    private final long brabantTelegramChatID = -151298765;
 
     /* Constructor */
     public Inf0_B0t() {
@@ -54,46 +56,53 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         LOGGER.addHandler(handler);
 
         /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
-        Timer reportTimer = new Timer();
-        Calendar date = Calendar.getInstance();
-        date.set(Calendar.HOUR, 3);
-        date.set(Calendar.MINUTE, 0);
-        date.set(Calendar.SECOND, 0);
-        date.set(Calendar.MILLISECOND, 0);
-        reportTimer.schedule(new ReportGenerator(), date.getTime(), 1000 * 60 * 60 * 24);
+        Runnable reportGenerator = () -> CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true);
+
+        /* Bepaal de tijdzone en de tijd wanneer het rapport gemaakt moet worden */
+        LocalDateTime localNow = LocalDateTime.now();
+        ZoneId currentZone = ZoneId.of("Europe/Amsterdam");
+        ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
+        ZonedDateTime zonedNext3;
+        zonedNext3 = zonedNow.withHour(3).withMinute(0).withSecond(0);
+
+        if (zonedNow.compareTo(zonedNext3) > 0) {
+            zonedNext3 = zonedNext3.plusDays(1);
+        }
+
+        Duration duration = Duration.between(zonedNow, zonedNext3);
+        long initalDelay = duration.getSeconds();
+
+        /* Voer de taak elke dag 1 keer uit */
+        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
+        scheduler.scheduleAtFixedRate(reportGenerator, initalDelay, 24 * 60 * 60, TimeUnit.SECONDS);
 
         /* Check elke minuut de serverstatus van Clash of Clans */
-        Runnable serverChecker = new Runnable() {
-            @Override
-            public void run() {
+        Runnable serverChecker = () -> {
 
-                /* Controleer de status */
-                serverStatusCoC = CoC_PROC.checkServerStatusCoC();
+            /* Controleer de status */
+            serverStatusCoC = CoC_PROC.getServerStatusCoC();
 
-                switch (serverStatusCoC) {
-                    case COCWENTOFFLINE:    // Server is offline gegaan
-                        LOGGER.log(Level.WARNING, "Server went OFFLINE");
-                        runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
-                        break;
-                    case COCWENTONLINE:     // Server is online gegaan
-                        LOGGER.log(Level.WARNING, "Server went ONLINE");
-                        runCommandMessage(new SendMessage().setChatId((long) -151298765).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
-                        break;
-                    case COCOFFLINE:        // Server is offline
-                        LOGGER.log(Level.FINE, "Server is OFFLINE");
-                        break;
-                    case COCONLINE:         // Server is online
-                        LOGGER.log(Level.FINE, "Server is ONLINE");
-                        break;
-                    default:
-                }
+            switch (serverStatusCoC) {
+                case COCWENTOFFLINE:    // Server is offline gegaan
+                    LOGGER.log(Level.WARNING, "Server went OFFLINE");
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
+                    break;
+                case COCWENTONLINE:     // Server is online gegaan
+                    LOGGER.log(Level.WARNING, "Server went ONLINE");
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
+                    break;
+                case COCOFFLINE:        // Server is offline
+                    LOGGER.log(Level.FINE, "Server is OFFLINE");
+                    break;
+                case COCONLINE:         // Server is online
+                    LOGGER.log(Level.FINE, "Server is ONLINE");
+                    break;
+                default:
             }
         };
 
-        /* Service om de servercheck uit te voeren */
+        /* Service om de servercheck uit te voeren en voer deze om de minuut uit*/
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-
-        /* Voer de check iedere minuut uit */
         executor.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
     }
 
@@ -378,7 +387,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].equals(Commands.HALLO.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + IConstants.VERSION +"\n\nIk ben gemaakt door: Thijs");
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + IConstants.VERSION);
                     runCommandMessage(cmdBuilder.getSendMessage());
                 } else {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(EmojiParser.parseToUnicode(":exclamation:ERROR: Ik ken dit commando helaas niet.\nStuur /help voor beschikbare commando's"));
@@ -389,11 +398,15 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         }
 
         if (cmdBuilder.getMessageText().toLowerCase().contains("homo".toLowerCase())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Bam is de grootste homo! :)");
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Tom is de grootste homo.... Maar Bam is ook nog steeds erg gay");
             runCommandMessage(cmdBuilder.getSendMessage());
         }
         if (cmdBuilder.getMessageText().toLowerCase().contains("slet".toLowerCase())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Ed is een vieze slettebak! ;D");
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Michiel is een slet");
+            runCommandMessage(cmdBuilder.getSendMessage());
+        }
+        if (cmdBuilder.getMessageText().toLowerCase().contains("hoer".toLowerCase())) {
+            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hoer?... Volgens mij heb je Bas verkeerd gespeeld");
             runCommandMessage(cmdBuilder.getSendMessage());
         }
     }
