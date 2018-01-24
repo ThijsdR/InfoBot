@@ -43,6 +43,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     /* Velden */
     private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
     private CoC_ServerState serverStatusCoC;
+    private boolean beledigingen = true;
     private final long brabantTelegramChatID = -151298765;
 
     /* Constructor */
@@ -387,7 +388,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].equals(Commands.HALLO.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + IConstants.VERSION);
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + IConstants.VERSION + "\n\nStatus: " + (beledigingen ? "Eerlijk" : "Empatisch"));
+                    runCommandMessage(cmdBuilder.getSendMessage());
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.MODE.getCommand())) {
+                    beledigingen = !beledigingen;
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("-- MODE SWITCH --\n" + (beledigingen ? "Empatisch -> Eerlijk" : "Eerlijk -> Empatisch"));
                     runCommandMessage(cmdBuilder.getSendMessage());
                 } else {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(EmojiParser.parseToUnicode(":exclamation:ERROR: Ik ken dit commando helaas niet.\nStuur /help voor beschikbare commando's"));
@@ -397,17 +404,32 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             }
         }
 
-        if (cmdBuilder.getMessageText().toLowerCase().contains("homo".toLowerCase())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Tom is de grootste homo.... Maar Bam is ook nog steeds erg gay");
-            runCommandMessage(cmdBuilder.getSendMessage());
-        }
-        if (cmdBuilder.getMessageText().toLowerCase().contains("slet".toLowerCase())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Michiel is een slet");
-            runCommandMessage(cmdBuilder.getSendMessage());
-        }
-        if (cmdBuilder.getMessageText().toLowerCase().contains("hoer".toLowerCase())) {
-            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hoer?... Volgens mij heb je Bas verkeerd gespeeld");
-            runCommandMessage(cmdBuilder.getSendMessage());
+        if (beledigingen) {
+            if (cmdBuilder.getMessageText().toLowerCase().contains("homo".toLowerCase()) || cmdBuilder.getMessageText().toLowerCase().contains("gay".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Bam is de grootste homo!");
+                runCommandMessage(cmdBuilder.getSendMessage());
+                return;
+            }
+            if (cmdBuilder.getMessageText().toLowerCase().contains("slet".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Ed is een slet!");
+                runCommandMessage(cmdBuilder.getSendMessage());
+                return;
+            }
+            if (cmdBuilder.getMessageText().toLowerCase().contains("hoer".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hoer?... Volgens mij heb je Bas verkeerd gespeeld");
+                runCommandMessage(cmdBuilder.getSendMessage());
+                return;
+            }
+            if (cmdBuilder.getMessageText().toLowerCase().contains("klaas".toLowerCase()) || cmdBuilder.getMessageText().toLowerCase().contains("duitser".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID())
+                        .setText(EmojiParser.parseToUnicode(":notes::notes:\n" +
+                                "Want Klaas is anders geaard\n" +
+                                "Klaas is anders geaard\n" +
+                                "Lekker zichzelf, dat is zeker wat waard\n" +
+                                "Maar Klaas is anders geaard\n" +
+                                ":musical_note::musical_note:"));
+                runCommandMessage(cmdBuilder.getSendMessage());
+            }
         }
     }
 }

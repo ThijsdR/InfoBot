@@ -18,7 +18,8 @@ public enum Commands {
     WEERVOORSPELLING("/weervoorspelling"),
     HELP("/help"),
     JOKE("/joke"),
-    HALLO("/hallo");
+    HALLO("/hallo"),
+    MODE("/5926");
 
     private final String command;
     private final String editableURL;
