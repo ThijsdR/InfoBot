@@ -19,6 +19,7 @@ public class W_Forecast {
             botResponse.append(forecastArray.getJSONObject(i).getString("title")).append(W_PROC.weatherIconChecker(forecastArray.getJSONObject(i).getString("icon")));
             botResponse.append("\n-~-~-~-~-~-~-~-~");
             botResponse.append("\n").append(forecastArray.getJSONObject(i).getString("fcttext_metric"));
+            botResponse.append("\n");
         }
 
         return String.valueOf(botResponse);

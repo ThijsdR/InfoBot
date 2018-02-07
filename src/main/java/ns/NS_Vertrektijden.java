@@ -30,7 +30,7 @@ public class NS_Vertrektijden {
 
         StringBuilder botResponse = new StringBuilder();
         botResponse.append(EmojiParser.parseToUnicode("Station :station:: ")).append(station);
-        botResponse.append("\n------------------------n");
+        botResponse.append("\n------------------------");
 
         assert vertrekkendeTreinen != null;
         for (VertrekkendeTrein trein : vertrekkendeTreinen) {
