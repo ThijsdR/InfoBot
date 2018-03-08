@@ -20,7 +20,10 @@ public class H_Help {
         botResponse.append("/cocclandonaties - Donaties binnen een clan (clantag)\n");
         botResponse.append("/cocclanmembers - Leden binnen een clan (clantag)\n");
         botResponse.append("/cocclanmember - Informatie over een clanlid (clantag + naam)\n");
-        botResponse.append("/cocclanmembersfile - Een Excel document met alle informatie over de leden van een clan (clantag)\n\n");
+        botResponse.append("/cocclanmembersfile - Een Excel document met alle informatie over de leden van een clan (clantag)\n");
+        botResponse.append("/cocblacklistadd - Voeg een speler toe aan de zwarte lijst (spelerstag)\n");
+        botResponse.append("/cocblacklistremove - Verwijder een speler van de zwarte lijst (spelerstag)\n");
+        botResponse.append("/cocblacklistview - Een tekst bestand met alle spelerstags op de zwarte lijst\n\n");
         botResponse.append("- Clash Royale -\n");
         botResponse.append("/crclaninfo - Informatie over de opgegeven clan (clantag)\n");
         botResponse.append("/crclanmembers - Leden binnen een clan (clantag)\n");

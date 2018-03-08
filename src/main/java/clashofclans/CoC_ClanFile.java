@@ -1,5 +1,6 @@
 package clashofclans;
 
+import com.sun.deploy.util.SystemUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -12,9 +13,11 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Deze klasse bevat methode(s) die clangegevens kunnen exporteren naar bestanden
@@ -38,11 +41,19 @@ public class CoC_ClanFile {
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
 
         /* Bepaal de naam van het bestand op basis of het een periodiek gegenereerd bestand is of niet */
-        File clanOverviewFile;
+        File clanOverviewFile = null;
         if (isPeriodicGenerated) {
-            clanOverviewFile = new File("clanoverview_logs/generated_reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
+            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+                clanOverviewFile = new File("clanoverview_logs/generated_reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
+            } else if (org.apache.commons.lang3.SystemUtils.IS_OS_LINUX) {
+                clanOverviewFile = new File("/home/thijs/Infobotfiles/Logs/Generated/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
+            }
         } else {
-            clanOverviewFile = new File("clanoverview_logs/logs/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanoverzicht.xlsx");
+            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+                clanOverviewFile = new File("clanoverview_logs/logs/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanoverzicht.xlsx");
+            } else if (org.apache.commons.lang3.SystemUtils.IS_OS_LINUX) {
+                clanOverviewFile = new File("/home/thijs/Infobotfiles/Logs/Reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
+            }
         }
 
         /* Maak een nieuw workbook en voeg daar een nieuwe sheet aan toe */
@@ -69,7 +80,7 @@ public class CoC_ClanFile {
         List<CoC_PlayerContainer> playersList = new ArrayList<>();
 
         /* Bepaal het format om de ratio af te ronden op twee decimalen */
-        DecimalFormat format = new DecimalFormat(".##");
+        DecimalFormat format = new DecimalFormat(".##", new DecimalFormatSymbols(Locale.US));
 
         /* Voor ieder jsonobject in de array met items */
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -81,7 +92,12 @@ public class CoC_ClanFile {
                 ratio = jsonArray.getJSONObject(i).getInt("donations");
             } else {
                 ratio = jsonArray.getJSONObject(i).getDouble("donations") / jsonArray.getJSONObject(i).getDouble("donationsReceived");
-                ratio = Double.valueOf(format.format(ratio));
+
+                try {
+                    ratio = Double.valueOf(format.format(ratio));
+                } catch (NumberFormatException nex) {
+                    nex.printStackTrace();
+                }
             }
 
             /* Voeg alle gevonden spelers toe aan de lijst */
@@ -209,6 +225,7 @@ public class CoC_ClanFile {
 
         /* Exporteer de gemaakte file */
         try {
+            assert clanOverviewFile != null;
             FileOutputStream outputStream = new FileOutputStream(clanOverviewFile);
             workbook.write(outputStream);
             workbook.close();

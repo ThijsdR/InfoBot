@@ -1,3 +1,24 @@
 Manifest-Version: 1.0
+Class-Path: osgi-resource-locator-1.0.1.jar hk2-utils-2.5.0-b32.jar ja
+ ckson-jaxrs-base-2.8.7.jar curvesapi-1.04.jar bcprov-jdk15on-1.55.jar
+  javax.ws.rs-api-2.0.1.jar jersey-client-2.25.1.jar xmlbeans-2.6.0.ja
+ r jackson-core-2.8.7.jar commons-collections4-4.1.jar json-simple-1.1
+ .1.jar ns-api-1.1.0.jar commons-logging-1.2.jar jersey-media-jaxb-2.2
+ 5.1.jar emoji-java-3.1.3.jar aopalliance-repackaged-2.5.0-b32.jar gui
+ ce-4.1.0.jar jackson-annotations-2.8.0.jar slf4j-api-1.7.13.jar teleg
+ rambots-3.6.jar grizzly-framework-2.3.28.jar poi-3.15.jar validation-
+ api-1.1.0.Final.jar jersey-entity-filtering-2.25.1.jar httpmime-4.5.3
+ .jar guava-19.0.jar httpcore-4.4.6.jar jersey-container-grizzly2-http
+ -2.25.1.jar jackson-jaxrs-json-provider-2.8.7.jar stax-api-1.0.1.jar 
+ jackson-module-jaxb-annotations-2.8.7.jar jackson-databind-2.8.7.jar 
+ json-20160810.jar httpclient-4.5.3.jar commons-lang3-3.1.jar javassis
+ t-3.20.0-GA.jar telegrambots-meta-3.6.jar jersey-media-json-jackson-2
+ .25.1.jar java-jwt-3.0.1.jar jersey-server-2.25.1.jar hk2-locator-2.5
+ .0-b32.jar aopalliance-1.0.jar commons-codec-1.10.jar grizzly-http-2.
+ 3.28.jar commons-io-2.5.jar poi-ooxml-schemas-3.15.jar junit-4.10.jar
+  grizzly-http-server-2.3.28.jar jersey-guava-2.25.1.jar hamcrest-core
+ -1.1.jar javax.inject-2.5.0-b32.jar hk2-api-2.5.0-b32.jar jersey-comm
+ on-2.25.1.jar poi-ooxml-3.15.jar javax.annotation-api-1.2.jar javax.i
+ nject-1.jar
 Main-Class: Main
 

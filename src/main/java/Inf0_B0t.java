@@ -1,27 +1,33 @@
 import clashofclans.*;
-import help.H_Help;
-import utility.CommandContainer;
 import clashroyale.CR_Clan;
+import com.vdurmont.emoji.EmojiParser;
+import help.H_Help;
+import nl.pvanassen.ns.NsApi;
 import ns.NS_StoringenWerkzaamheden;
 import ns.NS_Vertrektijden;
-import weather.W_Current;
-import weather.W_Forecast;
-import com.vdurmont.emoji.EmojiParser;
-import nl.pvanassen.ns.NsApi;
+import org.apache.commons.lang3.SystemUtils;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import utility.CommandContainer;
 import utility.Commands;
 import utility.IConstants;
+import weather.W_Current;
+import weather.W_Forecast;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -45,9 +51,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     private CoC_ServerState serverStatusCoC;
     private boolean beledigingen = true;
     private final long brabantTelegramChatID = -151298765;
+    private ArrayList<CoC_PlayerContainer> cocPlayersList = new ArrayList<>();
 
     /* Constructor */
     public Inf0_B0t() {
+
+        /* Initialize players list */
+        cocPlayersList = CoC_Clan.getCoCPlayerList();
+
+        /* Set up Frame */
+        JFrame frame = new JFrame("Inf0_B0t");
+        frame.setPreferredSize(new Dimension(800, 600));
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.getContentPane().add(new JLabel("Hello"), BorderLayout.CENTER);
+        frame.pack();
+        frame.setVisible(true);
 
         /* Set up LOGGER */
         LOGGER.setLevel(Level.ALL);
@@ -104,7 +122,18 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
         /* Service om de servercheck uit te voeren en voer deze om de minuut uit*/
         final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(serverChecker, 0, 15, TimeUnit.SECONDS);
+
+        Runnable memberChecker = () -> {
+            ArrayList<CoC_PlayerContainer> updatedList = CoC_Clan.getCoCPlayerList();
+            if (!(cocPlayersList.size() == updatedList.size())) {
+                runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_Clan.getClanChange(cocPlayersList, updatedList)));
+            }
+            cocPlayersList = updatedList;
+        };
+
+        final ScheduledExecutorService clanMemberDeltaService = Executors.newScheduledThreadPool(3);
+        clanMemberDeltaService.scheduleAtFixedRate(memberChecker, 0, 1, TimeUnit.MINUTES);
     }
 
     /**
@@ -274,6 +303,47 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;
                 }
+                if (cmdBuilder.getCommands()[0].equals(Commands.COCBLACKLISTADD.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 2) {
+                        try {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1]));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig");
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.COCBLACKLISTREMOVE.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 2) {
+                        try {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1]));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig");
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].equals(Commands.COCBLACKLISTVIEW.getCommand())) {
+                    SendDocument sendDocumentrequest = new SendDocument();
+                    sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                    if (SystemUtils.IS_OS_WINDOWS) {
+                        sendDocumentrequest.setNewDocument(new File("out/blacklist/cocblacklist.txt"));
+                    } else if (SystemUtils.IS_OS_LINUX) {
+                        sendDocumentrequest.setNewDocument(new File("/home/thijs/Infobotfiles/cocblacklist.txt"));
+                    }
+                    sendDocumentrequest.setCaption("Blacklist");
+                    runCommandDocument(sendDocumentrequest);
+                    break COMMAND_CONTROL;
+                }
                 //////     Einde Clash of Clans commando's   //////
 
                 ///////////////////////////////////////////////////
@@ -377,6 +447,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////          Overige commando's           //////
                 ///////////////////////////////////////////////////
+                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.CHAT.getCommand()) && cmdBuilder.getLocatieCommands().length > 1 && cmdBuilder.getChatID() == 315876545) {
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(cmdBuilder.getLocatieCommands()[1]));
+                    break COMMAND_CONTROL;
+                }
                 if (cmdBuilder.getCommands()[0].equals(Commands.HELP.getCommand())) {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(H_Help.getHelp());
                     runCommandMessage(cmdBuilder.getSendMessage());
