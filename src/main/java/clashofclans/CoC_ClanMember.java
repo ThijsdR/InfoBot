@@ -4,8 +4,6 @@ import com.vdurmont.emoji.EmojiParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Connection;
-
 /**
  * Deze klasse bevat methode(s) die betrekking hebben op een specifiek clanlid
  */
@@ -18,10 +16,10 @@ public class CoC_ClanMember {
      * @param memberName        Naam van de speler waarop gezocht moet worden
      * @return                  Alle data van het betreffende clanlid
      */
-    public static String getClanMemberInfo(String urlString, String memberName, Connection con) {
+    public static String getClanMemberInfo(String urlString, String memberName, String cocApiKey) {
 
         /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, cocApiKey);
 
         /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {

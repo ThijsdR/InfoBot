@@ -73,7 +73,7 @@ public class CoC_War {
         return allAttacks;
     }
 
-    public static String warAttacksUpdate(String warData, ArrayList<CoC_WarAttackContainer> currentClanAttacks, ArrayList<CoC_WarAttackContainer> currentOpponentAttacks, Connection con) {
+    public static String warAttacksUpdate(String warData, ArrayList<CoC_WarAttackContainer> currentClanAttacks, ArrayList<CoC_WarAttackContainer> currentOpponentAttacks, String cocApiKey) {
         StringBuilder attackString = null;
         try {
             ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
@@ -92,11 +92,11 @@ public class CoC_War {
             if (clanWarAttacks.size() > currentClanAttacks.size()) {
                 lastAttack = clanWarAttacks.get(clanWarAttacks.size() - 1);
 
-                String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), con);
+                String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
                 JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
                 clanPlayerName = clanPlayerJson.getString("name");
 
-                String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), con);
+                String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
                 JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
                 opponentPlayerName = opponentPlayerJson.getString("name");
 
@@ -122,11 +122,11 @@ public class CoC_War {
             if (opponentWarAttacks.size() > currentOpponentAttacks.size()) {
                 lastAttack = opponentWarAttacks.get(opponentWarAttacks.size() - 1);
 
-                String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), con);
+                String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
                 JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
                 clanPlayerName = clanPlayerJson.getString("name");
 
-                String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), con);
+                String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
                 JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
                 opponentPlayerName = opponentPlayerJson.getString("name");
 
@@ -172,13 +172,13 @@ public class CoC_War {
         return clanJson.getInt("stars") + "-" + opponentJson.getInt("stars");
     }
 
-    public static String endWarRecap(String warData, ArrayList<CoC_WarAttackContainer> clanWarAttacks, Connection con) {
+    public static String endWarRecap(String warData, ArrayList<CoC_WarAttackContainer> clanWarAttacks, String cocApiKey) {
         JSONObject warJson = new JSONObject(warData);
         JSONObject clanJson = warJson.getJSONObject("clan");
         JSONObject opponentJson = warJson.getJSONObject("opponent");
 
         clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
-        String bassieData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(clanWarAttacks.size() - 1).getAttackerTag().replace("#", "%23"), con);
+        String bassieData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(clanWarAttacks.size() - 1).getAttackerTag().replace("#", "%23"), cocApiKey);
         JSONObject bassieJson = new JSONObject(bassieData);
         String bassieAwardName = bassieJson.getString("name");
         String bassieAward = bassieAwardName + " met " + clanWarAttacks.get(clanWarAttacks.size() - 1).getDestructionPercentage() + "%";
@@ -206,9 +206,9 @@ public class CoC_War {
             for (CoC_WarAttackContainer attack : attacks) {
                 recap.append(EmojiParser.parseToUnicode(":star::star::star: "));
                 recap.append(attack.getDestructionPercentage()).append("% - ");
-                recap.append(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getAttackerTag().replace("#", "%23"), con));
+                recap.append(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getAttackerTag().replace("#", "%23"), cocApiKey));
                 recap.append(EmojiParser.parseToUnicode(":arrow_right:"));
-                recap.append(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getDefenderTag().replace("#", "%23"), con));
+                recap.append(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getDefenderTag().replace("#", "%23"), cocApiKey));
                 recap.append("\n");
             }
         }
@@ -288,14 +288,14 @@ public class CoC_War {
         }
     }
 
-    public static String getBassieAwardTopDrie(ArrayList<CoC_WarAttackContainer> clanWarAttacks, String warState, Connection con) {
+    public static String getBassieAwardTopDrie(ArrayList<CoC_WarAttackContainer> clanWarAttacks, String warState, String cocApiKey) {
         if (warState.equals("inWar")) {
             if (clanWarAttacks.size() >= 3) {
                 clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
 
                 StringBuilder bassieBuilder = new StringBuilder(EmojiParser.parseToUnicode(":trophy: Bassie-award huidige top 3\n\n"));
                 for (int i = 0; i < 3; i++) {
-                    JSONObject bassieJson = new JSONObject(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(i).getAttackerTag().replace("#", "%23"), con));
+                    JSONObject bassieJson = new JSONObject(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(i).getAttackerTag().replace("#", "%23"), cocApiKey));
                     String bassieAwardName = bassieJson.getString("name");
 
                     switch (i) {

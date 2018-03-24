@@ -23,8 +23,8 @@ public class CoC_Blacklist {
      * @param con       Connectie naar de sql server
      * @return          Informatie over de toegevoegde speler ter bevestiging
      */
-    public static String addToCOCBlacklist(String playerTag, String[] reason, Connection con) {
-        String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + playerTag.replace("#", "%23"), con);
+    public static String addToCOCBlacklist(String playerTag, String[] reason, Connection con, String cocApiKey) {
+        String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + playerTag.replace("#", "%23"), cocApiKey);
         JSONObject playerJson = new JSONObject(playerData);
         String playerName = playerJson.getString("name");
         StringBuilder reasonBuilder = new StringBuilder();
@@ -105,7 +105,7 @@ public class CoC_Blacklist {
     }
 
     /**
-     * 
+     *
      * @param con
      * @return
      */

@@ -25,30 +25,22 @@ public class CoC_PROC {
      * @param urlString     String om de request naar toe te sturen
      * @return              Response van de server
      */
-    public static String retrieveDataSupercellAPI(String urlString, Connection con) {
+    public static String retrieveDataSupercellAPI(String urlString, String apiKey) {
         StringBuffer content = new StringBuffer();
 
         try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_password FROM credentials WHERE Api = 'coc'");
-
-            String apiKey = null;
-            while (rs.next()) {
-                apiKey = rs.getString("Api_key");
-            }
-
             URL url = new URL(urlString);
-            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
-            httpsURLConnection.setRequestMethod("GET");
-            httpsURLConnection.setRequestProperty("Content-Type", "application/json");
-            httpsURLConnection.setRequestProperty("Authorization", "Bearer " + apiKey);
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setRequestProperty("Authorization", "Bearer " + apiKey);
 
-            int responseCode = httpsURLConnection.getResponseCode();
+            int responseCode = con.getResponseCode();
             if (responseCode == 503) {
                 return "SERVER ERROR";
             }
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
 
             while ((inputLine = in.readLine()) != null) {
@@ -56,9 +48,9 @@ public class CoC_PROC {
             }
 
             in.close();
-            httpsURLConnection.disconnect();
+            con.disconnect();
 
-        } catch (IOException | SQLException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -77,7 +69,7 @@ public class CoC_PROC {
         /* Probeer verbinding te maken met de server */
         try {
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_password FROM credentials WHERE Api = 'coc'");
+            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'coc'");
 
             String apiKey = null;
             while (rs.next()) {

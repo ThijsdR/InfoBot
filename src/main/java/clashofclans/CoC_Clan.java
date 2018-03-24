@@ -23,10 +23,10 @@ public class CoC_Clan {
      * @param urlString String om de request naar toe te sturen
      * @return Een String met alle informatie omtrent de opgegeven clan
      */
-    public static String getClanInfo(String urlString, Connection con) {
+    public static String getClanInfo(String urlString, String cocApiKey) {
 
         /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, cocApiKey);
 
         /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
@@ -60,10 +60,10 @@ public class CoC_Clan {
      * @param urlString String om de request naar toe te sturen
      * @return Een String met alle donatiegegevens van de opgegeven clan
      */
-    public static String getClanDonaties(String urlString, Connection con) {
+    public static String getClanDonaties(String urlString, String cocApiKey) {
 
         /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, cocApiKey);
 
         /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
@@ -92,16 +92,16 @@ public class CoC_Clan {
      *
      * @return
      */
-    public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(Connection con) {
+    public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(String cocApiKey) {
         ArrayList<CoC_PlayerContainer> playerList = new ArrayList<>();
 
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members", con);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members", cocApiKey);
 
         JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/%23" + jsonArray.getJSONObject(i).getString("tag").substring(1), con);
+            String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/%23" + jsonArray.getJSONObject(i).getString("tag").substring(1), cocApiKey);
             JSONObject playerJson = new JSONObject(playerData);
             JSONArray heroesJsonArray = playerJson.getJSONArray("heroes");
 

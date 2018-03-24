@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -32,7 +31,7 @@ public class CoC_ClanFile {
      * @param isPeriodicGenerated   Boolean of het bestand periodiek gegenereerd is
      * @return                      Een Excel bestand met alle informatie over clanleden
      */
-    public static File getClanMembersFileXLSX(String urlString, boolean isPeriodicGenerated, Connection con) {
+    public static File getClanMembersFileXLSX(String urlString, boolean isPeriodicGenerated, String cocApiKey) {
 
         /* Bepaal het huidige tijdstip */
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -61,7 +60,7 @@ public class CoC_ClanFile {
         XSSFSheet sheet = workbook.createSheet("Overzicht clan");
 
         /* Stuur aan de hand van de urlString een request naar de server en haal hier alle benodigde data uit */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, cocApiKey);
         JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
 
