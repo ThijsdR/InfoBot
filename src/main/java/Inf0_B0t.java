@@ -49,10 +49,16 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     private ArrayList<CoC_WarAttackContainer> clanWarAttacks;
     private ArrayList<CoC_WarAttackContainer> opponentWarAttacks;
     private Connection con;
-    private String cocApiKey = CoC_Api.getApiKey();
+    private String cocApiKey;
 
     /* Constructor */
     Inf0_B0t() {
+
+        try {
+            cocApiKey = FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/cocapikey.txt"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         /* Bepaal waar de output moet worden opgeslagen */
         try {
@@ -87,7 +93,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         }
 
         /* Huidige status van de Clash of Clans server */
-        serverStatusCoC = CoC_PROC.getServerStatusCoC(con);
+        serverStatusCoC = CoC_PROC.getServerStatusCoC(cocApiKey);
 
         /* Huidige oorlogsdata van Clash of Clans */
         String currentWarData = CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey);
@@ -119,7 +125,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         Runnable serverChecker = () -> {
 
             /* Controleer de status */
-            serverStatusCoC = CoC_PROC.getServerStatusCoC(con);
+            serverStatusCoC = CoC_PROC.getServerStatusCoC(cocApiKey);
 
             System.out.println("=========" + new Timestamp(System.currentTimeMillis()) + "=========");
 
@@ -174,6 +180,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         }
                     } else if (warState.equals("inWar") && updatedWarState.equals("inWar")) {
                         String warUpdate = CoC_War.warAttacksUpdate(warData, clanWarAttacks, opponentWarAttacks, cocApiKey);
+                        String warUpdate3 = CoC_War.warAttacksUpdate3(warData, clanWarAttacks, cocApiKey);
 
                         if (!warUpdate.isEmpty()) {
                             ArrayList<Long> ids = new ArrayList<>();
@@ -195,6 +202,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                             System.out.println(warUpdate);
                             clanWarAttacks = CoC_War.getCurrentClanAttacks(warData);
                             opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(warData);
+                        }
+
+                        if (!warUpdate3.isEmpty()) {
+                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(warUpdate3));
                         }
 
                         System.out.println("clan attacks: " + clanWarAttacks.size());

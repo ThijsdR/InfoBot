@@ -5,10 +5,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Deze klasse bevat hulpmethode(s) voor de verschillende Clash of Clans klassen
@@ -64,28 +60,20 @@ public class CoC_PROC {
      *
      * @return      Huidige serverstatus
      */
-    public static CoC_ServerState getServerStatusCoC(Connection con) {
+    public static CoC_ServerState getServerStatusCoC(String cocApiKey) {
 
         /* Probeer verbinding te maken met de server */
         try {
-            Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'coc'");
-
-            String apiKey = null;
-            while (rs.next()) {
-                apiKey = rs.getString("Api_key");
-            }
-
             URL url = new URL("https://api.clashofclans.com/v1/clans?name=%23J0C9CPY");
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
             httpsURLConnection.setRequestMethod("GET");
-            httpsURLConnection.setRequestProperty("Authorization", "Bearer " + apiKey);
+            httpsURLConnection.setRequestProperty("Authorization", "Bearer " + cocApiKey);
 
             /* Het antwoord van de server in de vorm van een code */
             httpsCode = httpsURLConnection.getResponseCode();
 
             httpsURLConnection.disconnect();
-        } catch (IOException | SQLException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
