@@ -1,12 +1,14 @@
 package clashofclans;
 
-import utility.IConstants;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Deze klasse bevat hulpmethode(s) voor de verschillende Clash of Clans klassen
@@ -23,22 +25,30 @@ public class CoC_PROC {
      * @param urlString     String om de request naar toe te sturen
      * @return              Response van de server
      */
-    static String retrieveDataSupercellAPI(String urlString) {
+    public static String retrieveDataSupercellAPI(String urlString, Connection con) {
         StringBuffer content = new StringBuffer();
 
         try {
-            URL url = new URL(urlString);
-            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("Authorization", "Bearer " + IConstants.COCAPIKEY);
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_password FROM credentials WHERE Api = 'coc'");
 
-            int responseCode = con.getResponseCode();
+            String apiKey = null;
+            while (rs.next()) {
+                apiKey = rs.getString("Api_key");
+            }
+
+            URL url = new URL(urlString);
+            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
+            httpsURLConnection.setRequestMethod("GET");
+            httpsURLConnection.setRequestProperty("Content-Type", "application/json");
+            httpsURLConnection.setRequestProperty("Authorization", "Bearer " + apiKey);
+
+            int responseCode = httpsURLConnection.getResponseCode();
             if (responseCode == 503) {
                 return "SERVER ERROR";
             }
 
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            BufferedReader in = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
             String inputLine;
 
             while ((inputLine = in.readLine()) != null) {
@@ -46,9 +56,9 @@ public class CoC_PROC {
             }
 
             in.close();
-            con.disconnect();
+            httpsURLConnection.disconnect();
 
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
 
@@ -62,20 +72,28 @@ public class CoC_PROC {
      *
      * @return      Huidige serverstatus
      */
-    public static CoC_ServerState getServerStatusCoC() {
+    public static CoC_ServerState getServerStatusCoC(Connection con) {
 
         /* Probeer verbinding te maken met de server */
         try {
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_password FROM credentials WHERE Api = 'coc'");
+
+            String apiKey = null;
+            while (rs.next()) {
+                apiKey = rs.getString("Api_key");
+            }
+
             URL url = new URL("https://api.clashofclans.com/v1/clans?name=%23J0C9CPY");
-            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Bearer " + IConstants.COCAPIKEY);
+            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
+            httpsURLConnection.setRequestMethod("GET");
+            httpsURLConnection.setRequestProperty("Authorization", "Bearer " + apiKey);
 
             /* Het antwoord van de server in de vorm van een code */
-            httpsCode = con.getResponseCode();
+            httpsCode = httpsURLConnection.getResponseCode();
 
-            con.disconnect();
-        } catch (IOException e) {
+            httpsURLConnection.disconnect();
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
 

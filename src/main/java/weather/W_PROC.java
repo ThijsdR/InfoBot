@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class W_PROC {
-    public static String retrieveDataWeatherAPI(String urlString) {
+class W_PROC {
+    static String retrieveDataWeatherAPI(String urlString) {
         StringBuffer content = new StringBuffer();
 
         try {
@@ -35,7 +35,7 @@ public class W_PROC {
         return String.valueOf(content);
     }
 
-    public static String weatherIconChecker(String icon) {
+    static String weatherIconChecker(String icon) {
         String result = "";
 
         if (icon.equals("chanceflurries")) { result = (EmojiParser.parseToUnicode(" :snowflake::question:")); }

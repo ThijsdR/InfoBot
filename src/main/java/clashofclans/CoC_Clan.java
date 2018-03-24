@@ -2,12 +2,13 @@ package clashofclans;
 
 import clashofclans.player_resources.CoC_Hero;
 import com.vdurmont.emoji.EmojiParser;
-import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -22,10 +23,10 @@ public class CoC_Clan {
      * @param urlString String om de request naar toe te sturen
      * @return Een String met alle informatie omtrent de opgegeven clan
      */
-    public static String getClanInfo(String urlString) {
+    public static String getClanInfo(String urlString, Connection con) {
 
         /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
 
         /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
@@ -59,10 +60,10 @@ public class CoC_Clan {
      * @param urlString String om de request naar toe te sturen
      * @return Een String met alle donatiegegevens van de opgegeven clan
      */
-    public static String getClanDonaties(String urlString) {
+    public static String getClanDonaties(String urlString, Connection con) {
 
         /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
 
         /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
@@ -88,50 +89,19 @@ public class CoC_Clan {
     }
 
     /**
-     * Deze methode haalt alle relevante data op van clanleden van de opgegeven clan.
-     * De positie, de naam, de tag, het level, de trophies en de rol worden per lid opgehaald.
      *
-     * @param urlString String om de request naar toe te sturen
-     * @return Alle relevante data omtrent de leden van de opgegeven clan
+     * @return
      */
-    public static String getClanMembers(String urlString) {
-
-        /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
-
-        /* Return wanneer de server niks terugstuurt */
-        if (returnJson.equals("SERVER ERROR")) {
-            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
-        }
-
-        /* Haal alle benodigde data uit de response */
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
-
-        StringBuilder botResponse = new StringBuilder();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
-            botResponse.append("Name: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
-            botResponse.append("Tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
-            botResponse.append("Level: ").append(jsonArray.getJSONObject(i).getInt("expLevel")).append("\n");
-            botResponse.append(EmojiParser.parseToUnicode("Trophies: :trophy:")).append(jsonArray.getJSONObject(i).getInt("trophies")).append("\n");
-            botResponse.append("Role: ").append(jsonArray.getJSONObject(i).getString("role")).append("\n");
-            botResponse.append("-~-~-~-~-~-~-~-~\n");
-        }
-
-        return String.valueOf(botResponse);
-    }
-
-    public static ArrayList<CoC_PlayerContainer> getCoCPlayerList() {
+    public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(Connection con) {
         ArrayList<CoC_PlayerContainer> playerList = new ArrayList<>();
 
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members");
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members", con);
 
         JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
 
         for (int i = 0; i < jsonArray.length(); i++) {
-            String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/%23" + jsonArray.getJSONObject(i).getString("tag").substring(1));
+            String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/%23" + jsonArray.getJSONObject(i).getString("tag").substring(1), con);
             JSONObject playerJson = new JSONObject(playerData);
             JSONArray heroesJsonArray = playerJson.getJSONArray("heroes");
 
@@ -148,14 +118,19 @@ public class CoC_Clan {
                         heroesJsonArray.getJSONObject(j).getString("village")));
             }
             player.setHeroLevels(heroList);
-
             playerList.add(player);
         }
 
         return playerList;
     }
 
-    public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList) {
+    /**
+     *
+     * @param cocPlayersList
+     * @param updatedList
+     * @return
+     */
+    public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList, Connection con) {
         ArrayList<CoC_PlayerContainer> uniqueMembers = new ArrayList<>();
 
         boolean memberJoined = false;
@@ -196,13 +171,19 @@ public class CoC_Clan {
 
         StringBuilder stringBuilder = new StringBuilder();
         if (!uniqueMembers.isEmpty()) {
-            String blacklist = "";
+            ArrayList<String> blacklistTags = new ArrayList<>();
 
             if (memberJoined) {
                 stringBuilder = new StringBuilder("Een speler heeft zich bij de clan aangesloten!");
+
+                Statement stmt;
                 try {
-                    blacklist = FileUtils.readFileToString(new File("out/blacklist/cocblacklist.txt"));
-                } catch (IOException e) {
+                    stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery("SELECT Tag FROM blacklist");
+                    while (rs.next()) {
+                        blacklistTags.add(rs.getString("Tag"));
+                    }
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else {
@@ -231,7 +212,7 @@ public class CoC_Clan {
                     }
                 }
 
-                if (blacklist.toLowerCase().contains(player.getPlayerTag().toLowerCase())) {
+                if (blacklistTags.contains(player.getPlayerTag().toLowerCase())) {
                     stringBuilder.append(EmojiParser.parseToUnicode("\n\n >> :warning: DEZE SPELER STAAT OP DE ZWARTE LIJST!!"));
                 }
             }

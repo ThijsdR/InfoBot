@@ -24,12 +24,11 @@ public class CoC_PlayerContainer {
     private int unitsReceived;
     private double ratio;
 
-    private ArrayList<CoC_Buildings> buildingLevels;
-    private ArrayList<CoC_Troops> troopLevels;
-    private ArrayList<CoC_Spells> spellLevels;
     private ArrayList<CoC_Hero> heroLevels;
 
     private int townhallLevel;
+
+    private ArrayList<CoC_WarAttackContainer> warAttacks;
 
     /* Constructor */
     CoC_PlayerContainer(int positionInClan, String name, String playerTag, int expLevel, int trophyCount, String clanRole, int unitsDonated, int unitsReceived, double ratio) {
@@ -44,13 +43,6 @@ public class CoC_PlayerContainer {
         this.ratio = ratio;
     }
 
-    CoC_PlayerContainer(ArrayList<CoC_Buildings> buildingLevels, ArrayList<CoC_Troops> troopLevels, ArrayList<CoC_Spells> spellLevels, ArrayList<CoC_Hero> heroLevels) {
-        this.buildingLevels = buildingLevels;
-        this.troopLevels = troopLevels;
-        this.spellLevels = spellLevels;
-        this.heroLevels = heroLevels;
-    }
-
     CoC_PlayerContainer(String name, String playerTag, int townhallLevel, int trophyCount) {
         this.name = name;
         this.playerTag = playerTag;
@@ -58,13 +50,14 @@ public class CoC_PlayerContainer {
         this.trophyCount = trophyCount;
     }
 
-    CoC_PlayerContainer(String name, String playerTag) {
+    CoC_PlayerContainer(int positionInClan, String name, int townhallLevel) {
+        this.positionInClan = positionInClan;
         this.name = name;
-        this.playerTag = playerTag;
+        this.townhallLevel = townhallLevel;
     }
 
     /* Getters */
-    public int getPositionInClan() {
+    int getPositionInClan() {
         return positionInClan;
     }
     public String getName() {
@@ -73,51 +66,16 @@ public class CoC_PlayerContainer {
     String getPlayerTag() {
         return playerTag;
     }
-    public int getExpLevel() {
-        return expLevel;
-    }
     int getTrophyCount() {
         return trophyCount;
-    }
-    public String getClanRole() {
-        return clanRole;
-    }
-    public int getUnitsDonated() {
-        return unitsDonated;
-    }
-    public int getUnitsReceived() {
-        return unitsReceived;
-    }
-    public double getRatio() {
-        return ratio;
-    }
-
-    public List<CoC_Buildings> getBuildingLevels() {
-        return buildingLevels;
-    }
-    public List<CoC_Troops> getTroopLevels() {
-        return troopLevels;
-    }
-    public List<CoC_Spells> getSpellLevels() {
-        return spellLevels;
     }
     List<CoC_Hero> getHeroLevels() {
         return heroLevels;
     }
-
     int getTownhallLevel() {
         return townhallLevel;
     }
 
-    public void setBuildingLevels(ArrayList<CoC_Buildings> buildingLevels) {
-        this.buildingLevels = buildingLevels;
-    }
-    public void setTroopLevels(ArrayList<CoC_Troops> troopLevels) {
-        this.troopLevels = troopLevels;
-    }
-    public void setSpellLevels(ArrayList<CoC_Spells> spellLevels) {
-        this.spellLevels = spellLevels;
-    }
     void setHeroLevels(ArrayList<CoC_Hero> heroLevels) {
         this.heroLevels = heroLevels;
     }

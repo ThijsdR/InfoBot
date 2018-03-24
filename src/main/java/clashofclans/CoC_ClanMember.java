@@ -4,7 +4,7 @@ import com.vdurmont.emoji.EmojiParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.sql.Connection;
 
 /**
  * Deze klasse bevat methode(s) die betrekking hebben op een specifiek clanlid
@@ -18,10 +18,10 @@ public class CoC_ClanMember {
      * @param memberName        Naam van de speler waarop gezocht moet worden
      * @return                  Alle data van het betreffende clanlid
      */
-    public static String getClanMemberInfo(String urlString, String memberName) {
+    public static String getClanMemberInfo(String urlString, String memberName, Connection con) {
 
         /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, con);
 
         /* Return wanneer de server niks terugstuurt */
         if (returnJson.equals("SERVER ERROR")) {
@@ -53,29 +53,5 @@ public class CoC_ClanMember {
         } else {
             return "Geen resultaten gevonden\nZit het opgegeven lid wel in de clan?\nZorg dat eventuele hoofdletters ook goed staan.";
         }
-    }
-
-    // TODO Finish
-    public static String getClanMonitorInfo(String urlString, ArrayList<CoC_PlayerContainer> cocPlayers) {
-
-        StringBuilder botResponse = new StringBuilder();
-
-        /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString);
-
-        /* Haal alle benodigde data uit de response */
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/%23" + jsonArray.getJSONObject(i).getString("tag").substring(1));
-
-            JSONObject playerJson = new JSONObject(playerData);
-            JSONArray playerJsonArray = playerJson.getJSONArray("troops");
-
-
-        }
-
-        return String.valueOf(botResponse);
     }
 }

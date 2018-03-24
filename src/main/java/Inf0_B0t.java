@@ -1,10 +1,10 @@
 import clashofclans.*;
-import clashroyale.CR_Clan;
 import com.vdurmont.emoji.EmojiParser;
 import help.H_Help;
 import nl.pvanassen.ns.NsApi;
 import ns.NS_StoringenWerkzaamheden;
 import ns.NS_Vertrektijden;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
@@ -13,14 +13,13 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import utility.CommandContainer;
 import utility.Commands;
-import utility.IConstants;
 import weather.W_Current;
 import weather.W_Forecast;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -28,14 +27,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 /**
  * Het brein van Inf0_B0t.
@@ -43,21 +39,69 @@ import java.util.logging.SimpleFormatter;
  */
 public class Inf0_B0t extends TelegramLongPollingBot {
 
-    /* Logger */
-    private static final Logger LOGGER = Logger.getLogger(Inf0_B0t.class.getName());
-
     /* Velden */
-    private NsApi nsApi = new NsApi(IConstants.NSAPILOGIN, IConstants.NSAPIPASSWORD);
+    private NsApi nsApi;
     private CoC_ServerState serverStatusCoC;
     private boolean beledigingen = true;
     private final long brabantTelegramChatID = -151298765;
     private ArrayList<CoC_PlayerContainer> cocPlayersList = new ArrayList<>();
+    private String warState;
+    private ArrayList<CoC_WarAttackContainer> clanWarAttacks;
+    private ArrayList<CoC_WarAttackContainer> opponentWarAttacks;
+    private Connection con;
 
     /* Constructor */
-    public Inf0_B0t() {
+    Inf0_B0t() {
 
-        /* Initialize players list */
-        cocPlayersList = CoC_Clan.getCoCPlayerList();
+        /* Bepaal waar de output moet worden opgeslagen */
+        try {
+            PrintStream out = null;
+            if (SystemUtils.IS_OS_WINDOWS) {
+                out = new PrintStream(new FileOutputStream("out/output/output.txt"));
+            } else if (SystemUtils.IS_OS_LINUX) {
+                out = new PrintStream(new FileOutputStream("/home/thijs/Infobotfiles/output.txt"));
+            }
+            System.setOut(out);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        /* Maak verbinding met de sql server en zet de ns api op */
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb","root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_key FROM credentials WHERE Api = 'ns'");
+            String nsApiLogin = null;
+            String nsApiKey = null;
+            while (rs.next()) {
+                nsApiLogin = rs.getString("Api_user");
+                nsApiKey = rs.getString("Api_key");
+            }
+            assert nsApiLogin != null;
+            assert nsApiKey != null;
+            nsApi = new NsApi(nsApiLogin, nsApiKey);
+        } catch (ClassNotFoundException | SQLException | IOException e) {
+            e.printStackTrace();
+        }
+
+        /* Huidige status van de Clash of Clans server */
+        serverStatusCoC = CoC_PROC.getServerStatusCoC(con);
+
+        /* Huidige oorlogsdata van Clash of Clans */
+        String currentWarData = CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), con);
+
+        /* Huidige ledenlijst CLash of Clans */
+        cocPlayersList = CoC_Clan.getCoCPlayerList(con);
+
+        /* Huidige oorlogsstatus in Clash of Clans */
+        warState = CoC_War.getCurrentWarState(currentWarData);
+
+        /* Als de clan bezig is met een oorlog haal dan de huidige aanvallen op */
+        if (warState.equals("inWar")) {
+            clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
+            opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
+        }
 
         /* Set up Frame */
         JFrame frame = new JFrame("Inf0_B0t");
@@ -67,15 +111,116 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         frame.pack();
         frame.setVisible(true);
 
-        /* Set up LOGGER */
-        LOGGER.setLevel(Level.ALL);
-        ConsoleHandler handler = new ConsoleHandler();
-        handler.setFormatter(new SimpleFormatter());
-        handler.setLevel(Level.ALL);
-        LOGGER.addHandler(handler);
-
         /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
-        Runnable reportGenerator = () -> CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true);
+        Runnable reportGenerator = () -> CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true, con);
+
+        /* Check elke minuut de serverstatus van Clash of Clans */
+        Runnable serverChecker = () -> {
+
+            /* Controleer de status */
+            serverStatusCoC = CoC_PROC.getServerStatusCoC(con);
+
+            System.out.println("=========" + new Timestamp(System.currentTimeMillis()) + "=========");
+
+            switch (serverStatusCoC) {
+                case COCWENTOFFLINE:    // Server is offline gegaan
+                    System.out.println("Server went OFFLINE");
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
+                    break;
+                case COCWENTONLINE:     // Server is online gegaan
+                    System.out.println("Server went ONLINE");
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
+                    break;
+                case COCOFFLINE:        // Server is offline
+                    System.out.println("Server is OFFLINE");
+                    break;
+                case COCONLINE:         // Server is online
+                    System.out.println("Server is ONLINE");
+                    break;
+                default:
+            }
+        };
+
+        /* Bepaal de huidige ledenlijst */
+        Runnable memberChecker = () -> {
+            if (serverStatusCoC == CoC_ServerState.COCONLINE) {
+                ArrayList<CoC_PlayerContainer> updatedList = CoC_Clan.getCoCPlayerList(con);
+                if (!(cocPlayersList.size() == updatedList.size())) {
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_Clan.getClanChange(cocPlayersList, updatedList, con)));
+                }
+                cocPlayersList = updatedList;
+            }
+        };
+
+        /* Haal de huidige data op van de clanoorlog */
+        Runnable warChecker = () -> {
+            if (serverStatusCoC == CoC_ServerState.COCONLINE) {
+                String warData = CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), con);
+
+                String updatedWarState = CoC_War.getCurrentWarState(warData);
+
+                System.out.println("=========" + new Timestamp(System.currentTimeMillis()) + "=========");
+                System.out.println("Warstate: " + warState);
+                System.out.println("Updated warstate: " + updatedWarState);
+
+                try {
+                    if (warState.equals("preparation") && updatedWarState.equals("inWar")) {
+                        String startMessage = CoC_War.warStartMessage(warData);
+
+                        if (!startMessage.isEmpty()) {
+                            runCommandMessage(new SendMessage().setChatId("315876545").setText(CoC_War.warStartMessage(warData)));
+                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_War.warStartMessage(warData)));
+                        }
+                    } else if (warState.equals("inWar") && updatedWarState.equals("inWar")) {
+                        String warUpdate = CoC_War.warAttacksUpdate(warData, clanWarAttacks, opponentWarAttacks, con);
+
+                        if (!warUpdate.isEmpty()) {
+                            ArrayList<Long> ids = new ArrayList<>();
+                            Statement stmt;
+                            try {
+                                stmt = con.createStatement();
+                                ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
+                                while (rs.next()) {
+                                    ids.add((long) rs.getInt("ChatID"));
+                                }
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                            for (long id : ids) {
+                                runCommandMessage(new SendMessage().setChatId(id).setText(warUpdate));
+                            }
+
+                            System.out.println(warUpdate);
+                            clanWarAttacks = CoC_War.getCurrentClanAttacks(warData);
+                            opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(warData);
+                        }
+
+                        System.out.println("clan attacks: " + clanWarAttacks.size());
+                        System.out.println("opponent attacks: " + opponentWarAttacks.size());
+
+                    } else if (warState.equals("inWar") && updatedWarState.equals("warEnded")) {
+                        String warRecap = CoC_War.endWarRecap(warData, clanWarAttacks, con);
+
+                        if (!warRecap.isEmpty()) {
+                            runCommandMessage(new SendMessage().setChatId("315876545").setText(warRecap));
+                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(warRecap));
+                        }
+                    } else if (warState.equals("warEnded") && updatedWarState.equals("preparation")) {
+                        String foundOpponent = CoC_War.newOpponentOverview(warData);
+
+                        if (!foundOpponent.isEmpty()) {
+                            runCommandMessage(new SendMessage().setChatId("315876545").setText(foundOpponent));
+                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(foundOpponent));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                warState = updatedWarState;
+            }
+        };
 
         /* Bepaal de tijdzone en de tijd wanneer het rapport gemaakt moet worden */
         LocalDateTime localNow = LocalDateTime.now();
@@ -91,49 +236,11 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         Duration duration = Duration.between(zonedNow, zonedNext3);
         long initalDelay = duration.getSeconds();
 
-        /* Voer de taak elke dag 1 keer uit */
-        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
-        scheduler.scheduleAtFixedRate(reportGenerator, initalDelay, 24 * 60 * 60, TimeUnit.SECONDS);
-
-        /* Check elke minuut de serverstatus van Clash of Clans */
-        Runnable serverChecker = () -> {
-
-            /* Controleer de status */
-            serverStatusCoC = CoC_PROC.getServerStatusCoC();
-
-            switch (serverStatusCoC) {
-                case COCWENTOFFLINE:    // Server is offline gegaan
-                    LOGGER.log(Level.WARNING, "Server went OFFLINE");
-                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTOFFLINE.getStateDescription()));
-                    break;
-                case COCWENTONLINE:     // Server is online gegaan
-                    LOGGER.log(Level.WARNING, "Server went ONLINE");
-                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
-                    break;
-                case COCOFFLINE:        // Server is offline
-                    LOGGER.log(Level.FINE, "Server is OFFLINE");
-                    break;
-                case COCONLINE:         // Server is online
-                    LOGGER.log(Level.FINE, "Server is ONLINE");
-                    break;
-                default:
-            }
-        };
-
-        /* Service om de servercheck uit te voeren en voer deze om de minuut uit*/
-        final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(serverChecker, 0, 15, TimeUnit.SECONDS);
-
-        Runnable memberChecker = () -> {
-            ArrayList<CoC_PlayerContainer> updatedList = CoC_Clan.getCoCPlayerList();
-            if (!(cocPlayersList.size() == updatedList.size())) {
-                runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_Clan.getClanChange(cocPlayersList, updatedList)));
-            }
-            cocPlayersList = updatedList;
-        };
-
-        final ScheduledExecutorService clanMemberDeltaService = Executors.newScheduledThreadPool(3);
-        clanMemberDeltaService.scheduleAtFixedRate(memberChecker, 0, 1, TimeUnit.MINUTES);
+        final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
+        executorService.scheduleAtFixedRate(reportGenerator, initalDelay, 1, TimeUnit.DAYS);
+        executorService.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
+        executorService.scheduleAtFixedRate(memberChecker, 15, 60, TimeUnit.SECONDS);
+        executorService.scheduleAtFixedRate(warChecker, 45, 60, TimeUnit.SECONDS);
     }
 
     /**
@@ -165,14 +272,40 @@ public class Inf0_B0t extends TelegramLongPollingBot {
      * @return  bot username
      */
     public String getBotUsername() {
-        return "ClashInfo_Bot";
+        Statement stmt;
+        String apiUser = null;
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT Api_user FROM credentials WHERE Api = 'telegram'");
+
+            while (rs.next()) {
+                apiUser = rs.getString("Api_user");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return apiUser;
     }
 
     /**
      * @return  bot token
      */
     public String getBotToken() {
-        return "455982433:AAG0Y0tOtvK6QrGaetlqdZh_t9lDW5ks9cc";
+        Statement stmt;
+        String apiKey = null;
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'telegram'");
+
+            while (rs.next()) {
+                apiKey = rs.getString("Api_key");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return apiKey;
     }
 
     /**
@@ -193,7 +326,8 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 update.getMessage().getText()
         };
 
-        LOGGER.log(Level.FINE, "[FROM: {1} {2}] [USERNAME: {3}] [USER_ID: {4}] [CHAT_ID: {5}] [GROUP MESSAGE: {6}] [MESSAGE TEXT: {7}]", log);
+        System.out.println("=========" + new Timestamp(System.currentTimeMillis()) + "=========");
+        System.out.println(Arrays.toString(log));
     }
 
     /**
@@ -205,7 +339,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException tea) {
-            LOGGER.log(Level.SEVERE, tea.toString(), tea);
+            tea.printStackTrace();
         }
     }
 
@@ -218,7 +352,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         try {
             sendDocument(sendDocument);
         } catch (TelegramApiException tea) {
-            LOGGER.log(Level.SEVERE, tea.toString(), tea);
+            tea.printStackTrace();
         }
     }
 
@@ -237,45 +371,35 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////        Clash of Clans commando's      //////
                 ///////////////////////////////////////////////////
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANINFO.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1]));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1], con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getDefaultURL()));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getDefaultURL(), con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANDONATIONS.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANDONATIONS.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1] + "/members"));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getDefaultURL()));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBER.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanMembers(Commands.COCCLANMEMBER.getEditableURL() + cmdBuilder.getCommands()[1] + "/members"));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanMembers(Commands.COCCLANMEMBER.getDefaultURL()));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getDefaultURL(), con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERINFO.getCommand())) {
                     if (cmdBuilder.getCommands().length > 2 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         String clanTag = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getEditableURL() + clanTag + "/members", cmdBuilder.getCommands()[2]));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getEditableURL() + clanTag + "/members", cmdBuilder.getCommands()[2], con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     }
                     if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].contains("#")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getDefaultURL(), cmdBuilder.getCommands()[1]));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getDefaultURL(), cmdBuilder.getCommands()[1], con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     } else {
@@ -283,13 +407,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
 
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false));
+                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false, con));
                         sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
                     } if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].startsWith("#")){
@@ -298,32 +422,19 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     } else {
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false));
+                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false, con));
                         sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest);
                     } break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCBLACKLISTADD.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 2) {
-                        try {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1]));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig");
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTADD.getCommand())) {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(),2, cmdBuilder.getCommands().length) , con));
+                    runCommandMessage(cmdBuilder.getSendMessage());
                     break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCBLACKLISTREMOVE.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTREMOVE.getCommand())) {
                     if (cmdBuilder.getCommands().length == 2) {
-                        try {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1]));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1], con));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     else {
@@ -332,74 +443,69 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     }
                     break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCBLACKLISTVIEW.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTVIEW.getCommand())) {
                     SendDocument sendDocumentrequest = new SendDocument();
                     sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                    if (SystemUtils.IS_OS_WINDOWS) {
-                        sendDocumentrequest.setNewDocument(new File("out/blacklist/cocblacklist.txt"));
-                    } else if (SystemUtils.IS_OS_LINUX) {
-                        sendDocumentrequest.setNewDocument(new File("/home/thijs/Infobotfiles/cocblacklist.txt"));
-                    }
+                    sendDocumentrequest.setNewDocument(CoC_Blacklist.getBlacklist(con));
                     sendDocumentrequest.setCaption("Blacklist");
                     runCommandDocument(sendDocumentrequest);
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTCHECK.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 2) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.checkBlacklistPlayer(cmdBuilder.getCommands()[1], con));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig");
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWAROPPONENT.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getCurrentOpponentOverview(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), con)));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBASSIEAWARD.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 1) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getBassieAwardTopDrie(clanWarAttacks, warState, con));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARSUBSCRIBE.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 1) {
+                        if (cmdBuilder.getChatID() > 0) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.subscribeToWarEvents(cmdBuilder.getChatID(), con));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Dit commando is niet beschikbaar in een groepsgesprek!");
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        }
+                    }
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARUNSUBSCRIBE.getCommand())) {
+                    if (cmdBuilder.getCommands().length == 1) {
+                        if (cmdBuilder.getChatID() > 0) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.unsubscribeToWarEvents(cmdBuilder.getChatID(), con));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Dit commando is niet beschikbaar in een groepsgesprek!");
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        }
+                    }
                     break COMMAND_CONTROL;
                 }
                 //////     Einde Clash of Clans commando's   //////
 
                 ///////////////////////////////////////////////////
-                //////          Clash Royale commando's      //////
-                ///////////////////////////////////////////////////
-                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANINFO.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanInfo(Commands.CRCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanInfo(Commands.CRCLANINFO.getDefaultURL()));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANMEMBERS.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanMembers(Commands.CRCLANMEMBERS.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanMembers(Commands.CRCLANMEMBERS.getDefaultURL()));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANROLES.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanRoles(Commands.CRCLANROLES.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanRoles(Commands.CRCLANROLES.getDefaultURL()));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANDONATIONS.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanDonations(Commands.CRCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanDonations(Commands.CRCLANDONATIONS.getDefaultURL()));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.CRCLANCHEST.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanchestContribution(Commands.CRCLANCHEST.getEditableURL() + cmdBuilder.getCommands()[1].substring(1)));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CR_Clan.getClanchestContribution(Commands.CRCLANCHEST.getDefaultURL()));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                //////     Einde Clash Royale commando's     //////
-
-                ///////////////////////////////////////////////////
                 //////          NS/trein commando's          //////
                 ///////////////////////////////////////////////////
-                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINTIJDEN.getCommand())) {
+                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.TREINTIJDEN.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
                         cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NS_Vertrektijden.getVertrektijden(nsApi, cmdBuilder.getLocatieCommands()[1]));
                         runCommandMessage(cmdBuilder.getSendMessage());
@@ -408,11 +514,11 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINSTORINGEN.getCommand())) {
+                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.TREINSTORINGEN.getCommand())) {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NS_StoringenWerkzaamheden.getStoringen(nsApi));
                     runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.TREINWERKZAAMHEDEN.getCommand())) {
+                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.TREINWERKZAAMHEDEN.getCommand())) {
                     SendDocument sendDocumentrequest = new SendDocument();
                     sendDocumentrequest.setChatId(cmdBuilder.getChatID());
                     sendDocumentrequest.setNewDocument(NS_StoringenWerkzaamheden.getWerkzaamheden(nsApi));
@@ -424,18 +530,44 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////      Weergerelateerde commando's      //////
                 ///////////////////////////////////////////////////
-                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERHUIDIG.getCommand())) {
+                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.WEERHUIDIG.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Current.getCurrentWeather("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
+                        Statement stmt;
+                        String apiKey = null;
+                        try {
+                            stmt = con.createStatement();
+                            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'wunderground'");
+
+                            while (rs.next()) {
+                                apiKey = rs.getString("Api_key");
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Current.getCurrentWeather("http://api.wunderground.com/api/" + apiKey + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
                         cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weerhuidig Den Haag");
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.WEERVOORSPELLING.getCommand())) {
+                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.WEERVOORSPELLING.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Forecast.getForecast("http://api.wunderground.com/api/" + IConstants.WUNDERGROUNDAPIKEY + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
+                        Statement stmt;
+                        String apiKey = null;
+                        try {
+                            stmt = con.createStatement();
+                            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'wunderground'");
+
+                            while (rs.next()) {
+                                apiKey = rs.getString("Api_key");
+                            }
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Forecast.getForecast("http://api.wunderground.com/api/" + apiKey + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     } else {
                         cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weervoorspelling Den Haag");
@@ -447,30 +579,38 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////          Overige commando's           //////
                 ///////////////////////////////////////////////////
-                if (cmdBuilder.getLocatieCommands()[0].equals(Commands.CHAT.getCommand()) && cmdBuilder.getLocatieCommands().length > 1 && cmdBuilder.getChatID() == 315876545) {
+                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.CHAT.getCommand()) && cmdBuilder.getLocatieCommands().length > 1 && cmdBuilder.getChatID() == 315876545) {
                     runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(cmdBuilder.getLocatieCommands()[1]));
                     break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.HELP.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.HELP.getCommand())) {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(H_Help.getHelp());
                     runCommandMessage(cmdBuilder.getSendMessage());
                     break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.JOKE.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(IConstants.JOKE);
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.HALLO.getCommand())) {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + "1.3" + "\n\nStatus: " + (beledigingen ? "Eerlijk" : "Empatisch"));
                     runCommandMessage(cmdBuilder.getSendMessage());
                     break COMMAND_CONTROL;
                 }
-                if (cmdBuilder.getCommands()[0].equals(Commands.HALLO.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + IConstants.VERSION + "\n\nStatus: " + (beledigingen ? "Eerlijk" : "Empatisch"));
-                    runCommandMessage(cmdBuilder.getSendMessage());
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.MODE.getCommand())) {
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.MODE.getCommand())) {
                     beledigingen = !beledigingen;
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("-- MODE SWITCH --\n" + (beledigingen ? "Empatisch -> Eerlijk" : "Eerlijk -> Empatisch"));
                     runCommandMessage(cmdBuilder.getSendMessage());
-                } else {
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith(Commands.LOG.getCommand())) {
+                    SendDocument sendDocumentrequest = new SendDocument();
+                    sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                    if (SystemUtils.IS_OS_WINDOWS) {
+                        sendDocumentrequest.setNewDocument(new File("out/output/output.txt"));
+                    } else if (SystemUtils.IS_OS_LINUX) {
+                        sendDocumentrequest.setNewDocument(new File("/home/thijs/Infobotfiles/output.txt"));
+                    }
+                    sendDocumentrequest.setCaption("Log file");
+                    runCommandDocument(sendDocumentrequest);
+                }
+                else {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(EmojiParser.parseToUnicode(":exclamation:ERROR: Ik ken dit commando helaas niet.\nStuur /help voor beschikbare commando's"));
                     runCommandMessage(cmdBuilder.getSendMessage());
                 }

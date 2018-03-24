@@ -3,27 +3,28 @@ package utility;
 public enum Commands {
     COCCLANINFO("/cocclaninfo","https://api.clashofclans.com/v1/clans?name=","https://api.clashofclans.com/v1/clans?name=%23J0C9CPY"),
     COCCLANDONATIONS("/cocclandonaties", "https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
-    COCCLANMEMBER("/cocclanmembers", "https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
     COCCLANMEMBERINFO("/cocclanmember","https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
     COCCLANMEMBERSTOFILE("/cocclanmembersfile","https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
     COCBLACKLISTADD("/cocblacklistadd"),
     COCBLACKLISTREMOVE("/cocblacklistremove"),
     COCBLACKLISTVIEW("/cocblacklistview"),
-    CRCLANINFO("/crclaninfo","http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8ylpjy"),
-    CRCLANMEMBERS("/crclanmembers","http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8ylpjy"),
-    CRCLANROLES("/crclanroles", "http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8ylpjy"),
-    CRCLANDONATIONS("/crclandonations", "http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8ylpjy"),
-    CRCLANCHEST("/crclanchest", "http://api.cr-api.com/clan/", "http://api.cr-api.com/clan/8ylpjy"),
+    COCBLACKLISTCHECK("/cocblacklistcheck"),
+//    COCWAROPPONENT("/cocwaropponent", "https://api.clashofclans.com/v1/clans/%23CCV9VCVR/currentwar"),
+    COCWAROPPONENT("/cocwaropponent", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/currentwar"),
+    COCBASSIEAWARD("/cocbassie"),
+    COCWARSUBSCRIBE("/cocwarsubscribe"),
+    COCWARUNSUBSCRIBE("/cocwarunsubscribe"),
     TREINTIJDEN("/treintijden"),
     TREINSTORINGEN("/treinstoringen"),
     TREINWERKZAAMHEDEN("/treinwerkzaamheden"),
     WEERHUIDIG("/weerhuidig"),
-    WEERVOORSPELLING("/weervoorspelling"),
+    WEERVOORSPELLING("/weersvoorspelling"),
     CHAT("/chat"),
     HELP("/help"),
     JOKE("/joke"),
     HALLO("/hallo"),
-    MODE("/5926");
+    MODE("/5926"),
+    LOG("/logoutput");
 
     private final String command;
     private final String editableURL;
@@ -33,6 +34,12 @@ public enum Commands {
         this.command = command;
         this.editableURL = null;
         this.defaultURL = null;
+    }
+
+    Commands(String command, String defaultURL) {
+        this.command = command;
+        this.editableURL = null;
+        this.defaultURL = defaultURL;
     }
 
     Commands(String command, String editableURL, String defaultURL) {
