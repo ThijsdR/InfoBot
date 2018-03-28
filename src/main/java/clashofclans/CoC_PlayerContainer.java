@@ -24,6 +24,8 @@ public class CoC_PlayerContainer {
     private int unitsReceived;
     private double ratio;
 
+    private CoC_WarAttackContainer bestAttack;
+
     private ArrayList<CoC_Hero> heroLevels;
 
     private int townhallLevel;
@@ -56,6 +58,13 @@ public class CoC_PlayerContainer {
         this.townhallLevel = townhallLevel;
     }
 
+    CoC_PlayerContainer(int positionInClan, String name, int townhallLevel, CoC_WarAttackContainer bestAttack) {
+        this.positionInClan = positionInClan;
+        this.name = name;
+        this.townhallLevel = townhallLevel;
+        this.bestAttack = bestAttack;
+    }
+
     /* Getters */
     int getPositionInClan() {
         return positionInClan;
@@ -68,6 +77,9 @@ public class CoC_PlayerContainer {
     }
     int getTrophyCount() {
         return trophyCount;
+    }
+    public CoC_WarAttackContainer getBestAttack() {
+        return bestAttack;
     }
     List<CoC_Hero> getHeroLevels() {
         return heroLevels;

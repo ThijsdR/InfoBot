@@ -21,7 +21,6 @@ public enum Commands {
     WEERVOORSPELLING("/weersvoorspelling"),
     CHAT("/chat"),
     HELP("/help"),
-    JOKE("/joke"),
     HALLO("/hallo"),
     MODE("/5926"),
     LOG("/logoutput");

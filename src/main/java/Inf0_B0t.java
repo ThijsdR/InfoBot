@@ -6,6 +6,7 @@ import ns.NS_StoringenWerkzaamheden;
 import ns.NS_Vertrektijden;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.telegram.telegrambots.api.methods.ParseMode;
 import org.telegram.telegrambots.api.methods.send.SendDocument;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
@@ -105,10 +106,8 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         warState = CoC_War.getCurrentWarState(currentWarData);
 
         /* Als de clan bezig is met een oorlog haal dan de huidige aanvallen op */
-        if (warState.equals("inWar")) {
-            clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
-            opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
-        }
+        clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
+        opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
 
         /* Set up Frame */
         JFrame frame = new JFrame("Inf0_B0t");
@@ -212,7 +211,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         System.out.println("opponent attacks: " + opponentWarAttacks.size());
 
                     } else if (warState.equals("inWar") && updatedWarState.equals("warEnded")) {
-                        String warRecap = CoC_War.endWarRecap(warData, clanWarAttacks, cocApiKey);
+                        String warRecap = CoC_War.endWarRecap(warData, cocApiKey);
 
                         if (!warRecap.isEmpty()) {
                             runCommandMessage(new SendMessage().setChatId("315876545").setText(warRecap));
@@ -349,6 +348,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
      */
     private void runCommandMessage(SendMessage sendMessage) {
         try {
+            sendMessage.setParseMode(ParseMode.MARKDOWN);
             execute(sendMessage);
         } catch (TelegramApiException tea) {
             tea.printStackTrace();

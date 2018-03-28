@@ -174,7 +174,7 @@ public class CoC_Clan {
             ArrayList<String> blacklistTags = new ArrayList<>();
 
             if (memberJoined) {
-                stringBuilder = new StringBuilder("Een speler heeft zich bij de clan aangesloten!");
+                stringBuilder = new StringBuilder("*Een speler heeft zich bij de clan aangesloten!*");
 
                 Statement stmt;
                 try {
@@ -187,11 +187,11 @@ public class CoC_Clan {
                     e.printStackTrace();
                 }
             } else {
-                stringBuilder = new StringBuilder("Een speler zit niet langer meer bij de clan!");
+                stringBuilder = new StringBuilder("_Een speler zit niet langer meer bij de clan!_");
             }
 
             for (CoC_PlayerContainer player : uniqueMembers) {
-                stringBuilder.append("\n\n");
+                stringBuilder.append("\n\n`");
                 stringBuilder.append(player.getName());
                 stringBuilder.append(" (").append(player.getPlayerTag()).append(")\n");
                 stringBuilder.append(EmojiParser.parseToUnicode(":house: ")).append(player.getTownhallLevel()).append("  ");
@@ -211,9 +211,10 @@ public class CoC_Clan {
                             break;
                     }
                 }
+                stringBuilder.append("`");
 
                 if (blacklistTags.contains(player.getPlayerTag().toLowerCase())) {
-                    stringBuilder.append(EmojiParser.parseToUnicode("\n\n >> :warning: DEZE SPELER STAAT OP DE ZWARTE LIJST!!"));
+                    stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: DEZE SPELER STAAT OP DE ZWARTE LIJST!!*"));
                 }
             }
         }

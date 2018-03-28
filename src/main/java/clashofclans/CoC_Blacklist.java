@@ -41,7 +41,7 @@ public class CoC_Blacklist {
             e.printStackTrace();
         }
 
-        return playerName + " (" + playerTag + ") is toegevoegd aan de zwarte lijst vanwege: " + String.valueOf(reasonBuilder);
+        return "_" + playerName + " (" + playerTag + ") is toegevoegd aan de zwarte lijst vanwege: " + String.valueOf(reasonBuilder) + "_";
     }
 
     /**
@@ -70,9 +70,9 @@ public class CoC_Blacklist {
         }
 
         if (!(player == null)) {
-            return player + " (" + playerTag + ") is verwijderd van de zwarte lijst!";
+            return "_" + player + " (" + playerTag + ") is verwijderd van de zwarte lijst!_";
         } else {
-            return "Deze speler stond niet op de zwarte lijst";
+            return "_Deze speler stond niet op de zwarte lijst_";
         }
     }
 
@@ -98,9 +98,9 @@ public class CoC_Blacklist {
         }
 
         if (!(player == null)) {
-            return player + " (" + playerTag + ") staat op de zwarte lijst vanwege:\n" + reason;
+            return "_" + player + " (" + playerTag + ") staat op de zwarte lijst vanwege:\n" + reason + "_";
         } else {
-            return "De speler met de opgegeven spelerstag (" + playerTag + ") staat niet op de zwarte lijst";
+            return "_De speler met de opgegeven spelerstag (" + playerTag + ") staat niet op de zwarte lijst_";
         }
     }
 

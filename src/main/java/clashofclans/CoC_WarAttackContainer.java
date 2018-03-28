@@ -15,6 +15,11 @@ public class CoC_WarAttackContainer implements Comparable {
         this.order = order;
     }
 
+    CoC_WarAttackContainer(int stars, int destructionPercentage) {
+        this.stars = stars;
+        this.destructionPercentage = destructionPercentage;
+    }
+
     String getAttackerTag() {
         return attackerTag;
     }
