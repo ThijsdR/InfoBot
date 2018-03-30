@@ -179,7 +179,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         }
                     } else if (warState.equals("inWar") && updatedWarState.equals("inWar")) {
                         String warUpdate = CoC_War.warAttacksUpdate(warData, clanWarAttacks, opponentWarAttacks, cocApiKey);
-                        String warUpdate3 = CoC_War.warAttacksUpdate3(warData, clanWarAttacks, cocApiKey);
+                        String warUpdate3 = CoC_War.war3StarUpdate(warData, clanWarAttacks, cocApiKey);
 
                         if (!warUpdate.isEmpty()) {
                             ArrayList<Long> ids = new ArrayList<>();

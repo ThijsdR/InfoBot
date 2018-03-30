@@ -1,9 +1,6 @@
 package clashofclans;
 
-import clashofclans.player_resources.CoC_Buildings;
 import clashofclans.player_resources.CoC_Hero;
-import clashofclans.player_resources.CoC_Spells;
-import clashofclans.player_resources.CoC_Troops;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +60,12 @@ public class CoC_PlayerContainer {
         this.name = name;
         this.townhallLevel = townhallLevel;
         this.bestAttack = bestAttack;
+    }
+
+    CoC_PlayerContainer(int positionInClan, String playerTag, String name) {
+        this.positionInClan = positionInClan;
+        this.playerTag = playerTag;
+        this.name = name;
     }
 
     /* Getters */

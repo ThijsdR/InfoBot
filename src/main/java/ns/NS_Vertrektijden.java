@@ -29,32 +29,32 @@ public class NS_Vertrektijden {
         }
 
         StringBuilder botResponse = new StringBuilder();
-        botResponse.append(EmojiParser.parseToUnicode("Station :station:: ")).append(station);
-        botResponse.append("\n------------------------");
+        botResponse.append(EmojiParser.parseToUnicode("*Station :station:: ")).append(station);
+        botResponse.append("\n------------------------*");
 
         assert vertrekkendeTreinen != null;
         for (VertrekkendeTrein trein : vertrekkendeTreinen) {
-            botResponse.append("\n").append(trein.getTreinSoort());
+            botResponse.append("_\n").append(trein.getTreinSoort());
             botResponse.append("\n-> ").append(trein.getEindBestemming());
             botResponse.append("\nSpoor: ").append(trein.getVertrekSpoor());
             botResponse.append("\n").append(String.format("%02d", trein.getVertrekTijd().getHours()))
-                    .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
+                    .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes())).append("_");
 
             if (trein.getVertrekVertragingMinuten() != 0) {
-                botResponse.append(" +").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + ":exclamation:"));
+                botResponse.append(" `+").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + "`:exclamation:"));
             }
 
             if (trein.isGewijzigdVertrekspoor()) {
-                botResponse.append("\n\n-> Gewijzigd vertrekspoor! <-");
+                botResponse.append("\n\n*Gewijzigd vertrekspoor!*");
             }
 
             if (!trein.getOpmerkingen().isEmpty()) {
                 for (String opmerking : trein.getOpmerkingen()) {
-                    botResponse.append("\n").append(opmerking);
+                    botResponse.append("\n*").append(opmerking).append("*");
                 }
             }
 
-            botResponse.append("\n-~-~-~-~-~-~-~-~-~-~-~-~");
+            botResponse.append("\n*-~-~-~-~-~-~-~-~-~-~-~-~*");
         }
 
         return String.valueOf(botResponse);

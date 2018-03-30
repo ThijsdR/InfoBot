@@ -27,30 +27,30 @@ public class NS_StoringenWerkzaamheden {
         StringBuilder botResponse = new StringBuilder();
 
         assert storingen != null;
-        botResponse.append("Actuele storingen:");
-        botResponse.append("\n------------------------\n");
+        botResponse.append("*Actuele storingen:");
+        botResponse.append("\n------------------------*\n");
 
 
         if (!storingen.getOngeplandeStoringen().isEmpty()) {
             for (Storing storing : storingen.getOngeplandeStoringen()) {
-                botResponse.append("<< ").append(storing.getTraject()).append(" >>");
+                botResponse.append("_<< ").append(storing.getTraject()).append(" >>_");
                 botResponse.append("\n\n").append(storing.getReden());
 
                 if (!storing.getBericht().isEmpty()) {
                     botResponse.append("\n\n").append(storing.getBericht());
                 }
 
-                botResponse.append("\n\nLaatste update: ")
+                botResponse.append("\n\n`Laatste update: ")
                         .append(String.format("%02d", storing.getDatum().getDate())).append("-")
                         .append(String.format("%02d", storing.getDatum().getMonth() + 1)).append("-")
                         .append(String.format("%02d", storing.getDatum().getYear() - 100 + 2000)).append(" ")
                         .append(String.format("%02d", storing.getDatum().getHours())).append(":")
-                        .append(String.format("%02d", storing.getDatum().getMinutes()));
+                        .append(String.format("%02d", storing.getDatum().getMinutes())).append("`");
 
-                botResponse.append("\n-~-~-~-~-~-~-~-~\n");
+                botResponse.append("\n*-~-~-~-~-~-~-~-~*\n");
             }
         } else {
-            botResponse.append(EmojiParser.parseToUnicode("\nEr zijn momenteel GEEN storingen :grimacing::muscle:"));
+            botResponse.append(EmojiParser.parseToUnicode("\n_Er zijn momenteel GEEN storingen_ :grimacing::muscle:"));
         }
 
         return String.valueOf(botResponse);

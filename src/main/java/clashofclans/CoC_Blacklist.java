@@ -24,15 +24,24 @@ public class CoC_Blacklist {
      * @return          Informatie over de toegevoegde speler ter bevestiging
      */
     public static String addToCOCBlacklist(String playerTag, String[] reason, Connection con, String cocApiKey) {
+
+        /* Haal de naam op van de speler gekoppeld aan de spelerstag */
         String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + playerTag.replace("#", "%23"), cocApiKey);
         JSONObject playerJson = new JSONObject(playerData);
         String playerName = playerJson.getString("name");
-        StringBuilder reasonBuilder = new StringBuilder();
 
+        /* Wanneer er geen speler is gevonden bij de opgegeven spelerstag */
+        if (playerName == null) {
+            return "_Er is geen speler gevonden met deze spelerstag..._";
+        }
+
+        /* Maak een string van de opgegeven reden */
+        StringBuilder reasonBuilder = new StringBuilder();
         for (String s : reason) {
             reasonBuilder.append(s).append(" ");
         }
 
+        /* Voeg de opgegeven speler, tag en reden toe aan de database */
         Statement stmt;
         try {
             stmt = con.createStatement();
@@ -52,6 +61,8 @@ public class CoC_Blacklist {
      * @return          Informatie over de verwijderde speler ter bevestiging
      */
     public static String removeFromCOCBlacklist(String playerTag, Connection con) {
+
+        /* Controleer of de speler op de zwarte lijst staat */
         Statement stmt;
         String player = null;
         try {
@@ -61,6 +72,7 @@ public class CoC_Blacklist {
                 player = rs.getString("Name");
             }
 
+            /* Als een speler im de database is gevonden met de opgegeven tag, verwijder deze */
             if (!(player == null)) {
                 stmt.execute("DELETE FROM blacklist WHERE Tag = '" + playerTag + "'");
             }
@@ -77,10 +89,11 @@ public class CoC_Blacklist {
     }
 
     /**
+     * Deze methode controleert of de opgegeven speler op de zwarte lijst staat
      *
-     * @param playerTag
-     * @param con
-     * @return
+     * @param playerTag De te controleren speler
+     * @param con       Connectie naar de sql server
+     * @return          Bevestiging of de speler wel of niet op de zwarte lijst staat
      */
     public static String checkBlacklistPlayer(String playerTag, Connection con) {
         Statement stmt;
@@ -105,9 +118,11 @@ public class CoC_Blacklist {
     }
 
     /**
+     * Deze methode haalt alle spelersname, tags en redenen op uit de database die op de zwarte lijst staan
+     * en geeft dit in een File bestand
      *
-     * @param con
-     * @return
+     * @param con       Connectie naar de sql server
+     * @return          Bestand met alle spelers op de zwarte lijst
      */
     public static File getBlacklist(Connection con) {
         File blacklistFile = new File("Blacklist.txt");

@@ -88,10 +88,6 @@ public class CoC_Clan {
         return String.valueOf(botResponse);
     }
 
-    /**
-     *
-     * @return
-     */
     public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(String cocApiKey) {
         ArrayList<CoC_PlayerContainer> playerList = new ArrayList<>();
 
@@ -124,12 +120,6 @@ public class CoC_Clan {
         return playerList;
     }
 
-    /**
-     *
-     * @param cocPlayersList
-     * @param updatedList
-     * @return
-     */
     public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList, Connection con) {
         ArrayList<CoC_PlayerContainer> uniqueMembers = new ArrayList<>();
 
@@ -191,7 +181,7 @@ public class CoC_Clan {
             }
 
             for (CoC_PlayerContainer player : uniqueMembers) {
-                stringBuilder.append("\n\n`");
+                stringBuilder.append("\n\n");
                 stringBuilder.append(player.getName());
                 stringBuilder.append(" (").append(player.getPlayerTag()).append(")\n");
                 stringBuilder.append(EmojiParser.parseToUnicode(":house: ")).append(player.getTownhallLevel()).append("  ");
@@ -201,7 +191,7 @@ public class CoC_Clan {
                     String heroName = hero.getName();
                     switch (heroName) {
                         case "Barbarian King":
-                            stringBuilder.append(EmojiParser.parseToUnicode(":guardsman: ")).append(hero.getLevel()).append("  ");
+                            stringBuilder.append(EmojiParser.parseToUnicode(":prince: ")).append(hero.getLevel()).append("  ");
                             break;
                         case "Archer Queen":
                             stringBuilder.append(EmojiParser.parseToUnicode(":princess: ")).append(hero.getLevel()).append("  ");
@@ -211,7 +201,6 @@ public class CoC_Clan {
                             break;
                     }
                 }
-                stringBuilder.append("`");
 
                 if (blacklistTags.contains(player.getPlayerTag().toLowerCase())) {
                     stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: DEZE SPELER STAAT OP DE ZWARTE LIJST!!*"));
