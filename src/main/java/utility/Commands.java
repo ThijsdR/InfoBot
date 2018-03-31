@@ -9,7 +9,6 @@ public enum Commands {
     COCBLACKLISTREMOVE("/cocblacklistremove"),
     COCBLACKLISTVIEW("/cocblacklistview"),
     COCBLACKLISTCHECK("/cocblacklistcheck"),
-//    COCWAROPPONENT("/cocwaropponent", "https://api.clashofclans.com/v1/clans/%23CCV9VCVR/currentwar"),
     COCWAROPPONENT("/cocwaropponent", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/currentwar"),
     COCBASSIEAWARD("/cocbassie"),
     COCWARSUBSCRIBE("/cocwarsubscribe"),

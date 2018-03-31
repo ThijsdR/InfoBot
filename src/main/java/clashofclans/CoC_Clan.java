@@ -2,6 +2,7 @@ package clashofclans;
 
 import clashofclans.player_resources.CoC_Hero;
 import com.vdurmont.emoji.EmojiParser;
+import javafx.util.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -161,7 +162,7 @@ public class CoC_Clan {
 
         StringBuilder stringBuilder = new StringBuilder();
         if (!uniqueMembers.isEmpty()) {
-            ArrayList<String> blacklistTags = new ArrayList<>();
+            ArrayList<Pair<String, String>> blacklistData = new ArrayList<>();
 
             if (memberJoined) {
                 stringBuilder = new StringBuilder("*Een speler heeft zich bij de clan aangesloten!*");
@@ -169,9 +170,9 @@ public class CoC_Clan {
                 Statement stmt;
                 try {
                     stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT Tag FROM blacklist");
+                    ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
                     while (rs.next()) {
-                        blacklistTags.add(rs.getString("Tag"));
+                        blacklistData.add(new Pair<>(rs.getString("Tag"), rs.getString("Reason")));
                     }
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -202,8 +203,10 @@ public class CoC_Clan {
                     }
                 }
 
-                if (blacklistTags.contains(player.getPlayerTag().toLowerCase())) {
-                    stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: DEZE SPELER STAAT OP DE ZWARTE LIJST!!*"));
+                for (Pair<String, String> blPlayer : blacklistData) {
+                    if (blPlayer.getKey().equals(player.getPlayerTag().toLowerCase())) {
+                        stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: Deze speler staat op de zwarte lijst!*\n")).append("_Reden: ").append(blPlayer.getValue()).append("_");
+                    }
                 }
             }
         }

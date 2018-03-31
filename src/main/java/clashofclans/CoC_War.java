@@ -119,12 +119,12 @@ public class CoC_War {
                     String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
                     JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
                     clanPlayerName = clanPlayerJson.getString("name");
-                    clanPlayerTag = clanPlayerJson.getString("tag");
+                    clanPlayerTag = lastAttack.getAttackerTag();
 
                     String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
                     JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
                     opponentPlayerName = opponentPlayerJson.getString("name");
-                    opponentPlayerTag = opponentPlayerJson.getString("tag");
+                    opponentPlayerTag = lastAttack.getDefenderTag();
 
                     switch (lastAttack.getStars()) {
                         case 0:
@@ -141,17 +141,17 @@ public class CoC_War {
                             break;
                     }
 
-                    attackString.append(lastAttack.getDestructionPercentage()).append("% - *");
+                    attackString.append(lastAttack.getDestructionPercentage()).append("% \n");
 
                     for (CoC_PlayerContainer player : clanWarPlayers) {
                         if (player.getPlayerTag().equals(clanPlayerTag)) {
-                            attackString.append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
+                            attackString.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
                         }
                     }
 
                     for (CoC_PlayerContainer opponent : opponentWarPlayers) {
                         if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                            attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append("\n");
+                            attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append("\n\n");
                         }
                     }
                 }
@@ -161,15 +161,15 @@ public class CoC_War {
                 for (int i = 1; i <= (opponentWarAttacks.size() - currentOpponentAttacks.size()); i++) {
                     lastAttack = opponentWarAttacks.get(opponentWarAttacks.size() - i);
 
-                    String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
+                    String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
                     JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
                     opponentPlayerName = opponentPlayerJson.getString("name");
-                    opponentPlayerTag = opponentPlayerJson.getString("tag");
+                    opponentPlayerTag = lastAttack.getAttackerTag();
 
-                    String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
+                    String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
                     JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
                     clanPlayerName = clanPlayerJson.getString("name");
-                    clanPlayerTag = clanPlayerJson.getString("tag");
+                    clanPlayerTag = lastAttack.getDefenderTag();
 
                     switch (lastAttack.getStars()) {
                         case 0:
@@ -186,17 +186,17 @@ public class CoC_War {
                             break;
                     }
 
-                    attackString.append(lastAttack.getDestructionPercentage()).append("% - ");
+                    attackString.append(lastAttack.getDestructionPercentage()).append("% \n");
 
                     for (CoC_PlayerContainer opponent : opponentWarPlayers) {
                         if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                            attackString.append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append(EmojiParser.parseToUnicode(" :arrow_backward: "));
+                            attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append(EmojiParser.parseToUnicode(" :arrow_backward: "));
                         }
                     }
 
                     for (CoC_PlayerContainer player : clanWarPlayers) {
                         if (player.getPlayerTag().equals(clanPlayerTag)) {
-                            attackString.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append("\n");
+                            attackString.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append("\n\n");
                         }
                     }
                 }
@@ -251,24 +251,24 @@ public class CoC_War {
                         String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
                         JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
                         clanPlayerName = clanPlayerJson.getString("name");
-                        clanPlayerTag = clanPlayerJson.getString("tag");
+                        clanPlayerTag = lastAttack.getAttackerTag();
 
                         String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
                         JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
                         opponentPlayerName = opponentPlayerJson.getString("name");
-                        opponentPlayerTag = opponentPlayerJson.getString("tag");
+                        opponentPlayerTag = lastAttack.getDefenderTag();
 
-                        attackString.append(EmojiParser.parseToUnicode(":star::star::star: :100:")).append("% - ");
+                        attackString.append(EmojiParser.parseToUnicode(":star::star::star: :100:")).append("% \n");
 
                         for (CoC_PlayerContainer player : clanWarPlayers) {
                             if (player.getPlayerTag().equals(clanPlayerTag)) {
-                                attackString.append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
+                                attackString.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
                             }
                         }
 
                         for (CoC_PlayerContainer opponent : opponentWarPlayers) {
                             if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                                attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append("\n");
+                                attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append("\n\n");
                             }
                         }
                     }
@@ -315,7 +315,7 @@ public class CoC_War {
         recap.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(opponentJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append("\n");
         recap.append(EmojiParser.parseToUnicode(":collision: ")).append(df.format(opponentJson.getDouble("destructionPercentage"))).append("%\n\n");
 
-        recap.append(EmojiParser.parseToUnicode(":clown::trophy: *De Bassie-award gaat deze ronde naar:*\n_" + bassieAward + "_\n\n"));
+        recap.append(EmojiParser.parseToUnicode(":clown::trophy: *Winnaar van de Bassie-award:*\n_" + bassieAward + "_\n\n"));
 
         ArrayList<CoC_WarAttackContainer> attacks = new ArrayList<>();
         for (CoC_WarAttackContainer clanWarAttack : clanWarAttacks) {
@@ -333,7 +333,7 @@ public class CoC_War {
                 String attackerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getAttackerTag().replace("#", "%23"), cocApiKey);
                 JSONObject attackerJson = new JSONObject(attackerData);
                 recap.append(attackerJson.getString("name"));
-                recap.append(EmojiParser.parseToUnicode(" :arrow_forward: "));
+                recap.append(EmojiParser.parseToUnicode(" \n:arrow_forward: "));
                 String defenderData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getDefenderTag().replace("#", "%23"), cocApiKey);
                 JSONObject defenderJson = new JSONObject(defenderData);
                 recap.append(defenderJson.getString("name"));
