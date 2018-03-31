@@ -188,15 +188,15 @@ public class CoC_War {
 
                     attackString.append(lastAttack.getDestructionPercentage()).append("% \n");
 
-                    for (CoC_PlayerContainer opponent : opponentWarPlayers) {
-                        if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                            attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append(EmojiParser.parseToUnicode(" :arrow_backward: "));
+                    for (CoC_PlayerContainer player : clanWarPlayers) {
+                        if (player.getPlayerTag().equals(clanPlayerTag)) {
+                            attackString.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_backward: "));
                         }
                     }
 
-                    for (CoC_PlayerContainer player : clanWarPlayers) {
-                        if (player.getPlayerTag().equals(clanPlayerTag)) {
-                            attackString.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append("\n\n");
+                    for (CoC_PlayerContainer opponent : opponentWarPlayers) {
+                        if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
+                            attackString.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append("\n\n");
                         }
                     }
                 }
