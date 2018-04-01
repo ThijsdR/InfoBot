@@ -1,13 +1,13 @@
 package clashofclans;
 
 import com.vdurmont.emoji.EmojiParser;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -300,10 +300,11 @@ public class CoC_War {
         JSONObject opponentJson = warJson.getJSONObject("opponent");
 
         ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
+        clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
         String bassieData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(clanWarAttacks.size() - 1).getAttackerTag().replace("#", "%23"), cocApiKey);
         JSONObject bassieJson = new JSONObject(bassieData);
         String bassieAwardName = bassieJson.getString("name");
-        String bassieAward = bassieAwardName + " met " + clanWarAttacks.get(clanWarAttacks.size() - 1).getDestructionPercentage() + "%";
+        String bassieAward = bassieAwardName + " met " + clanWarAttacks.get(0).getDestructionPercentage() + "%";
         DecimalFormat df = new DecimalFormat(".##");
 
         StringBuilder recap = new StringBuilder(EmojiParser.parseToUnicode("*De oorlog is afgelopen!* :checkered_flag:\n\n"));
@@ -329,7 +330,7 @@ public class CoC_War {
 
             for (CoC_WarAttackContainer attack : attacks) {
                 recap.append(EmojiParser.parseToUnicode(":star::star::star: "));
-                recap.append(attack.getDestructionPercentage()).append("% - ");
+                recap.append(attack.getDestructionPercentage()).append("% \n");
                 String attackerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getAttackerTag().replace("#", "%23"), cocApiKey);
                 JSONObject attackerJson = new JSONObject(attackerData);
                 recap.append(attackerJson.getString("name"));
@@ -337,7 +338,7 @@ public class CoC_War {
                 String defenderData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getDefenderTag().replace("#", "%23"), cocApiKey);
                 JSONObject defenderJson = new JSONObject(defenderData);
                 recap.append(defenderJson.getString("name"));
-                recap.append("\n");
+                recap.append("\n\n");
             }
         }
 
@@ -479,11 +480,12 @@ public class CoC_War {
         }
     }
 
-    public static String subscribeToWarEvents(long chatID, Connection con) {
-        Statement stmt;
+    public static String subscribeToWarEvents(long chatID) {
         try {
             ArrayList<Long> chatIDs = new ArrayList<>();
-            stmt = con.createStatement();
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
             while (rs.next()) {
                 chatIDs.add((long) rs.getInt("ChatID"));
@@ -491,22 +493,29 @@ public class CoC_War {
 
             if (!chatIDs.contains(chatID)) {
                 stmt.execute("INSERT INTO subscriberswar (ChatID) VALUES ('" + chatID + "')");
+                rs.close();
+                stmt.close();
+                con.close();
                 return "_Gelukt! Je bent nu geabonneerd op de oorlogsupdates_";
             } else {
+                rs.close();
+                stmt.close();
+                con.close();
                 return "_Je bent al geabonneerd op de oorlogsupdates..._";
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
         return "_Oeps, er is iets misgegaan..._";
     }
 
-    public static String unsubscribeToWarEvents(long chatID, Connection con) {
-        Statement stmt;
+    public static String unsubscribeToWarEvents(long chatID) {
         try {
             ArrayList<Long> chatIDs = new ArrayList<>();
-            stmt = con.createStatement();
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
             while (rs.next()) {
                 chatIDs.add((long) rs.getInt("ChatID"));
@@ -514,12 +523,18 @@ public class CoC_War {
 
             if (chatIDs.contains(chatID)) {
                 stmt.execute("DELETE FROM subscriberswar WHERE ChatID = '" + chatID + "'");
+                rs.close();
+                stmt.close();
+                con.close();
                 return "_Gelukt! Je bent niet langer geabonneerd op de oorlogsupdates_";
             } else {
+                rs.close();
+                stmt.close();
+                con.close();
                 return "_Je bent niet geabonneerd op de oorlogsupdates, dus ik kan je ook niet verwijderen uit de lijst..._";
             }
 
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
         return "_Oeps, er is iets misgegaan..._";

@@ -3,13 +3,13 @@ package clashofclans;
 import clashofclans.player_resources.CoC_Hero;
 import com.vdurmont.emoji.EmojiParser;
 import javafx.util.Pair;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.File;
+import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -121,7 +121,7 @@ public class CoC_Clan {
         return playerList;
     }
 
-    public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList, Connection con) {
+    public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList) {
         ArrayList<CoC_PlayerContainer> uniqueMembers = new ArrayList<>();
 
         boolean memberJoined = false;
@@ -167,14 +167,18 @@ public class CoC_Clan {
             if (memberJoined) {
                 stringBuilder = new StringBuilder("*Een speler heeft zich bij de clan aangesloten!*");
 
-                Statement stmt;
                 try {
-                    stmt = con.createStatement();
+                    Class.forName("com.mysql.jdbc.Driver");
+                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+                    Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
                     while (rs.next()) {
                         blacklistData.add(new Pair<>(rs.getString("Tag"), rs.getString("Reason")));
                     }
-                } catch (SQLException e) {
+                    rs.close();
+                    stmt.close();
+                    con.close();
+                } catch (SQLException | ClassNotFoundException | IOException e) {
                     e.printStackTrace();
                 }
             } else {

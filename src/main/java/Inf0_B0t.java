@@ -49,7 +49,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     private String warState;
     private ArrayList<CoC_WarAttackContainer> clanWarAttacks;
     private ArrayList<CoC_WarAttackContainer> opponentWarAttacks;
-    private Connection con;
     private String cocApiKey;
 
     /* Constructor */
@@ -77,7 +76,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         /* Maak verbinding met de sql server en zet de ns api op */
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb","root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb","root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_key FROM credentials WHERE Api = 'ns'");
             String nsApiLogin = null;
@@ -89,6 +88,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             assert nsApiLogin != null;
             assert nsApiKey != null;
             nsApi = new NsApi(nsApiLogin, nsApiKey);
+            rs.close();
+            stmt.close();
+            con.close();
         } catch (ClassNotFoundException | SQLException | IOException e) {
             e.printStackTrace();
         }
@@ -152,7 +154,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             if (serverStatusCoC == CoC_ServerState.COCONLINE) {
                 ArrayList<CoC_PlayerContainer> updatedList = CoC_Clan.getCoCPlayerList(cocApiKey);
                 if (!(cocPlayersList.size() == updatedList.size())) {
-                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_Clan.getClanChange(cocPlayersList, updatedList, con)));
+                    runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_Clan.getClanChange(cocPlayersList, updatedList)));
                 }
                 cocPlayersList = updatedList;
             }
@@ -183,13 +185,17 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
                         if (!warUpdate.isEmpty()) {
                             ArrayList<Long> ids = new ArrayList<>();
-                            Statement stmt;
                             try {
-                                stmt = con.createStatement();
+                                Class.forName("com.mysql.jdbc.Driver");
+                                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+                                Statement stmt = con.createStatement();
                                 ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
                                 while (rs.next()) {
                                     ids.add((long) rs.getInt("ChatID"));
                                 }
+                                rs.close();
+                                stmt.close();
+                                con.close();
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
@@ -283,16 +289,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
      * @return  bot username
      */
     public String getBotUsername() {
-        Statement stmt;
         String apiUser = null;
         try {
-            stmt = con.createStatement();
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Api_user FROM credentials WHERE Api = 'telegram'");
 
             while (rs.next()) {
                 apiUser = rs.getString("Api_user");
             }
-        } catch (SQLException e) {
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
 
@@ -303,16 +314,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
      * @return  bot token
      */
     public String getBotToken() {
-        Statement stmt;
         String apiKey = null;
         try {
-            stmt = con.createStatement();
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'telegram'");
 
             while (rs.next()) {
                 apiKey = rs.getString("Api_key");
             }
-        } catch (SQLException e) {
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
 
@@ -440,13 +456,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     } break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTADD.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(),2, cmdBuilder.getCommands().length) , con, cocApiKey));
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(),2, cmdBuilder.getCommands().length) , cocApiKey));
                     runCommandMessage(cmdBuilder.getSendMessage());
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTREMOVE.getCommand())) {
                     if (cmdBuilder.getCommands().length == 2) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1], con));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1]));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     else {
@@ -458,14 +474,14 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTVIEW.getCommand())) {
                     SendDocument sendDocumentrequest = new SendDocument();
                     sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                    sendDocumentrequest.setNewDocument(CoC_Blacklist.getBlacklist(con));
+                    sendDocumentrequest.setNewDocument(CoC_Blacklist.getBlacklist());
                     sendDocumentrequest.setCaption("Blacklist");
                     runCommandDocument(sendDocumentrequest);
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTCHECK.getCommand())) {
                     if (cmdBuilder.getCommands().length == 2) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.checkBlacklistPlayer(cmdBuilder.getCommands()[1], con));
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.checkBlacklistPlayer(cmdBuilder.getCommands()[1]));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     else {
@@ -491,7 +507,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARSUBSCRIBE.getCommand())) {
                     if (cmdBuilder.getCommands().length == 1) {
                         if (cmdBuilder.getChatID() > 0) {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.subscribeToWarEvents(cmdBuilder.getChatID(), con));
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.subscribeToWarEvents(cmdBuilder.getChatID()));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         } else {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Dit commando is niet beschikbaar in een groepsgesprek!");
@@ -503,7 +519,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARUNSUBSCRIBE.getCommand())) {
                     if (cmdBuilder.getCommands().length == 1) {
                         if (cmdBuilder.getChatID() > 0) {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.unsubscribeToWarEvents(cmdBuilder.getChatID(), con));
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.unsubscribeToWarEvents(cmdBuilder.getChatID()));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         } else {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Dit commando is niet beschikbaar in een groepsgesprek!");
@@ -544,16 +560,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.WEERHUIDIG.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        Statement stmt;
                         String apiKey = null;
                         try {
-                            stmt = con.createStatement();
+                            Class.forName("com.mysql.jdbc.Driver");
+                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+                            Statement stmt = con.createStatement();
                             ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'wunderground'");
 
                             while (rs.next()) {
                                 apiKey = rs.getString("Api_key");
                             }
-                        } catch (SQLException e) {
+
+                            rs.close();
+                            stmt.close();
+                            con.close();
+                        } catch (SQLException | ClassNotFoundException | IOException e) {
                             e.printStackTrace();
                         }
 
@@ -566,16 +587,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 }
                 if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.WEERVOORSPELLING.getCommand())) {
                     if (cmdBuilder.getLocatieCommands().length > 1) {
-                        Statement stmt;
                         String apiKey = null;
                         try {
-                            stmt = con.createStatement();
+                            Class.forName("com.mysql.jdbc.Driver");
+                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+                            Statement stmt = con.createStatement();
                             ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'wunderground'");
 
                             while (rs.next()) {
                                 apiKey = rs.getString("Api_key");
                             }
-                        } catch (SQLException e) {
+
+                            rs.close();
+                            stmt.close();
+                            con.close();
+                        } catch (SQLException | ClassNotFoundException | IOException e) {
                             e.printStackTrace();
                         }
 
