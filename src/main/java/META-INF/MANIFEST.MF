@@ -1,23 +1,23 @@
 Manifest-Version: 1.0
-Class-Path: commons-codec-1.10.jar xmlbeans-2.6.0.jar bcprov-jdk15on-1
- .55.jar poi-ooxml-3.15.jar jackson-jaxrs-base-2.8.7.jar jackson-core-
- 2.8.7.jar commons-io-2.5.jar grizzly-http-2.3.28.jar commons-lang3-3.
- 1.jar grizzly-framework-2.3.28.jar jackson-databind-2.8.7.jar javax.i
- nject-1.jar httpmime-4.5.3.jar hk2-locator-2.5.0-b32.jar javax.ws.rs-
- api-2.0.1.jar jersey-media-json-jackson-2.25.1.jar jackson-jaxrs-json
- -provider-2.8.7.jar java-jwt-3.0.1.jar jersey-media-jaxb-2.25.1.jar j
- ersey-client-2.25.1.jar httpclient-4.5.3.jar jersey-common-2.25.1.jar
-  aopalliance-repackaged-2.5.0-b32.jar json-20160810.jar grizzly-http-
- server-2.3.28.jar hk2-utils-2.5.0-b32.jar aopalliance-1.0.jar jersey-
- container-grizzly2-http-2.25.1.jar mysql-connector-java-5.1.6.jar cur
- vesapi-1.04.jar commons-collections4-4.1.jar emoji-java-4.0.0.jar ns-
- api-1.1.0.jar guice-4.1.0.jar telegrambots-3.6.jar poi-ooxml-schemas-
- 3.15.jar jackson-annotations-2.8.0.jar hk2-api-2.5.0-b32.jar jersey-g
- uava-2.25.1.jar commons-logging-1.2.jar stax-api-1.0.1.jar osgi-resou
- rce-locator-1.0.1.jar jersey-server-2.25.1.jar poi-3.15.jar validatio
- n-api-1.1.0.Final.jar guava-19.0.jar javassist-3.20.0-GA.jar jersey-e
- ntity-filtering-2.25.1.jar slf4j-api-1.7.13.jar jackson-module-jaxb-a
- nnotations-2.8.7.jar javax.annotation-api-1.2.jar javax.inject-2.5.0-
- b32.jar httpcore-4.4.6.jar telegrambots-meta-3.6.jar
+Class-Path: commons-codec-1.10.jar jackson-annotations-2.8.0.jar javax
+ .annotation-api-1.2.jar osgi-resource-locator-1.0.1.jar curvesapi-1.0
+ 4.jar poi-ooxml-3.15.jar httpmime-4.5.3.jar commons-io-2.5.jar json-2
+ 0160810.jar grizzly-http-2.3.28.jar telegrambots-meta-3.6.jar guice-4
+ .1.0.jar javax.ws.rs-api-2.0.1.jar jackson-databind-2.8.7.jar javassi
+ st-3.20.0-GA.jar jersey-media-jaxb-2.25.1.jar commons-logging-1.2.jar
+  javax.inject-2.5.0-b32.jar emoji-java-4.0.0.jar xmlbeans-2.6.0.jar j
+ ersey-media-json-jackson-2.25.1.jar hk2-locator-2.5.0-b32.jar commons
+ -lang3-3.1.jar jackson-jaxrs-json-provider-2.8.7.jar jersey-server-2.
+ 25.1.jar bcprov-jdk15on-1.55.jar guava-19.0.jar httpcore-4.4.6.jar st
+ ax-api-1.0.1.jar mysql-connector-java-5.1.6.jar hk2-utils-2.5.0-b32.j
+ ar jersey-guava-2.25.1.jar grizzly-http-server-2.3.28.jar httpclient-
+ 4.5.3.jar jersey-client-2.25.1.jar telegrambots-3.6.jar hk2-api-2.5.0
+ -b32.jar jackson-module-jaxb-annotations-2.8.7.jar commons-collection
+ s4-4.1.jar aopalliance-1.0.jar poi-ooxml-schemas-3.15.jar slf4j-api-1
+ .7.13.jar jackson-jaxrs-base-2.8.7.jar jersey-container-grizzly2-http
+ -2.25.1.jar jersey-common-2.25.1.jar java-jwt-3.0.1.jar grizzly-frame
+ work-2.3.28.jar validation-api-1.1.0.Final.jar poi-3.15.jar ns-api-1.
+ 1.0.jar jackson-core-2.8.7.jar aopalliance-repackaged-2.5.0-b32.jar j
+ ersey-entity-filtering-2.25.1.jar javax.inject-1.jar
 Main-Class: Main
 

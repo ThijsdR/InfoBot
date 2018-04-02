@@ -81,10 +81,12 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             ResultSet rs = stmt.executeQuery("SELECT Api_user, Api_key FROM credentials WHERE Api = 'ns'");
             String nsApiLogin = null;
             String nsApiKey = null;
+
             while (rs.next()) {
                 nsApiLogin = rs.getString("Api_user");
                 nsApiKey = rs.getString("Api_key");
             }
+
             assert nsApiLogin != null;
             assert nsApiKey != null;
             nsApi = new NsApi(nsApiLogin, nsApiKey);
@@ -110,14 +112,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         /* Als de clan bezig is met een oorlog haal dan de huidige aanvallen op */
         clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
         opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
-
-        /* Set up Frame */
-        JFrame frame = new JFrame("Inf0_B0t");
-        frame.setPreferredSize(new Dimension(800, 600));
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new JLabel("Hello"), BorderLayout.CENTER);
-        frame.pack();
-        frame.setVisible(true);
 
         /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
         Runnable reportGenerator = () -> CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true, cocApiKey);
@@ -399,42 +393,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////        Clash of Clans commando's      //////
                 ///////////////////////////////////////////////////
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANINFO.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getEditableURL() + cmdBuilder.getCommands()[1], cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanInfo(Commands.COCCLANINFO.getDefaultURL(), cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANDONATIONS.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1) {
-                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Clan.getClanDonaties(Commands.COCCLANDONATIONS.getDefaultURL(), cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].equals(Commands.COCCLANMEMBERINFO.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 2 && cmdBuilder.getCommands()[1].startsWith("#")) {
-                        String clanTag = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getEditableURL() + clanTag + "/members", cmdBuilder.getCommands()[2], cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                        break COMMAND_CONTROL;
-                    }
-                    if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].contains("#")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_ClanMember.getClanMemberInfo(Commands.COCCLANMEMBERINFO.getDefaultURL(), cmdBuilder.getCommands()[1], cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                        break COMMAND_CONTROL;
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik na het commando nog 1 of 2 parameters nodig.\nBijvoorbeeld: /cocmemberinfo #joc9cpy BlackWing\nof: /cocmemberinfo BlackWing (standaard brabant2.0)");
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
                     if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
                         cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
@@ -545,13 +503,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.TREINSTORINGEN.getCommand())) {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(NS_StoringenWerkzaamheden.getStoringen(nsApi));
                     runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.TREINWERKZAAMHEDEN.getCommand())) {
-                    SendDocument sendDocumentrequest = new SendDocument();
-                    sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                    sendDocumentrequest.setNewDocument(NS_StoringenWerkzaamheden.getWerkzaamheden(nsApi));
-                    sendDocumentrequest.setCaption("Actuele en aankomende werkzaamheden");
-                    runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
                 }
                 //////         Einde NS/trein commando's     //////
 

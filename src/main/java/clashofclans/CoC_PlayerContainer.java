@@ -1,7 +1,5 @@
 package clashofclans;
 
-import clashofclans.player_resources.CoC_Hero;
-
 import java.util.ArrayList;
 import java.util.List;
 

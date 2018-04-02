@@ -1,6 +1,5 @@
 package clashofclans;
 
-import clashofclans.player_resources.CoC_Hero;
 import com.vdurmont.emoji.EmojiParser;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
@@ -16,78 +15,6 @@ import java.util.ArrayList;
  * Deze klasse bevat methode(s) welke betrekking hebben op de gehele clan
  */
 public class CoC_Clan {
-
-    /**
-     * Deze methode wordt gebruikt om alle relevante informatie op te halen van de opgegeven clan.
-     * Van de clan wordt de naam, het clanlevel, de tag, de score, het type, het ledenaantal en de locatie opgevraagd
-     *
-     * @param urlString String om de request naar toe te sturen
-     * @return Een String met alle informatie omtrent de opgegeven clan
-     */
-    public static String getClanInfo(String urlString, String cocApiKey) {
-
-        /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, cocApiKey);
-
-        /* Return wanneer de server niks terugstuurt */
-        if (returnJson.equals("SERVER ERROR")) {
-            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
-        }
-
-        /* Haal alle benodigde data uit de response */
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
-
-        /* Genereer het antwoord op basis van de response */
-        StringBuilder botResponse = new StringBuilder();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            botResponse.append("Clan: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
-            botResponse.append("Level: ").append(jsonArray.getJSONObject(i).getInt("clanLevel")).append("\n");
-            botResponse.append("Clan tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
-            botResponse.append(EmojiParser.parseToUnicode("Clanpoints: :trophy:")).append(jsonArray.getJSONObject(i).getInt("clanPoints")).append("\n");
-            botResponse.append("Clan type: ").append(jsonArray.getJSONObject(i).getString("type")).append("\n");
-            botResponse.append(EmojiParser.parseToUnicode("Members: :family:")).append(jsonArray.getJSONObject(i).getInt("members")).append("\n");
-            botResponse.append("Country: ").append(jsonArray.getJSONObject(i).getJSONObject("location").getString("name")).append("\n");
-            botResponse.append("-~-~-~-~-~-~-~-~\n");
-        }
-
-        return String.valueOf(botResponse);
-    }
-
-    /**
-     * Deze methode haalt alle donatiegegevens op van de opgegeven clan.
-     * De hoeveelheid gedoneerde en ontvangen troepen worden getoond.
-     *
-     * @param urlString String om de request naar toe te sturen
-     * @return Een String met alle donatiegegevens van de opgegeven clan
-     */
-    public static String getClanDonaties(String urlString, String cocApiKey) {
-
-        /* Stuur aan de hand van de urlString een request naar de server */
-        String returnJson = CoC_PROC.retrieveDataSupercellAPI(urlString, cocApiKey);
-
-        /* Return wanneer de server niks terugstuurt */
-        if (returnJson.equals("SERVER ERROR")) {
-            return "Ik kan de gevraagde data niet opvragen van de server...\nDe server is hoogstwaarschijnlijk offline";
-        }
-
-        /* Haal alle benodigde data uit de response */
-        JSONObject json = new JSONObject(returnJson);
-        JSONArray jsonArray = json.getJSONArray("items");
-
-        /* Genereer het antwoord op basis van de response */
-        StringBuilder botResponse = new StringBuilder();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            botResponse.append("-").append(jsonArray.getJSONObject(i).getInt("clanRank")).append("-\n");
-            botResponse.append("Name: ").append(jsonArray.getJSONObject(i).getString("name")).append("\n");
-            botResponse.append("Tag: ").append(jsonArray.getJSONObject(i).getString("tag")).append("\n");
-            botResponse.append(EmojiParser.parseToUnicode("Donations: :arrow_forward:")).append(jsonArray.getJSONObject(i).getInt("donations")).append("\n");
-            botResponse.append(EmojiParser.parseToUnicode("Received: :arrow_backward:")).append(jsonArray.getJSONObject(i).getInt("donationsReceived")).append("\n");
-            botResponse.append("-~-~-~-~-~-~-~-~\n");
-        }
-
-        return String.valueOf(botResponse);
-    }
 
     public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(String cocApiKey) {
         ArrayList<CoC_PlayerContainer> playerList = new ArrayList<>();
@@ -111,8 +38,7 @@ public class CoC_Clan {
 
             for (int j = 0; j < heroesJsonArray.length(); j++) {
                 heroList.add(new CoC_Hero(heroesJsonArray.getJSONObject(j).getString("name"),
-                        heroesJsonArray.getJSONObject(j).getInt("level"),
-                        heroesJsonArray.getJSONObject(j).getString("village")));
+                        heroesJsonArray.getJSONObject(j).getInt("level")));
             }
             player.setHeroLevels(heroList);
             playerList.add(player);

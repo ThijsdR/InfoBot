@@ -11,13 +11,13 @@ public class W_Forecast {
         JSONArray forecastArray = txt.getJSONArray("forecastday");
 
         StringBuilder botResponse = new StringBuilder();
-        botResponse.append("Voorspelling:");
-        botResponse.append("\n--------------------------");
+        botResponse.append("*Voorspelling:");
+        botResponse.append("\n--------------------------*");
 
         for (int i = 0; i < forecastArray.length(); i++) {
             botResponse.append("\n");
             botResponse.append(forecastArray.getJSONObject(i).getString("title")).append(W_PROC.weatherIconChecker(forecastArray.getJSONObject(i).getString("icon")));
-            botResponse.append("\n-~-~-~-~-~-~-~-~");
+            botResponse.append("\n*-~-~-~-~-~-~-~-~*");
             botResponse.append("\n").append(forecastArray.getJSONObject(i).getString("fcttext_metric"));
             botResponse.append("\n");
         }

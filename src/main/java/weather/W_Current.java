@@ -11,9 +11,9 @@ public class W_Current {
         StringBuilder botResponse = new StringBuilder();
         botResponse.append(location.getString("full"));
         botResponse.append(W_PROC.weatherIconChecker(current.getString("icon")));
-        botResponse.append("\n--------------------------");
-        botResponse.append("\nTemperatuur: ").append(current.getDouble("temp_c")).append(" *C");
-        botResponse.append("\nGevoelstemperatuur: ").append(current.getDouble("feelslike_c")).append(" *C");
+        botResponse.append("\n*--------------------------*");
+        botResponse.append("\nTemperatuur: ").append(current.getDouble("temp_c")).append(" C");
+        botResponse.append("\nGevoelstemperatuur: ").append(current.getDouble("feelslike_c")).append(" C");
         botResponse.append("\nLuchtvochtigheid: ").append(current.getString("relative_humidity"));
 
         return String.valueOf(botResponse);

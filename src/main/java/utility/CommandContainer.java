@@ -27,19 +27,15 @@ public class CommandContainer {
     public String getMessageText() {
         return messageText;
     }
-
     public String[] getCommands() {
         return commands;
     }
-
     public String[] getLocatieCommands() {
         return locatieCommands;
     }
-
     public SendMessage getSendMessage() {
         return sendMessage;
     }
-
     public long getChatID() {
         return chatID;
     }

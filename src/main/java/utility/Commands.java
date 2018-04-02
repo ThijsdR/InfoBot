@@ -1,9 +1,6 @@
 package utility;
 
 public enum Commands {
-    COCCLANINFO("/cocclaninfo","https://api.clashofclans.com/v1/clans?name=","https://api.clashofclans.com/v1/clans?name=%23J0C9CPY"),
-    COCCLANDONATIONS("/cocclandonaties", "https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
-    COCCLANMEMBERINFO("/cocclanmember","https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
     COCCLANMEMBERSTOFILE("/cocclanmembersfile","https://api.clashofclans.com/v1/clans/", "https://api.clashofclans.com/v1/clans/%23J0C9CPY/members"),
     COCBLACKLISTADD("/cocblacklistadd"),
     COCBLACKLISTREMOVE("/cocblacklistremove"),
@@ -15,7 +12,6 @@ public enum Commands {
     COCWARUNSUBSCRIBE("/cocwarunsubscribe"),
     TREINTIJDEN("/treintijden"),
     TREINSTORINGEN("/treinstoringen"),
-    TREINWERKZAAMHEDEN("/treinwerkzaamheden"),
     WEERHUIDIG("/weerhuidig"),
     WEERVOORSPELLING("/weersvoorspelling"),
     CHAT("/chat"),
@@ -49,11 +45,9 @@ public enum Commands {
     public String getCommand() {
         return command;
     }
-
     public String getEditableURL() {
         return editableURL;
     }
-
     public String getDefaultURL() {
         return defaultURL;
     }
