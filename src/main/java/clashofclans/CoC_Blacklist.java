@@ -140,8 +140,8 @@ public class CoC_Blacklist {
             ResultSet rs = stmt.executeQuery("SELECT * FROM blacklist");
             while (rs.next()) {
                 blacklistBuilder.append(rs.getString("Name")).append(" (")
-                        .append(rs.getString("Tag")).append(") - ")
-                        .append(rs.getString("Reason")).append("\n");
+                        .append(rs.getString("Tag")).append(")\n")
+                        .append(rs.getString("Reason")).append("\\nn");
             }
             FileUtils.writeStringToFile(blacklistFile, String.valueOf(blacklistBuilder));
             rs.close();

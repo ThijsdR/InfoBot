@@ -297,14 +297,27 @@ public class CoC_War {
     public static String endWarRecap(String warData, String cocApiKey) {
         JSONObject warJson = new JSONObject(warData);
         JSONObject clanJson = warJson.getJSONObject("clan");
+        JSONArray clanJsonJSONArray = clanJson.getJSONArray("members");
+        ArrayList<CoC_PlayerContainer> clanWarPlayers = new ArrayList<>();
+
+        for (int i = 0; i < clanJsonJSONArray.length(); i++) {
+            clanWarPlayers.add(new CoC_PlayerContainer(clanJsonJSONArray.getJSONObject(i).getInt("mapPosition"),
+                    clanJsonJSONArray.getJSONObject(i).getString("tag"),
+                    clanJsonJSONArray.getJSONObject(i).getString("name")));
+        }
+
         JSONObject opponentJson = warJson.getJSONObject("opponent");
+        JSONArray opponentJsonJSONArray = opponentJson.getJSONArray("members");
+        ArrayList<CoC_PlayerContainer> opponentWarPlayers = new ArrayList<>();
+
+        for (int i = 0; i < opponentJsonJSONArray.length(); i++) {
+            opponentWarPlayers.add(new CoC_PlayerContainer(opponentJsonJSONArray.getJSONObject(i).getInt("mapPosition"),
+                    opponentJsonJSONArray.getJSONObject(i).getString("tag"),
+                    opponentJsonJSONArray.getJSONObject(i).getString("name")));
+        }
 
         ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
         clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
-        String bassieData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(clanWarAttacks.size() - 1).getAttackerTag().replace("#", "%23"), cocApiKey);
-        JSONObject bassieJson = new JSONObject(bassieData);
-        String bassieAwardName = bassieJson.getString("name");
-        String bassieAward = bassieAwardName + " met " + clanWarAttacks.get(0).getDestructionPercentage() + "%";
         DecimalFormat df = new DecimalFormat(".##");
 
         StringBuilder recap = new StringBuilder(EmojiParser.parseToUnicode("*De oorlog is afgelopen!* :checkered_flag:\n\n"));
@@ -316,29 +329,52 @@ public class CoC_War {
         recap.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(opponentJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append("\n");
         recap.append(EmojiParser.parseToUnicode(":collision: ")).append(df.format(opponentJson.getDouble("destructionPercentage"))).append("%\n\n");
 
+        String bassieData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getAttackerTag().replace("#", "%23"), cocApiKey);
+        JSONObject bassieJson = new JSONObject(bassieData);
+        String bassieAwardName = bassieJson.getString("name");
+        String bassieAward = bassieAwardName + " met " + clanWarAttacks.get(0).getDestructionPercentage() + "%";
         recap.append(EmojiParser.parseToUnicode(":clown::trophy: *Winnaar van de Bassie-award:*\n_" + bassieAward + "_\n\n"));
 
-        ArrayList<CoC_WarAttackContainer> attacks = new ArrayList<>();
+        ArrayList<CoC_WarAttackContainer> perfectAttacks = new ArrayList<>();
+
         for (CoC_WarAttackContainer clanWarAttack : clanWarAttacks) {
             if (clanWarAttack.getDestructionPercentage() == 100) {
-                attacks.add(clanWarAttack);
+                perfectAttacks.add(clanWarAttack);
             }
         }
 
-        if (!attacks.isEmpty()) {
-            recap.append("*Helden van deze oorlog:*\n");
+        if (!perfectAttacks.isEmpty()) {
+            recap.append("*Eervolle vermeldingen:*\n");
 
-            for (CoC_WarAttackContainer attack : attacks) {
-                recap.append(EmojiParser.parseToUnicode(":star::star::star: "));
-                recap.append(attack.getDestructionPercentage()).append("% \n");
-                String attackerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getAttackerTag().replace("#", "%23"), cocApiKey);
-                JSONObject attackerJson = new JSONObject(attackerData);
-                recap.append(attackerJson.getString("name"));
-                recap.append(EmojiParser.parseToUnicode(" \n:arrow_forward: "));
-                String defenderData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getDefenderTag().replace("#", "%23"), cocApiKey);
-                JSONObject defenderJson = new JSONObject(defenderData);
-                recap.append(defenderJson.getString("name"));
-                recap.append("\n\n");
+            String clanPlayerName;
+            String clanPlayerTag;
+            String opponentPlayerName;
+            String opponentPlayerTag;
+
+            for (CoC_WarAttackContainer attack : perfectAttacks) {
+                String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getAttackerTag().replace("#", "%23"), cocApiKey);
+                JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
+                clanPlayerName = clanPlayerJson.getString("name");
+                clanPlayerTag = attack.getAttackerTag();
+
+                String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + attack.getDefenderTag().replace("#", "%23"), cocApiKey);
+                JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
+                opponentPlayerName = opponentPlayerJson.getString("name");
+                opponentPlayerTag = attack.getDefenderTag();
+
+                recap.append(EmojiParser.parseToUnicode(":star::star::star: :100:")).append("% \n");
+
+                for (CoC_PlayerContainer player : clanWarPlayers) {
+                    if (player.getPlayerTag().equals(clanPlayerTag)) {
+                        recap.append("*").append(player.getPositionInClan()).append(".* ").append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
+                    }
+                }
+
+                for (CoC_PlayerContainer opponent : opponentWarPlayers) {
+                    if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
+                        recap.append("*").append(opponent.getPositionInClan()).append(".* ").append(opponentPlayerName).append("\n\n");
+                    }
+                }
             }
         }
 
