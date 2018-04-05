@@ -108,35 +108,57 @@ public class CoC_Clan {
                     e.printStackTrace();
                 }
             } else {
-                stringBuilder = new StringBuilder("_Een speler zit niet langer meer bij de clan!_");
+                stringBuilder = new StringBuilder("*Een speler zit niet langer meer bij de clan!*");
             }
 
             for (CoC_PlayerContainer player : uniqueMembers) {
                 stringBuilder.append("\n\n");
                 stringBuilder.append(player.getName());
-                stringBuilder.append(" (").append(player.getPlayerTag()).append(")\n");
-                stringBuilder.append(EmojiParser.parseToUnicode(":house: ")).append(player.getTownhallLevel()).append("  ");
-                stringBuilder.append(EmojiParser.parseToUnicode(":trophy: ")).append(player.getTrophyCount()).append("  ");
+                stringBuilder.append(" (")
+                        .append(player.getPlayerTag())
+                        .append(")\n");
+                stringBuilder.append(EmojiParser.parseToUnicode(":house: "))
+                        .append(player.getTownhallLevel())
+                        .append("  ");
+                stringBuilder.append(EmojiParser.parseToUnicode(":trophy: "))
+                        .append(player.getTrophyCount())
+                        .append("  ");
 
                 for (CoC_Hero hero : player.getHeroLevels()) {
                     String heroName = hero.getName();
                     switch (heroName) {
                         case "Barbarian King":
-                            stringBuilder.append(EmojiParser.parseToUnicode(":prince: ")).append(hero.getLevel()).append("  ");
+                            stringBuilder.append(EmojiParser.parseToUnicode(":prince: "))
+                                    .append(hero.getLevel())
+                                    .append("  ");
                             break;
                         case "Archer Queen":
-                            stringBuilder.append(EmojiParser.parseToUnicode(":princess: ")).append(hero.getLevel()).append("  ");
+                            stringBuilder.append(EmojiParser.parseToUnicode(":princess: "))
+                                    .append(hero.getLevel())
+                                    .append("  ");
                             break;
                         case "Grand Warden":
-                            stringBuilder.append(EmojiParser.parseToUnicode(":angel: ")).append(hero.getLevel());
+                            stringBuilder.append(EmojiParser.parseToUnicode(":angel: "))
+                                    .append(hero.getLevel());
                             break;
                     }
                 }
 
-                for (Pair<String, String> blPlayer : blacklistData) {
-                    if (blPlayer.getKey().equals(player.getPlayerTag().toLowerCase())) {
-                        stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: Deze speler staat op de zwarte lijst!*\n")).append("_Reden: ").append(blPlayer.getValue()).append("_");
+                if (memberJoined) {
+                    for (Pair<String, String> blPlayer : blacklistData) {
+                        if (blPlayer.getKey().equals(player.getPlayerTag().toLowerCase())) {
+                            stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: Deze speler staat op de zwarte lijst!*\n"))
+                                    .append(blPlayer.getValue());
+                        }
                     }
+
+                    String playerName = player.getName().replaceAll("\\s", "-").toLowerCase();
+                    stringBuilder.append("\n\n")
+                            .append("https://www.clashofstats.com/players/")
+                            .append(playerName)
+                            .append("-")
+                            .append(player.getPlayerTag().substring(1))
+                            .append("/profile#playerHistory");
                 }
             }
         }

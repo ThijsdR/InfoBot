@@ -12,8 +12,6 @@ public enum Commands {
     COCWARUNSUBSCRIBE("/cocwarunsubscribe"),
     TREINTIJDEN("/treintijden"),
     TREINSTORINGEN("/treinstoringen"),
-    WEERHUIDIG("/weerhuidig"),
-    WEERVOORSPELLING("/weersvoorspelling"),
     CHAT("/chat"),
     HELP("/help"),
     HALLO("/hallo"),

@@ -14,11 +14,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import utility.CommandContainer;
 import utility.Commands;
-import weather.W_Current;
-import weather.W_Forecast;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
@@ -505,65 +501,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
                 }
                 //////         Einde NS/trein commando's     //////
-
-                ///////////////////////////////////////////////////
-                //////      Weergerelateerde commando's      //////
-                ///////////////////////////////////////////////////
-                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.WEERHUIDIG.getCommand())) {
-                    if (cmdBuilder.getLocatieCommands().length > 1) {
-                        String apiKey = null;
-                        try {
-                            Class.forName("com.mysql.jdbc.Driver");
-                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
-                            Statement stmt = con.createStatement();
-                            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'wunderground'");
-
-                            while (rs.next()) {
-                                apiKey = rs.getString("Api_key");
-                            }
-
-                            rs.close();
-                            stmt.close();
-                            con.close();
-                        } catch (SQLException | ClassNotFoundException | IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Current.getCurrentWeather("http://api.wunderground.com/api/" + apiKey + "/conditions/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weerhuidig Den Haag");
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getLocatieCommands()[0].startsWith(Commands.WEERVOORSPELLING.getCommand())) {
-                    if (cmdBuilder.getLocatieCommands().length > 1) {
-                        String apiKey = null;
-                        try {
-                            Class.forName("com.mysql.jdbc.Driver");
-                            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
-                            Statement stmt = con.createStatement();
-                            ResultSet rs = stmt.executeQuery("SELECT Api_key FROM credentials WHERE Api = 'wunderground'");
-
-                            while (rs.next()) {
-                                apiKey = rs.getString("Api_key");
-                            }
-
-                            rs.close();
-                            stmt.close();
-                            con.close();
-                        } catch (SQLException | ClassNotFoundException | IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(W_Forecast.getForecast("http://api.wunderground.com/api/" + apiKey + "/forecast/q/nl/" + cmdBuilder.getLocatieCommands()[1].replace(" ", "_") + ".json"));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik de naam van een plaats in Nederland nodig...\n\nBijvoorbeeld: /weervoorspelling Den Haag");
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } break COMMAND_CONTROL;
-                }
-                //////    Einde weergerelateerde commando's  //////
 
                 ///////////////////////////////////////////////////
                 //////          Overige commando's           //////

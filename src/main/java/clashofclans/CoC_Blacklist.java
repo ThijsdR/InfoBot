@@ -141,7 +141,7 @@ public class CoC_Blacklist {
             while (rs.next()) {
                 blacklistBuilder.append(rs.getString("Name")).append(" (")
                         .append(rs.getString("Tag")).append(")\n")
-                        .append(rs.getString("Reason")).append("\\nn");
+                        .append(rs.getString("Reason")).append("\n\n");
             }
             FileUtils.writeStringToFile(blacklistFile, String.valueOf(blacklistBuilder));
             rs.close();

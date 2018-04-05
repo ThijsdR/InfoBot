@@ -387,8 +387,8 @@ public class CoC_War {
         JSONObject opponentJson = warJson.getJSONObject("opponent");
         JSONArray opponentMemberJsonArray = opponentJson.getJSONArray("members");
 
-        StringBuilder opponentOverview = new StringBuilder("*De oorlog is verklaard aan:* _");
-        opponentOverview.append(opponentJson.getString("name")).append("_\n*------------------*");
+        StringBuilder opponentOverview = new StringBuilder("*De oorlog is verklaard aan:* ");
+        opponentOverview.append(opponentJson.getString("name")).append("\n");
 
         for (int j = 0; j < opponentMemberJsonArray.length(); j++) {
             JSONObject opponentMemberJson = opponentMemberJsonArray.getJSONObject(j);
@@ -423,7 +423,12 @@ public class CoC_War {
             JSONObject opponentJson = warJson.getJSONObject("opponent");
             JSONArray opponentMemberJsonArray = opponentJson.getJSONArray("members");
             botResponse.append("*Tegenstander:* _").append(opponentJson.getString("name")).append("_\n\n");
-            botResponse.append("_Huidige stand: ").append(checkWarScore(warData)).append("_\n");
+            botResponse.append("_Huidige stand: ").append(checkWarScore(warData)).append("_\n\n");
+
+            JSONObject clanJson = warJson.getJSONObject("clan");
+            DecimalFormat df = new DecimalFormat(".##");
+            botResponse.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(clanJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append(" ");
+            botResponse.append(EmojiParser.parseToUnicode(":collision: ")).append(df.format(clanJson.getDouble("destructionPercentage"))).append("%\n");
 
             for (int j = 0; j < opponentMemberJsonArray.length(); j++) {
                 JSONObject opponentMemberJson = opponentMemberJsonArray.getJSONObject(j);
@@ -451,27 +456,36 @@ public class CoC_War {
                 }
 
                 if (player.getTownhallLevel() < 10) {
-                    botResponse.append(EmojiParser.parseToUnicode("   :house:")).append("0").append(player.getTownhallLevel()).append("   ");
+                    botResponse.append(EmojiParser.parseToUnicode(" :house:"))
+                            .append("0")
+                            .append(player.getTownhallLevel())
+                            .append(" ");
                 } else {
-                    botResponse.append(EmojiParser.parseToUnicode("   :house:")).append(player.getTownhallLevel()).append("   ");
+                    botResponse.append(EmojiParser.parseToUnicode(" :house:"))
+                            .append(player.getTownhallLevel())
+                            .append(" ");
                 }
 
                 switch (player.getBestAttack().getStars()) {
                     case 0:
-                        botResponse.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: ")).
-                                append(player.getBestAttack().getDestructionPercentage()).append("%");
+                        botResponse.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
                         break;
                     case 1:
-                        botResponse.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: ")).
-                                append(player.getBestAttack().getDestructionPercentage()).append("%");
+                        botResponse.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
                         break;
                     case 2:
-                        botResponse.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: ")).
-                                append(player.getBestAttack().getDestructionPercentage()).append("%");
+                        botResponse.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
                         break;
                     case 3:
-                        botResponse.append(EmojiParser.parseToUnicode(":star::star::star: ")).
-                                append(player.getBestAttack().getDestructionPercentage()).append("%");
+                        botResponse.append(EmojiParser.parseToUnicode(":star::star::star: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
                         break;
                 }
             }
