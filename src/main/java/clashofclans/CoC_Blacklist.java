@@ -2,6 +2,7 @@ package clashofclans;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
+import utility.TextFormatting;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class CoC_Blacklist {
 
         /* Wanneer er geen speler is gevonden bij de opgegeven spelerstag */
         if (playerName == null) {
-            return "_Er is geen speler gevonden met deze spelerstag..._";
+            return TextFormatting.toItalic("Er is geen speler gevonden met deze spelerstag...");
         }
 
         /* Maak een string van de opgegeven reden */
@@ -49,7 +50,7 @@ public class CoC_Blacklist {
             e.printStackTrace();
         }
 
-        return "_" + playerName + " (" + playerTag + ") is toegevoegd aan de zwarte lijst vanwege: " + String.valueOf(reasonBuilder) + "_";
+        return TextFormatting.toItalic(playerName + " (" + playerTag + ") is toegevoegd aan de zwarte lijst vanwege: " + String.valueOf(reasonBuilder));
     }
 
     /**
@@ -84,9 +85,9 @@ public class CoC_Blacklist {
         }
 
         if (!(player == null)) {
-            return "_" + player + " (" + playerTag + ") is verwijderd van de zwarte lijst!_";
+            return TextFormatting.toItalic(player + " (" + playerTag + ") is verwijderd van de zwarte lijst!");
         } else {
-            return "_Deze speler stond niet op de zwarte lijst_";
+            return TextFormatting.toItalic("Deze speler stond niet op de zwarte lijst");
         }
     }
 
@@ -118,9 +119,9 @@ public class CoC_Blacklist {
         }
 
         if (!(player == null)) {
-            return "_" + player + " (" + playerTag + ") staat op de zwarte lijst vanwege:\n" + reason + "_";
+            return TextFormatting.toItalic(player + " (" + playerTag + ") staat op de zwarte lijst vanwege:\n" + reason);
         } else {
-            return "_De speler met de opgegeven spelerstag (" + playerTag + ") staat niet op de zwarte lijst_";
+            return TextFormatting.toItalic("De speler met de opgegeven spelerstag (" + playerTag + ") staat niet op de zwarte lijst");
         }
     }
 

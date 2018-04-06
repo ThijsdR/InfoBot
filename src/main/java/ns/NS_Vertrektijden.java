@@ -34,11 +34,11 @@ public class NS_Vertrektijden {
 
         assert vertrekkendeTreinen != null;
         for (VertrekkendeTrein trein : vertrekkendeTreinen) {
-            botResponse.append("_\n").append(trein.getTreinSoort());
+            botResponse.append("\n").append(trein.getTreinSoort());
             botResponse.append("\n-> ").append(trein.getEindBestemming());
             botResponse.append("\nSpoor: ").append(trein.getVertrekSpoor());
             botResponse.append("\n").append(String.format("%02d", trein.getVertrekTijd().getHours()))
-                    .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes())).append("_");
+                    .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
 
             if (trein.getVertrekVertragingMinuten() != 0) {
                 botResponse.append(" `+").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + "`:exclamation:"));

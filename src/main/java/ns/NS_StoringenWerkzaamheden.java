@@ -7,6 +7,7 @@ import nl.pvanassen.ns.RequestBuilder;
 import nl.pvanassen.ns.model.storingen.Storing;
 import nl.pvanassen.ns.model.storingen.Storingen;
 import org.apache.commons.io.FileUtils;
+import utility.TextFormatting;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,13 +28,13 @@ public class NS_StoringenWerkzaamheden {
         StringBuilder botResponse = new StringBuilder();
 
         assert storingen != null;
-        botResponse.append("*Actuele storingen:");
-        botResponse.append("\n------------------------*\n");
+        botResponse.append(TextFormatting.toBold("Actuele storingen:"));
+        botResponse.append("\n------------------------\n");
 
 
         if (!storingen.getOngeplandeStoringen().isEmpty()) {
             for (Storing storing : storingen.getOngeplandeStoringen()) {
-                botResponse.append("_<< ").append(storing.getTraject()).append(" >>_");
+                botResponse.append("<< ").append(TextFormatting.toItalic(storing.getTraject())).append(" >>");
                 botResponse.append("\n\n").append(storing.getReden());
 
                 if (!storing.getBericht().isEmpty()) {
@@ -47,10 +48,10 @@ public class NS_StoringenWerkzaamheden {
                         .append(String.format("%02d", storing.getDatum().getHours())).append(":")
                         .append(String.format("%02d", storing.getDatum().getMinutes())).append("`");
 
-                botResponse.append("\n*-~-~-~-~-~-~-~-~*\n");
+                botResponse.append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~\n"));
             }
         } else {
-            botResponse.append(EmojiParser.parseToUnicode("\n_Er zijn momenteel GEEN storingen_ :grimacing::muscle:"));
+            botResponse.append(EmojiParser.parseToUnicode(TextFormatting.toItalic("\nEr zijn momenteel GEEN storingen :grimacing::muscle:")));
         }
 
         return String.valueOf(botResponse);

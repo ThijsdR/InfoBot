@@ -5,6 +5,7 @@ import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import utility.TextFormatting;
 
 import java.io.File;
 import java.io.IOException;
@@ -88,27 +89,10 @@ public class CoC_Clan {
 
         StringBuilder stringBuilder = new StringBuilder();
         if (!uniqueMembers.isEmpty()) {
-            ArrayList<Pair<String, String>> blacklistData = new ArrayList<>();
-
             if (memberJoined) {
-                stringBuilder = new StringBuilder("*Een speler heeft zich bij de clan aangesloten!*");
-
-                try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
-                    Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
-                    while (rs.next()) {
-                        blacklistData.add(new Pair<>(rs.getString("Tag"), rs.getString("Reason")));
-                    }
-                    rs.close();
-                    stmt.close();
-                    con.close();
-                } catch (SQLException | ClassNotFoundException | IOException e) {
-                    e.printStackTrace();
-                }
+                stringBuilder = new StringBuilder(TextFormatting.toBold("Een speler heeft zich bij de clan aangesloten!"));
             } else {
-                stringBuilder = new StringBuilder("*Een speler zit niet langer meer bij de clan!*");
+                stringBuilder = new StringBuilder(TextFormatting.toBold("Een speler zit niet langer meer bij de clan!"));
             }
 
             for (CoC_PlayerContainer player : uniqueMembers) {
@@ -119,10 +103,10 @@ public class CoC_Clan {
                         .append(")\n");
                 stringBuilder.append(EmojiParser.parseToUnicode(":house: "))
                         .append(player.getTownhallLevel())
-                        .append("  ");
+                        .append(" ");
                 stringBuilder.append(EmojiParser.parseToUnicode(":trophy: "))
                         .append(player.getTrophyCount())
-                        .append("  ");
+                        .append(" ");
 
                 for (CoC_Hero hero : player.getHeroLevels()) {
                     String heroName = hero.getName();
@@ -130,12 +114,12 @@ public class CoC_Clan {
                         case "Barbarian King":
                             stringBuilder.append(EmojiParser.parseToUnicode(":prince: "))
                                     .append(hero.getLevel())
-                                    .append("  ");
+                                    .append(" ");
                             break;
                         case "Archer Queen":
                             stringBuilder.append(EmojiParser.parseToUnicode(":princess: "))
                                     .append(hero.getLevel())
-                                    .append("  ");
+                                    .append(" ");
                             break;
                         case "Grand Warden":
                             stringBuilder.append(EmojiParser.parseToUnicode(":angel: "))
@@ -145,10 +129,30 @@ public class CoC_Clan {
                 }
 
                 if (memberJoined) {
+                    ArrayList<Pair<String, String>> blacklistData = new ArrayList<>();
+                    
+                    try {
+                        Class.forName("com.mysql.jdbc.Driver");
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+                        Statement stmt = con.createStatement();
+                        ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
+                        while (rs.next()) {
+                            blacklistData.add(new Pair<>(rs.getString("Tag"), rs.getString("Reason")));
+                        }
+                        rs.close();
+                        stmt.close();
+                        con.close();
+                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                        e.printStackTrace();
+                    }
+
                     for (Pair<String, String> blPlayer : blacklistData) {
                         if (blPlayer.getKey().equals(player.getPlayerTag().toLowerCase())) {
-                            stringBuilder.append(EmojiParser.parseToUnicode("\n\n *>> :warning: Deze speler staat op de zwarte lijst!*\n"))
-                                    .append(blPlayer.getValue());
+                            stringBuilder.append("\n\n >> ")
+                                    .append(TextFormatting.toBold("Deze speler staat op de zwarte lijst!"))
+                                    .append("\n")
+                                    .append(blPlayer.getValue())
+                                    .append(EmojiParser.parseToUnicode(" :warning:"));
                         }
                     }
 

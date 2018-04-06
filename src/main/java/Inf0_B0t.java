@@ -14,6 +14,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import utility.CommandContainer;
 import utility.Commands;
+import utility.TextFormatting;
 
 import java.io.*;
 import java.sql.*;
@@ -399,7 +400,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         sendDocumentrequest.setCaption("Clanleden overzicht");
                         runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
                     } if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].startsWith("#")){
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando uit te voeren heb ik na het commando nog een parameter nodig.\nBijvoorbeeld: /cocclanmembersfile #joc9cpy");
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando uit te voeren heb ik na het commando nog een parameter nodig.\nBijvoorbeeld: /cocclanmembersfile #joc9cpy"));
                         runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
                     } else {
                         SendDocument sendDocumentrequest = new SendDocument();
@@ -420,7 +421,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig");
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig"));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     break COMMAND_CONTROL;
@@ -439,7 +440,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig");
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig"));
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                     break COMMAND_CONTROL;
@@ -464,7 +465,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.subscribeToWarEvents(cmdBuilder.getChatID()));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         } else {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Dit commando is niet beschikbaar in een groepsgesprek!");
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando is niet beschikbaar in een groepsgesprek!"));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         }
                     }
@@ -476,7 +477,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.unsubscribeToWarEvents(cmdBuilder.getChatID()));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         } else {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Dit commando is niet beschikbaar in een groepsgesprek!");
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando is niet beschikbaar in een groepsgesprek!"));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         }
                     }
@@ -515,7 +516,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.HALLO.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0_B0t\n\nVersie: " + "1.3" + "\n\nStatus: " + (beledigingen ? "Eerlijk" : "Empatisch"));
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hallo!\nIk ben Inf0B0t\n\nVersie: " + "1.5" + "\n\nStatus: " + (beledigingen ? "Eerlijk" : "Empatisch"));
                     runCommandMessage(cmdBuilder.getSendMessage());
                     break COMMAND_CONTROL;
                 }
@@ -562,12 +563,12 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             }
             if (cmdBuilder.getMessageText().toLowerCase().contains("klaas".toLowerCase()) || cmdBuilder.getMessageText().toLowerCase().contains("duitser".toLowerCase())) {
                 cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID())
-                        .setText(EmojiParser.parseToUnicode(":notes::notes:\n" +
+                        .setText(EmojiParser.parseToUnicode(TextFormatting.toItalic(":notes::notes:\n" +
                                 "Want Klaas is anders geaard\n" +
                                 "Klaas is anders geaard\n" +
                                 "Lekker zichzelf, dat is zeker wat waard\n" +
                                 "Maar Klaas is anders geaard\n" +
-                                ":musical_note::musical_note:"));
+                                ":musical_note::musical_note:")));
                 runCommandMessage(cmdBuilder.getSendMessage());
             }
         }
