@@ -1,7 +1,6 @@
 package clashofclans;
 
 import com.vdurmont.emoji.EmojiParser;
-import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -11,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Deze klasse bevat methode(s) welke betrekking hebben op de gehele clan
@@ -129,15 +130,15 @@ public class CoC_Clan {
                 }
 
                 if (memberJoined) {
-                    ArrayList<Pair<String, String>> blacklistData = new ArrayList<>();
-                    
+                    Map<String, String> blacklistMap = new HashMap<>();
+
                     try {
                         Class.forName("com.mysql.jdbc.Driver");
                         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
                         while (rs.next()) {
-                            blacklistData.add(new Pair<>(rs.getString("Tag"), rs.getString("Reason")));
+                            blacklistMap.put(rs.getString("Tag"), rs.getString("Reason"));
                         }
                         rs.close();
                         stmt.close();
@@ -146,13 +147,13 @@ public class CoC_Clan {
                         e.printStackTrace();
                     }
 
-                    for (Pair<String, String> blPlayer : blacklistData) {
-                        if (blPlayer.getKey().equals(player.getPlayerTag().toLowerCase())) {
+                    for (Map.Entry<String, String> entry : blacklistMap.entrySet()) {
+                        if (entry.getKey().toLowerCase().equals(player.getPlayerTag().toLowerCase())) {
                             stringBuilder.append("\n\n >> ")
+                                    .append(EmojiParser.parseToUnicode(" :warning: "))
                                     .append(TextFormatting.toBold("Deze speler staat op de zwarte lijst!"))
                                     .append("\n")
-                                    .append(blPlayer.getValue())
-                                    .append(EmojiParser.parseToUnicode(" :warning:"));
+                                    .append(TextFormatting.toItalic(entry.getValue()));
                         }
                     }
 

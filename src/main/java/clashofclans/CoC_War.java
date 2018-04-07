@@ -1,7 +1,6 @@
 package clashofclans;
 
 import com.vdurmont.emoji.EmojiParser;
-import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -312,12 +311,15 @@ public class CoC_War {
         return clanJson.getInt("stars") + "-" + opponentJson.getInt("stars");
     }
 
-    private static Pair<Integer, Integer> getWarStars(String warData) {
+    private static ArrayList<Integer> getWarStars(String warData) {
         JSONObject warJson = new JSONObject(warData);
         JSONObject clanJson = warJson.getJSONObject("clan");
         JSONObject opponentJson = warJson.getJSONObject("opponent");
 
-        return new Pair<>(clanJson.getInt("stars"), opponentJson.getInt("stars"));
+        return new ArrayList<Integer>() {{
+            add(clanJson.getInt("stars"));
+            add(opponentJson.getInt("stars"));
+        }};
     }
 
     public static String endWarRecap(String warData, String cocApiKey) {
@@ -350,10 +352,10 @@ public class CoC_War {
         recap.append(EmojiParser.parseToUnicode(":checkered_flag:"));
         recap.append("\n\n");
 
-        Pair<Integer, Integer> warStars = getWarStars(warData);
-        if (warStars.getKey() > warStars.getValue()) {
+        ArrayList<Integer> warStars = getWarStars(warData);
+        if (warStars.get(0) > warStars.get(1)) {
             recap.append(TextFormatting.toCode("We hebben deze oorlog gewonnen!")).append("\n\n");
-        } else if (warStars.getKey() < warStars.getValue()) {
+        } else if (warStars.get(0) < warStars.get(1)) {
             recap.append(TextFormatting.toCode("We hebben deze oorlog helaas verloren...")).append("\n\n");
         } else {
             if (clanJson.getDouble("destructionPercentage") > opponentJson.getDouble("destructionPercentage")) {

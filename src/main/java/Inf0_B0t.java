@@ -411,8 +411,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     } break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTADD.getCommand())) {
-                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(),2, cmdBuilder.getCommands().length) , cocApiKey));
-                    runCommandMessage(cmdBuilder.getSendMessage());
+                    if (cmdBuilder.getCommands().length < 3) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik een spelerstag en een reden nodog waarom de speler op de zwarte lijst moet staan"));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    } else {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(), 2, cmdBuilder.getCommands().length), cocApiKey));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTREMOVE.getCommand())) {
@@ -524,6 +529,23 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     beledigingen = !beledigingen;
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("-- MODE SWITCH --\n" + (beledigingen ? "Empatisch -> Eerlijk" : "Eerlijk -> Empatisch"));
                     runCommandMessage(cmdBuilder.getSendMessage());
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith("/testing")) {
+                    try {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.endWarRecap(FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/testwarstats.txt")), cocApiKey));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    runCommandMessage(cmdBuilder.getSendMessage());
+                    break COMMAND_CONTROL;
+                }
+                if (cmdBuilder.getCommands()[0].startsWith("/testwar")) {
+                    SendDocument sendDocumentrequest = new SendDocument();
+                    sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                    sendDocumentrequest.setNewDocument(new File("/home/thijs/Infobotfiles/testwarstats.txt"));
+                    sendDocumentrequest.setCaption("War JSON");
+                    runCommandDocument(sendDocumentrequest);
                     break COMMAND_CONTROL;
                 }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.LOG.getCommand())) {

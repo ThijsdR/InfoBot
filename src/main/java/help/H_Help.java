@@ -15,7 +15,7 @@ public class H_Help {
     public static String getHelp() {
         StringBuilder botResponse = new StringBuilder();
 
-        botResponse.append(TextFormatting.toItalic("Ik ben er om je te voorzien met relevante data omtrent Clash of Clans.\n\n Om mij aan te sturen kan je gebruik maken van de volgende commando's:_\n\n"));
+        botResponse.append(TextFormatting.toItalic("Ik ben er om je te voorzien met relevante data omtrent Clash of Clans.\n\n Om mij aan te sturen kan je gebruik maken van de volgende commando's:\n\n"));
         botResponse.append(TextFormatting.toBold("- Clash of Clans -\n"));
         botResponse.append("/cocclanmembersfile - Een Excel document met alle informatie over de leden van een clan (clantag)\n");
         botResponse.append("/cocblacklistadd - Voeg een speler toe aan de zwarte lijst (spelerstag + reden)\n");
