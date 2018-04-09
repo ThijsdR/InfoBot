@@ -344,46 +344,300 @@ public class CoC_War {
                     opponentJsonJSONArray.getJSONObject(i).getString("name")));
         }
 
-        ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
-        clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
-        DecimalFormat df = new DecimalFormat(".##");
+        int clanZeroStarAttacks = 0;
+        int clanOneStarAttacks = 0;
+        int clanTwoStarAttacks = 0;
+        int clanThreeStarAttacks = 0;
 
-        StringBuilder recap = new StringBuilder(TextFormatting.toBold("De oorlog is afgelopen! "));
-        recap.append(EmojiParser.parseToUnicode(":checkered_flag:"));
-        recap.append("\n\n");
+        for (int i = 0; i < opponentJsonJSONArray.length(); i++) {
+            JSONObject bestAttack = opponentJsonJSONArray.getJSONObject(i).getJSONObject("bestOpponentAttack");
 
-        ArrayList<Integer> warStars = getWarStars(warData);
-        if (warStars.get(0) > warStars.get(1)) {
-            recap.append(TextFormatting.toCode("We hebben deze oorlog gewonnen!")).append("\n\n");
-        } else if (warStars.get(0) < warStars.get(1)) {
-            recap.append(TextFormatting.toCode("We hebben deze oorlog helaas verloren...")).append("\n\n");
-        } else {
-            if (clanJson.getDouble("destructionPercentage") > opponentJson.getDouble("destructionPercentage")) {
-                recap.append(TextFormatting.toCode("We hebben deze oorlog gewonnen!")).append("\n\n");
-            } else if (clanJson.getDouble("destructionPercentage") < opponentJson.getDouble("destructionPercentage")) {
-                recap.append(TextFormatting.toCode("We hebben deze oorlog helaas verloren...")).append("\n\n");
-            } else {
-                recap.append(TextFormatting.toCode("De oorlog is geeindigd in een gelijkspel...")).append("\n\n");
+            switch (bestAttack.getInt("stars")) {
+                case 0: clanZeroStarAttacks++; break;
+                case 1: clanOneStarAttacks++; break;
+                case 2: clanTwoStarAttacks++; break;
+                case 3: clanThreeStarAttacks++; break;
             }
         }
 
-        recap.append(TextFormatting.toItalic("Eindstand: ")).append(checkWarScore(warData)).append("\n\n");
-        recap.append(EmojiParser.parseToUnicode(":family: ")).append(TextFormatting.toBold(clanJson.getString("name"))).append("\n");
-        recap.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(clanJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append("\n");
-        recap.append(EmojiParser.parseToUnicode(":collision: ")).append(df.format(clanJson.getDouble("destructionPercentage"))).append("%\n\n");
-        recap.append(EmojiParser.parseToUnicode(":family: ")).append(TextFormatting.toBold(opponentJson.getString("name"))).append("\n");
-        recap.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(opponentJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append("\n");
-        recap.append(EmojiParser.parseToUnicode(":collision: ")).append(df.format(opponentJson.getDouble("destructionPercentage"))).append("%\n\n");
+        int opponentZeroStarAttacks = 0;
+        int opponentOneStarAttacks = 0;
+        int opponentTwoStarAttacks = 0;
+        int opponentThreeStarAttacks = 0;
 
-        String bassieData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getAttackerTag().replace("#", "%23"), cocApiKey);
-        JSONObject bassieJson = new JSONObject(bassieData);
-        String bassieAwardName = bassieJson.getString("name");
-        String bassieAward = bassieAwardName + " met " + clanWarAttacks.get(0).getDestructionPercentage() + "%";
-        recap.append(EmojiParser.parseToUnicode(":clown::trophy:" +
-                TextFormatting.toBold("Winnaar van de Bassie-award:") +
-                "\n" +
-                TextFormatting.toItalic(bassieAward) +
-                "\n\n"));
+        for (int i = 0; i < clanJsonJSONArray.length(); i++) {
+            JSONObject bestAttack = clanJsonJSONArray.getJSONObject(i).getJSONObject("bestOpponentAttack");
+
+            switch (bestAttack.getInt("stars")) {
+                case 0: opponentZeroStarAttacks++; break;
+                case 1: opponentOneStarAttacks++; break;
+                case 2: opponentTwoStarAttacks++; break;
+                case 3: opponentThreeStarAttacks++; break;
+            }
+        }
+
+        ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
+        clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
+
+        ArrayList<CoC_WarAttackContainer> opponentWarAttacks = getCurrentOpponentAttacks(warData);
+        opponentWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
+
+        int clanFailedAttacks = 0;
+
+        for (CoC_WarAttackContainer attack : clanWarAttacks) {
+            if (attack.getStars() == 0) {
+                clanFailedAttacks++;
+            }
+        }
+
+        int opponentFailedAttacks = 0;
+
+        for (CoC_WarAttackContainer attack : opponentWarAttacks) {
+            if (attack.getStars() == 0) {
+                opponentFailedAttacks++;
+            }
+        }
+
+        DecimalFormat df = new DecimalFormat("##.##");
+
+        StringBuilder recap = new StringBuilder(TextFormatting.toBold("DE OORLOG IS AFGELOPEN! "));
+        recap.append(EmojiParser.parseToUnicode(":checkered_flag:\n\n"));
+
+        ArrayList<Integer> warStars = getWarStars(warData);
+        if (warStars.get(0) > warStars.get(1)) {
+            recap.append(TextFormatting.toItalic("We hebben deze oorlog gewonnen!")).append("\n\n");
+        } else if (warStars.get(0) < warStars.get(1)) {
+            recap.append(TextFormatting.toItalic("We hebben deze oorlog helaas verloren...")).append("\n\n");
+        } else {
+            if (clanJson.getDouble("destructionPercentage") > opponentJson.getDouble("destructionPercentage")) {
+                recap.append(TextFormatting.toItalic("We hebben deze oorlog gewonnen!")).append("\n\n");
+            } else if (clanJson.getDouble("destructionPercentage") < opponentJson.getDouble("destructionPercentage")) {
+                recap.append(TextFormatting.toItalic("We hebben deze oorlog helaas verloren...")).append("\n\n");
+            } else {
+                recap.append(TextFormatting.toItalic("De oorlog is geeindigd in een gelijkspel...")).append("\n\n");
+            }
+        }
+
+        recap.append(TextFormatting.toCode("<< Eindstand: " + checkWarScore(warData) + " >>")).append("\n\n\n");
+
+        recap.append(TextFormatting.toBold(clanJson.getString("name")))
+                .append(EmojiParser.parseToUnicode("\t\t:family:\t\t"))
+                .append(TextFormatting.toBold(opponentJson.getString("name")));
+
+        recap.append("```\n\n\n");
+        recap.append("[   Statistieken   ]\n");
+        recap.append("--------------------\n");
+        recap.append("|");
+        recap.append("   ").append(clanJson.getInt("stars"));
+        recap.append(" |");
+        recap.append(EmojiParser.parseToUnicode(" :star2: "));
+        recap.append("| ");
+        recap.append(opponentJson.getInt("stars")).append("   ");
+        recap.append("|");
+        recap.append("\n");
+        recap.append("--------------------\n");
+        recap.append("|");
+        recap.append(" ").append(clanJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2);
+        recap.append("|");
+        recap.append(EmojiParser.parseToUnicode(" :crossed_swords: "));
+        recap.append("|");
+        recap.append(opponentJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append(" ");
+        recap.append("|");
+        recap.append("\n");
+        recap.append("--------------------\n");
+        recap.append("|");
+        recap.append(df.format(clanJson.getDouble("destructionPercentage"))).append("%");
+        recap.append("|");
+        recap.append(EmojiParser.parseToUnicode(" :collision: "));
+        recap.append("|");
+        recap.append(df.format(opponentJson.getDouble("destructionPercentage"))).append("%");
+        recap.append("|");
+        recap.append("\n");
+        recap.append("--------------------\n");
+        recap.append("| ");
+        recap.append(df.format((double)clanJson.getInt("stars") / (double)clanJson.getInt("attacks")));
+        recap.append(" |");
+        recap.append(EmojiParser.parseToUnicode(":star::crossed_swords:"));
+        recap.append("| ");
+        recap.append(df.format((double)opponentJson.getInt("stars") / (double)opponentJson.getInt("attacks")));
+        recap.append(" |");
+        recap.append("\n");
+
+        recap.append("--------------------\n");
+        recap.append("|");
+
+        if (clanJson.getInt("attacks") - clanFailedAttacks >= 10) {
+            recap.append("   ").append(clanJson.getInt("attacks") - clanFailedAttacks);
+        } else {
+            recap.append("    ").append(clanJson.getInt("attacks") - clanFailedAttacks);
+        }
+
+        recap.append(" |").append(EmojiParser.parseToUnicode(":white_check_mark::crossed_swords:")).append("| ");
+
+        if (opponentJson.getInt("attacks") - opponentFailedAttacks >= 10) {
+            recap.append(opponentJson.getInt("attacks") - opponentFailedAttacks).append("   ");
+        } else {
+            recap.append(opponentJson.getInt("attacks") - opponentFailedAttacks).append("    ");
+        }
+        recap.append("|");
+        recap.append("\n");
+
+        recap.append("--------------------\n");
+        recap.append("|");
+
+        if (clanFailedAttacks >= 10) {
+            recap.append("   ").append(clanFailedAttacks);
+        } else {
+            recap.append("    ").append(clanFailedAttacks);
+        }
+
+        recap.append(" |").append(EmojiParser.parseToUnicode(":x::crossed_swords:")).append("| ");
+
+        if (opponentFailedAttacks >= 10) {
+            recap.append(opponentFailedAttacks).append("   ");
+        } else {
+            recap.append(opponentFailedAttacks).append("    ");
+        }
+        recap.append("|");
+        recap.append("\n");
+        recap.append("--------------------\n");
+
+        recap.append("\n");
+        recap.append("[ Beste  aanvallen ]\n");
+        recap.append("--------------------\n");
+        recap.append("| ");
+
+        if (clanThreeStarAttacks >= 10) {
+            recap.append(clanThreeStarAttacks);
+        } else {
+            recap.append(" ").append(clanThreeStarAttacks);
+        }
+        recap.append(" |");
+        recap.append(EmojiParser.parseToUnicode(" :star::star::star: "));
+        recap.append("| ");
+
+        if (opponentThreeStarAttacks >= 10) {
+            recap.append(opponentThreeStarAttacks);
+        } else {
+            recap.append(opponentThreeStarAttacks).append(" ");
+        }
+        recap.append(" |");
+        recap.append("\n");
+        recap.append("--------------------\n");
+        recap.append("| ");
+
+        if (clanTwoStarAttacks >= 10) {
+            recap.append(clanTwoStarAttacks);
+        } else {
+            recap.append(" ").append(clanTwoStarAttacks);
+        }
+        recap.append(" |");
+        recap.append(EmojiParser.parseToUnicode(" :star::star::heavy_multiplication_x: "));
+        recap.append("| ");
+
+        if (opponentTwoStarAttacks >= 10) {
+            recap.append(opponentTwoStarAttacks);
+        } else {
+            recap.append(opponentTwoStarAttacks).append(" ");
+        }
+        recap.append(" |");
+        recap.append("\n");
+        recap.append("--------------------\n");
+        recap.append("| ");
+
+        if (clanOneStarAttacks >= 10) {
+            recap.append(clanOneStarAttacks);
+        } else {
+            recap.append(" ").append(clanOneStarAttacks);
+        }
+        recap.append(" |");
+        recap.append(EmojiParser.parseToUnicode(" :star::heavy_multiplication_x::heavy_multiplication_x: "));
+        recap.append("| ");
+
+        if (opponentOneStarAttacks >= 10) {
+            recap.append(opponentOneStarAttacks);
+        } else {
+            recap.append(opponentOneStarAttacks).append(" ");
+        }
+        recap.append(" |");
+        recap.append("\n");
+        recap.append("--------------------\n");
+        recap.append("| ");
+
+        if (clanZeroStarAttacks >= 10) {
+            recap.append(clanZeroStarAttacks);
+        } else {
+            recap.append(" ").append(clanZeroStarAttacks);
+        }
+        recap.append(" |");
+        recap.append(EmojiParser.parseToUnicode(" :heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "));
+        recap.append("| ");
+
+        if (opponentZeroStarAttacks >= 10) {
+            recap.append(opponentZeroStarAttacks);
+        } else {
+            recap.append(opponentZeroStarAttacks).append(" ");
+        }
+        recap.append(" |");
+        recap.append("\n");
+        recap.append("--------------------\n");
+
+        recap.append("```");
+
+        recap.append("\n");
+
+        String bassiePlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getAttackerTag().replace("#", "%23"), cocApiKey);
+        JSONObject bassiePlayerJson = new JSONObject(bassiePlayerData);
+        String bassiePlayerName = bassiePlayerJson.getString("name");
+        String bassiePlayerTag = clanWarAttacks.get(0).getAttackerTag();
+
+        String bassieOppoonentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getDefenderTag().replace("#", "%23"), cocApiKey);
+        JSONObject bassiepponentPlayerJson = new JSONObject(bassieOppoonentPlayerData);
+        String bassieOpponentPlayerName = bassiepponentPlayerJson.getString("name");
+        String bassieOpponentPlayerTag = clanWarAttacks.get(0).getDefenderTag();
+
+        recap.append(TextFormatting.toBold("\nWINNAAR VAN DE BASSIE-AWARD ")).append(EmojiParser.parseToUnicode(":clown::trophy:\n\n"));
+
+        switch (clanWarAttacks.get(0).getStars()) {
+            case 0:
+                recap.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+            case 1:
+                recap.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+            case 2:
+                recap.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+            case 3:
+                recap.append(EmojiParser.parseToUnicode(":star::star::star: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+        }
+
+        recap.append("\n");
+
+        for (CoC_PlayerContainer player : clanWarPlayers) {
+            if (player.getPlayerTag().equals(bassiePlayerTag)) {
+                recap.append(TextFormatting.toBold(player.getPositionInClan() + ". "))
+                        .append(bassiePlayerName)
+                        .append(EmojiParser.parseToUnicode(" :arrow_forward: "));
+            }
+        }
+
+        for (CoC_PlayerContainer opponent : opponentWarPlayers) {
+            if (opponent.getPlayerTag().equals(bassieOpponentPlayerTag)) {
+                recap.append(TextFormatting.toBold(opponent.getPositionInClan() + ". "))
+                        .append(bassieOpponentPlayerName)
+                        .append("\n\n");
+            }
+        }
 
         ArrayList<CoC_WarAttackContainer> perfectAttacks = new ArrayList<>();
 
@@ -394,8 +648,9 @@ public class CoC_War {
         }
 
         if (!perfectAttacks.isEmpty()) {
-            recap.append(TextFormatting.toBold("Eervolle vermeldingen:"));
-            recap.append("\n");
+            recap.append(TextFormatting.toBold("\nEERVOLLE VERMELDINGEN:"));
+            recap.append(EmojiParser.parseToUnicode(" :speech_balloon:"));
+            recap.append("\n\n");
 
             String clanPlayerName;
             String clanPlayerTag;

@@ -97,18 +97,21 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         /* Huidige status van de Clash of Clans server */
         serverStatusCoC = CoC_PROC.getServerStatusCoC(cocApiKey);
 
-        /* Huidige oorlogsdata van Clash of Clans */
-        String currentWarData = CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey);
+        if (serverStatusCoC == CoC_ServerState.COCONLINE) {
 
-        /* Huidige ledenlijst CLash of Clans */
-        cocPlayersList = CoC_Clan.getCoCPlayerList(cocApiKey);
+            /* Huidige oorlogsdata van Clash of Clans */
+            String currentWarData = CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey);
 
-        /* Huidige oorlogsstatus in Clash of Clans */
-        warState = CoC_War.getCurrentWarState(currentWarData);
+            /* Huidige ledenlijst CLash of Clans */
+            cocPlayersList = CoC_Clan.getCoCPlayerList(cocApiKey);
 
-        /* Als de clan bezig is met een oorlog haal dan de huidige aanvallen op */
-        clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
-        opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
+            /* Huidige oorlogsstatus in Clash of Clans */
+            warState = CoC_War.getCurrentWarState(currentWarData);
+
+            /* Als de clan bezig is met een oorlog haal dan de huidige aanvallen op */
+            clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
+            opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
+        }
 
         /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
         Runnable reportGenerator = () -> CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true, cocApiKey);
@@ -129,6 +132,17 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 case COCWENTONLINE:     // Server is online gegaan
                     System.out.println("Server went ONLINE");
                     runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_ServerState.COCWENTONLINE.getStateDescription()));
+
+                    /* Huidige ledenlijst CLash of Clans */
+                    cocPlayersList = CoC_Clan.getCoCPlayerList(cocApiKey);
+
+                    /* Huidige oorlogsstatus in Clash of Clans */
+                    warState = CoC_War.getCurrentWarState(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey));
+
+                    /* Als de clan bezig is met een oorlog haal dan de huidige aanvallen op */
+                    clanWarAttacks = CoC_War.getCurrentClanAttacks(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey));
+                    opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey));
+
                     break;
                 case COCOFFLINE:        // Server is offline
                     System.out.println("Server is OFFLINE");
@@ -390,102 +404,110 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                 ///////////////////////////////////////////////////
                 //////        Clash of Clans commando's      //////
                 ///////////////////////////////////////////////////
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
-                    if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
-                        cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
+                if (serverStatusCoC == CoC_ServerState.COCONLINE) {
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCCLANMEMBERSTOFILE.getCommand())) {
+                        if (cmdBuilder.getCommands().length > 1 && cmdBuilder.getCommands()[1].startsWith("#")) {
+                            cmdBuilder.getCommands()[1] = cmdBuilder.getCommands()[1].startsWith("#") ? "%23" + cmdBuilder.getCommands()[1].substring(1) : cmdBuilder.getCommands()[1];
 
+                            SendDocument sendDocumentrequest = new SendDocument();
+                            sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                            sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false, cocApiKey));
+                            sendDocumentrequest.setCaption("Clanleden overzicht");
+                            runCommandDocument(sendDocumentrequest);
+                            break COMMAND_CONTROL;
+                        }
+                        if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].startsWith("#")) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando uit te voeren heb ik na het commando nog een parameter nodig.\nBijvoorbeeld: /cocclanmembersfile #joc9cpy"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        } else {
+                            SendDocument sendDocumentrequest = new SendDocument();
+                            sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                            sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false, cocApiKey));
+                            sendDocumentrequest.setCaption("Clanleden overzicht");
+                            runCommandDocument(sendDocumentrequest);
+                        }
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTADD.getCommand())) {
+                        if (cmdBuilder.getCommands().length < 3) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik een spelerstag en een reden nodog waarom de speler op de zwarte lijst moet staan"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(), 2, cmdBuilder.getCommands().length), cocApiKey));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        }
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTREMOVE.getCommand())) {
+                        if (cmdBuilder.getCommands().length == 2) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1]));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        }
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTVIEW.getCommand())) {
                         SendDocument sendDocumentrequest = new SendDocument();
                         sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false, cocApiKey));
-                        sendDocumentrequest.setCaption("Clanleden overzicht");
-                        runCommandDocument(sendDocumentrequest); break COMMAND_CONTROL;
-                    } if (cmdBuilder.getCommands().length > 1 && !cmdBuilder.getCommands()[1].startsWith("#")){
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando uit te voeren heb ik na het commando nog een parameter nodig.\nBijvoorbeeld: /cocclanmembersfile #joc9cpy"));
-                        runCommandMessage(cmdBuilder.getSendMessage()); break COMMAND_CONTROL;
-                    } else {
-                        SendDocument sendDocumentrequest = new SendDocument();
-                        sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                        sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false, cocApiKey));
-                        sendDocumentrequest.setCaption("Clanleden overzicht");
+                        sendDocumentrequest.setNewDocument(CoC_Blacklist.getBlacklist());
+                        sendDocumentrequest.setCaption("Blacklist");
                         runCommandDocument(sendDocumentrequest);
-                    } break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTADD.getCommand())) {
-                    if (cmdBuilder.getCommands().length < 3) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik een spelerstag en een reden nodog waarom de speler op de zwarte lijst moet staan"));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    } else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.addToCOCBlacklist(cmdBuilder.getCommands()[1], Arrays.copyOfRange(cmdBuilder.getCommands(), 2, cmdBuilder.getCommands().length), cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
                     }
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTREMOVE.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 2) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.removeFromCOCBlacklist(cmdBuilder.getCommands()[1]));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
-                    else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig"));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTVIEW.getCommand())) {
-                    SendDocument sendDocumentrequest = new SendDocument();
-                    sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                    sendDocumentrequest.setNewDocument(CoC_Blacklist.getBlacklist());
-                    sendDocumentrequest.setCaption("Blacklist");
-                    runCommandDocument(sendDocumentrequest);
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTCHECK.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 2) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.checkBlacklistPlayer(cmdBuilder.getCommands()[1]));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
-                    else {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig"));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWAROPPONENT.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getCurrentOpponentOverview(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey)));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBASSIEAWARD.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 1) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getBassieAwardTopDrie(clanWarAttacks, warState, cocApiKey));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                    }
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARSUBSCRIBE.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 1) {
-                        if (cmdBuilder.getChatID() > 0) {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.subscribeToWarEvents(cmdBuilder.getChatID()));
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBLACKLISTCHECK.getCommand())) {
+                        if (cmdBuilder.getCommands().length == 2) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_Blacklist.checkBlacklistPlayer(cmdBuilder.getCommands()[1]));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         } else {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando is niet beschikbaar in een groepsgesprek!"));
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Om het commando goed uit te kunnen voeren heb ik nog een spelerstag nodig"));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         }
+                        break COMMAND_CONTROL;
                     }
-                    break COMMAND_CONTROL;
-                }
-                if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARUNSUBSCRIBE.getCommand())) {
-                    if (cmdBuilder.getCommands().length == 1) {
-                        if (cmdBuilder.getChatID() > 0) {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.unsubscribeToWarEvents(cmdBuilder.getChatID()));
-                            runCommandMessage(cmdBuilder.getSendMessage());
-                        } else {
-                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando is niet beschikbaar in een groepsgesprek!"));
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWAROPPONENT.getCommand())) {
+                        if (cmdBuilder.getCommands().length == 1) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getCurrentOpponentOverview(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey)));
                             runCommandMessage(cmdBuilder.getSendMessage());
                         }
+                        break COMMAND_CONTROL;
                     }
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCBASSIEAWARD.getCommand())) {
+                        if (cmdBuilder.getCommands().length == 1) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getBassieAwardTopDrie(clanWarAttacks, warState, cocApiKey));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                        }
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARSUBSCRIBE.getCommand())) {
+                        if (cmdBuilder.getCommands().length == 1) {
+                            if (cmdBuilder.getChatID() > 0) {
+                                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.subscribeToWarEvents(cmdBuilder.getChatID()));
+                                runCommandMessage(cmdBuilder.getSendMessage());
+                            } else {
+                                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando is niet beschikbaar in een groepsgesprek!"));
+                                runCommandMessage(cmdBuilder.getSendMessage());
+                            }
+                        }
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWARUNSUBSCRIBE.getCommand())) {
+                        if (cmdBuilder.getCommands().length == 1) {
+                            if (cmdBuilder.getChatID() > 0) {
+                                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.unsubscribeToWarEvents(cmdBuilder.getChatID()));
+                                runCommandMessage(cmdBuilder.getSendMessage());
+                            } else {
+                                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando is niet beschikbaar in een groepsgesprek!"));
+                                runCommandMessage(cmdBuilder.getSendMessage());
+                            }
+                        }
+                        break COMMAND_CONTROL;
+                    }
+                } else {
+                    cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Dit commando kan niet worden uitgevoerd wanneer de server offline is..."));
+                    runCommandMessage(cmdBuilder.getSendMessage());
                     break COMMAND_CONTROL;
                 }
                 //////     Einde Clash of Clans commando's   //////
