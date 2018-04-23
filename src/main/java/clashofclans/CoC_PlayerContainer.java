@@ -66,6 +66,10 @@ public class CoC_PlayerContainer {
         this.name = name;
     }
 
+    CoC_PlayerContainer() {
+
+    }
+
     /* Getters */
     int getPositionInClan() {
         return positionInClan;

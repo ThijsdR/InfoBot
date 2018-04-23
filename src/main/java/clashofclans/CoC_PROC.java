@@ -1,10 +1,15 @@
 package clashofclans;
 
+import org.apache.commons.io.FileUtils;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * Deze klasse bevat hulpmethode(s) voor de verschillende Clash of Clans klassen
@@ -92,5 +97,28 @@ public class CoC_PROC {
         else {
             return CoC_ServerState.COCONLINE;
         }
+    }
+
+    public static ArrayList<Long> getSubscribedIds() {
+        ArrayList<Long> ids = new ArrayList<>();
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
+
+            while (rs.next()) {
+                ids.add((long) rs.getInt("ChatID"));
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return ids;
     }
 }

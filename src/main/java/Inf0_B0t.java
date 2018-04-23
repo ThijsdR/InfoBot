@@ -12,6 +12,7 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
+import roda.R_Boete;
 import utility.CommandContainer;
 import utility.Commands;
 import utility.TextFormatting;
@@ -181,32 +182,23 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         String startMessage = CoC_War.warStartMessage(warData);
 
                         if (!startMessage.isEmpty()) {
-                            runCommandMessage(new SendMessage().setChatId("315876545").setText(CoC_War.warStartMessage(warData)));
-                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_War.warStartMessage(warData)));
+                            ArrayList<Long> ids = CoC_PROC.getSubscribedIds();
+
+                            for (long id : ids) {
+                                runCommandMessage(new SendMessage().setChatId(id).setText(startMessage).disableNotification());
+                            }
+
+                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_War.warStartMessage(startMessage)));
                         }
                     } else if (warState.equals("inWar") && updatedWarState.equals("inWar")) {
                         String warUpdate = CoC_War.warAttacksUpdate(warData, clanWarAttacks, opponentWarAttacks, cocApiKey);
                         String warUpdate3 = CoC_War.war3StarUpdate(warData, clanWarAttacks, cocApiKey);
 
                         if (!warUpdate.isEmpty()) {
-                            ArrayList<Long> ids = new ArrayList<>();
-                            try {
-                                Class.forName("com.mysql.jdbc.Driver");
-                                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
-                                Statement stmt = con.createStatement();
-                                ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
-                                while (rs.next()) {
-                                    ids.add((long) rs.getInt("ChatID"));
-                                }
-                                rs.close();
-                                stmt.close();
-                                con.close();
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
+                            ArrayList<Long> ids = CoC_PROC.getSubscribedIds();
 
                             for (long id : ids) {
-                                runCommandMessage(new SendMessage().setChatId(id).setText(warUpdate));
+                                runCommandMessage(new SendMessage().setChatId(id).setText(warUpdate).disableNotification());
                             }
 
                             System.out.println(warUpdate);
@@ -225,7 +217,16 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         String warRecap = CoC_War.endWarRecap(warData, cocApiKey);
 
                         if (!warRecap.isEmpty()) {
-                            runCommandMessage(new SendMessage().setChatId("315876545").setText(warRecap));
+                            String endMessage = CoC_War.warEndMessage(warData);
+
+                            if (!endMessage.isEmpty()) {
+                                ArrayList<Long> ids = CoC_PROC.getSubscribedIds();
+
+                                for (long id : ids) {
+                                    runCommandMessage(new SendMessage().setChatId(id).setText(endMessage).disableNotification());
+                                }
+                            }
+
                             runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(warRecap));
                         }
                     } else if (warState.equals("warEnded") && updatedWarState.equals("preparation")) {
@@ -580,28 +581,105 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     }
                     sendDocumentrequest.setCaption("Log file");
                     runCommandDocument(sendDocumentrequest);
+                    break COMMAND_CONTROL;
                 }
+                //////          Einde overige commando's     //////
+
+                ///////////////////////////////////////////////////
+                //////          Roda    commando's           //////
+                ///////////////////////////////////////////////////
+                if (cmdBuilder.getChatID() == 315876545) {
+                    if (cmdBuilder.getCommands()[0].equals("/rodainfo")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.getBoeteLijst());
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodalijst")) {
+                        SendDocument sendDocumentrequest = new SendDocument();
+                        sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                        sendDocumentrequest.setNewDocument(R_Boete.getAlleBoetes());
+                        sendDocumentrequest.setCaption("Boetelijst");
+                        runCommandDocument(sendDocumentrequest);
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodalijstopenstaand")) {
+                        SendDocument sendDocumentrequest = new SendDocument();
+                        sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                        sendDocumentrequest.setNewDocument(R_Boete.getOpenstaandeBoetes());
+                        sendDocumentrequest.setCaption("Boetelijst openstaand");
+                        runCommandDocument(sendDocumentrequest);
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodalijstbetaald")) {
+                        SendDocument sendDocumentrequest = new SendDocument();
+                        sendDocumentrequest.setChatId(cmdBuilder.getChatID());
+                        sendDocumentrequest.setNewDocument(R_Boete.getBetaaldeBoetes());
+                        sendDocumentrequest.setCaption("Boetelijst betaald");
+                        runCommandDocument(sendDocumentrequest);
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodaisbetaald")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteBetaald(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodaisopenstaand")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteOpenstaand(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodaverwijder")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.verwijderBoete(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodaboete")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.voegBoeteToe(Arrays.copyOfRange(cmdBuilder.getCommands(), 1, cmdBuilder.getCommands().length)));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodahelp")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("/rodainfo, /rodalijst, /rodaisbetaald, /rodaisopenstaand, /rodaboete, /rodalijstopenstaand, /rodalijstbetaald, /rodaverwijder");
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                    }
+                }
+                //////          Einde roda     commando's     //////
                 else {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(EmojiParser.parseToUnicode(":exclamation:ERROR: Ik ken dit commando helaas niet.\nStuur /help voor beschikbare commando's"));
                     runCommandMessage(cmdBuilder.getSendMessage());
                 }
-                //////          Einde overige commando's     //////
+
             }
         }
 
         if (beledigingen) {
             if (cmdBuilder.getMessageText().toLowerCase().contains("homo".toLowerCase()) || cmdBuilder.getMessageText().toLowerCase().contains("gay".toLowerCase())) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Bam is de grootste homo!");
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Bam is de grootste homo en Klaas is een stokslobberaar!"));
                 runCommandMessage(cmdBuilder.getSendMessage());
                 return;
             }
             if (cmdBuilder.getMessageText().toLowerCase().contains("slet".toLowerCase())) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Ed is een slet!");
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Ed is een slet!"));
                 runCommandMessage(cmdBuilder.getSendMessage());
                 return;
             }
             if (cmdBuilder.getMessageText().toLowerCase().contains("hoer".toLowerCase())) {
-                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("Hoer?... Volgens mij heb je Bas verkeerd gespeeld");
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Hoer?... Volgens mij heb je Bas verkeerd gespeeld"));
+                runCommandMessage(cmdBuilder.getSendMessage());
+                return;
+            }
+            if (cmdBuilder.getMessageText().toLowerCase().contains("thijs".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Thijs is echt een topgozer"));
+                runCommandMessage(cmdBuilder.getSendMessage());
+                return;
+            }
+            if (cmdBuilder.getMessageText().toLowerCase().contains("hoi".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Hallo gebruiker"));
+                runCommandMessage(cmdBuilder.getSendMessage());
+                return;
+            }
+            if (cmdBuilder.getMessageText().toLowerCase().contains("stomme bot".toLowerCase())) {
+                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Ik mag dan wel een bot zijn, maar bots worden gemaakt door mensen") + EmojiParser.parseToUnicode(":heart:"));
                 runCommandMessage(cmdBuilder.getSendMessage());
                 return;
             }
