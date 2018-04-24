@@ -188,7 +188,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                                 runCommandMessage(new SendMessage().setChatId(id).setText(startMessage).disableNotification());
                             }
 
-                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(CoC_War.warStartMessage(startMessage)));
+                            runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(startMessage));
                         }
                     } else if (warState.equals("inWar") && updatedWarState.equals("inWar")) {
                         String warUpdate = CoC_War.warAttacksUpdate(warData, clanWarAttacks, opponentWarAttacks, cocApiKey);
@@ -619,27 +619,72 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         break COMMAND_CONTROL;
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaisbetaald")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteBetaald(Integer.parseInt(cmdBuilder.getCommands()[1])));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                        break COMMAND_CONTROL;
+                        if (cmdBuilder.getCommands().length == 3) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteBetaald(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Te weinig parameters om het commando goed uit te voeren"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        }
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodaallesbetaald")) {
+                        if (cmdBuilder.getCommands().length == 3) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setAlleBoetesBetaald(cmdBuilder.getCommands()[1]));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Te weinig parameters om het commando goed uit te voeren"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        }
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaisopenstaand")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteOpenstaand(Integer.parseInt(cmdBuilder.getCommands()[1])));
-                        runCommandMessage(cmdBuilder.getSendMessage());
-                        break COMMAND_CONTROL;
+                        if (cmdBuilder.getCommands().length == 3) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteOpenstaand(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Te weinig parameters om het commando goed uit te voeren"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        }
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaverwijder")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.verwijderBoete(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                        if (cmdBuilder.getCommands().length == 3) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.verwijderBoete(Integer.parseInt(cmdBuilder.getCommands()[1])));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Te weinig parameters om het commando goed uit te voeren"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        }
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodaboete")) {
+                        if (cmdBuilder.getCommands().length == 3) {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.voegBoeteToe(Arrays.copyOfRange(cmdBuilder.getCommands(), 1, cmdBuilder.getCommands().length)));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        } else {
+                            cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(TextFormatting.toItalic("Te weinig parameters om het commando goed uit te voeren"));
+                            runCommandMessage(cmdBuilder.getSendMessage());
+                            break COMMAND_CONTROL;
+                        }
+                    }
+                    if (cmdBuilder.getCommands()[0].equals("/rodatotaalopenstaand")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.getTotaalOpenstaand());
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     }
-                    if (cmdBuilder.getCommands()[0].equals("/rodaboete")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.voegBoeteToe(Arrays.copyOfRange(cmdBuilder.getCommands(), 1, cmdBuilder.getCommands().length)));
+                    if (cmdBuilder.getCommands()[0].equals("/rodatotaalbetaald")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.getTotaalBetaald());
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodahelp")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("/rodainfo, /rodalijst, /rodaisbetaald, /rodaisopenstaand, /rodaboete, /rodalijstopenstaand, /rodalijstbetaald, /rodaverwijder");
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("/rodainfo, /rodalijst, /rodaisbetaald, /rodaallesbetaald, /rodaisopenstaand, /rodaboete, /rodalijstopenstaand, /rodalijstbetaald, /rodaverwijder, /rodatotaalopenstaand, /rodatotaalbetaald");
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                 }

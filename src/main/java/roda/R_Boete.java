@@ -279,10 +279,6 @@ public class R_Boete {
         return boeteFile;
     }
 
-    public static String getAlleBetalingen() {
-        return "";
-    }
-
     public static String setBoeteBetaald(int boeteId) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -304,6 +300,29 @@ public class R_Boete {
 
         updateBoeteLijst();
         return TextFormatting.toItalic("Gelukt!");
+    }
+
+    public static String setAlleBoetesBetaald(String naam) {
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+
+            PreparedStatement ps = con.prepareStatement(
+                    "UPDATE boeteoverzichtroda SET Betaald = ? WHERE BoeteId = ?"
+            );
+
+            ps.setString(1, "Ja");
+            ps.setString(2, naam);
+
+            ps.executeUpdate();
+            ps.close();
+            con.close();
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+
+        updateBoeteLijst();
+        return TextFormatting.toItalic(naam + " heeft alle boetes betaald!");
     }
 
     public static String setBoeteOpenstaand(int boeteId) {
@@ -615,6 +634,88 @@ public class R_Boete {
         }
 
         return boeteFile;
+    }
+
+    public static String getTotaalOpenstaand() {
+        StringBuilder totaalBuilder = new StringBuilder(TextFormatting.toBold("Openstaande bedragen per persoon\n\n"));
+        ArrayList<R_SpelerContainer> spelersLijst = new ArrayList<>();
+        DecimalFormat format = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.getDefault()));
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT boetepotroda.Id, boetepotroda.Naam, boeteoverzichtroda.Betaald, " +
+                    "CASE WHEN boeteoverzichtroda.Betaald = 'Ja' THEN SUM(boetespecificatieroda.BoeteBedrag) END AS 'BetaaldBedrag', " +
+                    "CASE WHEN boeteoverzichtroda.Betaald = 'Nee' THEN SUM(boetespecificatieroda.BoeteBedrag) END AS 'OpenstaandBedrag' " +
+                    "FROM boeteoverzichtroda " +
+                    "INNER JOIN boetepotroda ON boeteoverzichtroda.SpelerId = boetepotroda.Id "  +
+                    "INNER JOIN boetespecificatieroda ON boeteoverzichtroda.Boetecode = boetespecificatieroda.Code " +
+                    "GROUP BY boetepotroda.Id, boetepotroda.Naam, boeteoverzichtroda.Betaald");
+
+            while (rs.next()) {
+                spelersLijst.add(new R_SpelerContainer(rs.getInt("Id"),
+                        rs.getString("Naam"),
+                        rs.getDouble("OpenstaandBedrag"),
+                        rs.getDouble("BetaaldBedrag")
+                ));
+            }
+
+            for (R_SpelerContainer speler : spelersLijst) {
+                if (speler.getOpenstaandBedrag() != 0) {
+                    totaalBuilder.append(speler.getNaam()).append(" -> €").append(format.format(speler.getOpenstaandBedrag())).append("\n");
+                }
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return String.valueOf(totaalBuilder);
+    }
+
+    public static String getTotaalBetaald() {
+        StringBuilder totaalBuilder = new StringBuilder(TextFormatting.toBold("Betaalde bedragen per persoon\n\n"));
+        ArrayList<R_SpelerContainer> spelersLijst = new ArrayList<>();
+        DecimalFormat format = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.getDefault()));
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT boetepotroda.Id, boetepotroda.Naam, boeteoverzichtroda.Betaald, " +
+                    "CASE WHEN boeteoverzichtroda.Betaald = 'Ja' THEN SUM(boetespecificatieroda.BoeteBedrag) END AS 'BetaaldBedrag', " +
+                    "CASE WHEN boeteoverzichtroda.Betaald = 'Nee' THEN SUM(boetespecificatieroda.BoeteBedrag) END AS 'OpenstaandBedrag' " +
+                    "FROM boeteoverzichtroda " +
+                    "INNER JOIN boetepotroda ON boeteoverzichtroda.SpelerId = boetepotroda.Id "  +
+                    "INNER JOIN boetespecificatieroda ON boeteoverzichtroda.Boetecode = boetespecificatieroda.Code " +
+                    "GROUP BY boetepotroda.Id, boetepotroda.Naam, boeteoverzichtroda.Betaald");
+
+            while (rs.next()) {
+                spelersLijst.add(new R_SpelerContainer(rs.getInt("Id"),
+                        rs.getString("Naam"),
+                        rs.getDouble("OpenstaandBedrag"),
+                        rs.getDouble("BetaaldBedrag")
+                ));
+            }
+
+            for (R_SpelerContainer speler : spelersLijst) {
+                if (speler.getBetaaldBedrag() != 0) {
+                    totaalBuilder.append(speler.getNaam()).append(" -> €").append(format.format(speler.getBetaaldBedrag())).append("\n");
+                }
+            }
+
+            rs.close();
+            stmt.close();
+            con.close();
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return String.valueOf(totaalBuilder);
     }
 
     private static void updateBoeteLijst() {
