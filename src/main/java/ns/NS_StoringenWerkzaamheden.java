@@ -1,6 +1,7 @@
 package ns;
 
 import com.vdurmont.emoji.EmojiParser;
+import help.H_Help;
 import nl.pvanassen.ns.ApiRequest;
 import nl.pvanassen.ns.NsApi;
 import nl.pvanassen.ns.RequestBuilder;
@@ -22,7 +23,7 @@ public class NS_StoringenWerkzaamheden {
         try {
             storingen = nsApi.getApiResponse(request);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         StringBuilder botResponse = new StringBuilder();

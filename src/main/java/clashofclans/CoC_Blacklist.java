@@ -1,5 +1,6 @@
 package clashofclans;
 
+import help.H_Help;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import utility.TextFormatting;
@@ -47,7 +48,7 @@ public class CoC_Blacklist {
             stmt.close();
             con.close();
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         return TextFormatting.toItalic(playerName + " (" + playerTag + ") is toegevoegd aan de zwarte lijst vanwege: " + String.valueOf(reasonBuilder));
@@ -81,7 +82,7 @@ public class CoC_Blacklist {
             stmt.close();
             con.close();
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         if (!(player == null)) {
@@ -115,7 +116,7 @@ public class CoC_Blacklist {
             stmt.close();
             con.close();
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         if (!(player == null)) {
@@ -149,7 +150,7 @@ public class CoC_Blacklist {
             stmt.close();
             con.close();
         } catch (SQLException | IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
         return blacklistFile;
     }

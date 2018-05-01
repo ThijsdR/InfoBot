@@ -1,5 +1,6 @@
 package clashofclans;
 
+import help.H_Help;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -28,10 +29,9 @@ public class CoC_ClanFile {
      * Na het ophalen van deze data wordt de data geplaatst in een Excel bestand.
      *
      * @param urlString             String om de request naar toe te sturen
-     * @param isPeriodicGenerated   Boolean of het bestand periodiek gegenereerd is
      * @return                      Een Excel bestand met alle informatie over clanleden
      */
-    public static File getClanMembersFileXLSX(String urlString, boolean isPeriodicGenerated, String cocApiKey) {
+    public static File getClanMembersFileXLSX(String urlString, String cocApiKey) {
 
         /* Bepaal het huidige tijdstip */
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -40,20 +40,7 @@ public class CoC_ClanFile {
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
 
         /* Bepaal de naam van het bestand op basis of het een periodiek gegenereerd bestand is of niet */
-        File clanOverviewFile = null;
-        if (isPeriodicGenerated) {
-            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
-                clanOverviewFile = new File("clanoverview_logs/generated_reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
-            } else if (org.apache.commons.lang3.SystemUtils.IS_OS_LINUX) {
-                clanOverviewFile = new File("/home/thijs/Infobotfiles/Logs/Generated/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
-            }
-        } else {
-            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
-                clanOverviewFile = new File("clanoverview_logs/logs/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanoverzicht.xlsx");
-            } else if (org.apache.commons.lang3.SystemUtils.IS_OS_LINUX) {
-                clanOverviewFile = new File("/home/thijs/Infobotfiles/Logs/Reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
-            }
-        }
+        File clanOverviewFile = new File("/home/thijs/Infobotfiles/Logs/Reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
 
         /* Maak een nieuw workbook en voeg daar een nieuwe sheet aan toe */
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -95,7 +82,7 @@ public class CoC_ClanFile {
                 try {
                     ratio = Double.valueOf(format.format(ratio));
                 } catch (NumberFormatException nex) {
-                    nex.printStackTrace();
+                    System.out.println(H_Help.exceptionStacktraceToString(nex));
                 }
             }
 
@@ -218,18 +205,17 @@ public class CoC_ClanFile {
                     sheet.autoSizeColumn(colNum);
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                System.out.println(H_Help.exceptionStacktraceToString(e));
             }
         }
 
         /* Exporteer de gemaakte file */
         try {
-            assert clanOverviewFile != null;
             FileOutputStream outputStream = new FileOutputStream(clanOverviewFile);
             workbook.write(outputStream);
             workbook.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         return clanOverviewFile;

@@ -1,3 +1,4 @@
+import help.H_Help;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
@@ -15,7 +16,7 @@ public class Main {
         try {
             telegramBotsApi.registerBot(new Inf0_B0t());
         } catch (TelegramApiException tea) {
-            tea.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(tea));
         }
 
         System.out.println("Inf0_B0t succesfully started");

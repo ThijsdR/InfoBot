@@ -1,5 +1,6 @@
 package clashofclans;
 
+import help.H_Help;
 import org.apache.commons.io.FileUtils;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -52,7 +53,7 @@ public class CoC_PROC {
             con.disconnect();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         return String.valueOf(content);
@@ -79,7 +80,7 @@ public class CoC_PROC {
 
             httpsURLConnection.disconnect();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         /* Onderneem actie aan de hand van de gekregen code */
@@ -116,7 +117,7 @@ public class CoC_PROC {
             stmt.close();
             con.close();
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         return ids;

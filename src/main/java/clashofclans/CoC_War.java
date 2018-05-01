@@ -1,6 +1,7 @@
 package clashofclans;
 
 import com.vdurmont.emoji.EmojiParser;
+import help.H_Help;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -210,8 +211,9 @@ public class CoC_War {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
+
         return String.valueOf(attackString);
     }
 
@@ -289,8 +291,9 @@ public class CoC_War {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
+
         return String.valueOf(attackString);
     }
 
@@ -861,8 +864,9 @@ public class CoC_War {
             }
 
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
+
         return TextFormatting.toItalic("Oeps, er is iets misgegaan...");
     }
 
@@ -891,7 +895,8 @@ public class CoC_War {
             }
 
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
+
         }
         return TextFormatting.toItalic("Oeps, er is iets misgegaan...");
     }

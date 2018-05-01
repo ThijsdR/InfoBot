@@ -13,6 +13,7 @@ import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 import roda.R_Boete;
+import roda.R_Help;
 import utility.CommandContainer;
 import utility.Commands;
 import utility.TextFormatting;
@@ -21,10 +22,6 @@ import java.io.*;
 import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -41,10 +38,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
     /* Velden */
     private NsApi nsApi;
     private CoC_ServerState serverStatusCoC;
-    private boolean beledigingen = true;
+    private boolean beledigingen = false;
     private final long brabantTelegramChatID = -151298765;
-    private ArrayList<CoC_PlayerContainer> cocPlayersList = new ArrayList<>();
     private String warState;
+    private ArrayList<CoC_PlayerContainer> cocPlayersList = new ArrayList<>();
     private ArrayList<CoC_WarAttackContainer> clanWarAttacks;
     private ArrayList<CoC_WarAttackContainer> opponentWarAttacks;
     private String cocApiKey;
@@ -55,7 +52,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         try {
             cocApiKey = FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/cocapikey.txt"));
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         /* Bepaal waar de output moet worden opgeslagen */
@@ -68,7 +65,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             }
             System.setOut(out);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         /* Maak verbinding met de sql server en zet de ns api op */
@@ -92,7 +89,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             stmt.close();
             con.close();
         } catch (ClassNotFoundException | SQLException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         /* Huidige status van de Clash of Clans server */
@@ -113,9 +110,6 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             clanWarAttacks = CoC_War.getCurrentClanAttacks(currentWarData);
             opponentWarAttacks = CoC_War.getCurrentOpponentAttacks(currentWarData);
         }
-
-        /* Maak elke dag, om 03:00 uur, een rapport van de data van CoC clanleden */
-        Runnable reportGenerator = () -> CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), true, cocApiKey);
 
         /* Check elke minuut de serverstatus van Clash of Clans */
         Runnable serverChecker = () -> {
@@ -238,30 +232,15 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         }
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.out.println(H_Help.exceptionStacktraceToString(e));
                 }
 
                 warState = updatedWarState;
             }
         };
 
-        /* Bepaal de tijdzone en de tijd wanneer het rapport gemaakt moet worden */
-        LocalDateTime localNow = LocalDateTime.now();
-        ZoneId currentZone = ZoneId.of("Europe/Amsterdam");
-        ZonedDateTime zonedNow = ZonedDateTime.of(localNow, currentZone);
-        ZonedDateTime zonedNext3;
-        zonedNext3 = zonedNow.withHour(3).withMinute(0).withSecond(0);
-
-        if (zonedNow.compareTo(zonedNext3) > 0) {
-            zonedNext3 = zonedNext3.plusDays(1);
-        }
-
-        Duration duration = Duration.between(zonedNow, zonedNext3);
-        long initalDelay = duration.getSeconds();
-
         final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(4);
-        executorService.scheduleAtFixedRate(reportGenerator, initalDelay, 1, TimeUnit.DAYS);
-        executorService.scheduleAtFixedRate(serverChecker, 0, 1, TimeUnit.MINUTES);
+        executorService.scheduleAtFixedRate(serverChecker, 0, 15, TimeUnit.SECONDS);
         executorService.scheduleAtFixedRate(memberChecker, 15, 60, TimeUnit.SECONDS);
         executorService.scheduleAtFixedRate(warChecker, 45, 60, TimeUnit.SECONDS);
     }
@@ -310,7 +289,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             stmt.close();
             con.close();
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         return apiUser;
@@ -335,7 +314,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             stmt.close();
             con.close();
         } catch (SQLException | ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         return apiKey;
@@ -373,7 +352,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
             sendMessage.setParseMode(ParseMode.MARKDOWN);
             execute(sendMessage);
         } catch (TelegramApiException tea) {
-            tea.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(tea));
         }
     }
 
@@ -386,7 +365,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
         try {
             sendDocument(sendDocument);
         } catch (TelegramApiException tea) {
-            tea.printStackTrace();
+            System.out.println(H_Help.exceptionStacktraceToString(tea));
         }
     }
 
@@ -412,7 +391,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
 
                             SendDocument sendDocumentrequest = new SendDocument();
                             sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                            sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", false, cocApiKey));
+                            sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getEditableURL() + cmdBuilder.getCommands()[1] + "/members", cocApiKey));
                             sendDocumentrequest.setCaption("Clanleden overzicht");
                             runCommandDocument(sendDocumentrequest);
                             break COMMAND_CONTROL;
@@ -424,7 +403,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         } else {
                             SendDocument sendDocumentrequest = new SendDocument();
                             sendDocumentrequest.setChatId(cmdBuilder.getChatID());
-                            sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), false, cocApiKey));
+                            sendDocumentrequest.setNewDocument(CoC_ClanFile.getClanMembersFileXLSX(Commands.COCCLANMEMBERSTOFILE.getDefaultURL(), cocApiKey));
                             sendDocumentrequest.setCaption("Clanleden overzicht");
                             runCommandDocument(sendDocumentrequest);
                         }
@@ -619,7 +598,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         break COMMAND_CONTROL;
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaisbetaald")) {
-                        if (cmdBuilder.getCommands().length == 3) {
+                        if (cmdBuilder.getCommands().length == 2) {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteBetaald(Integer.parseInt(cmdBuilder.getCommands()[1])));
                             runCommandMessage(cmdBuilder.getSendMessage());
                             break COMMAND_CONTROL;
@@ -630,7 +609,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         }
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaallesbetaald")) {
-                        if (cmdBuilder.getCommands().length == 3) {
+                        if (cmdBuilder.getCommands().length == 2) {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setAlleBoetesBetaald(cmdBuilder.getCommands()[1]));
                             runCommandMessage(cmdBuilder.getSendMessage());
                             break COMMAND_CONTROL;
@@ -641,7 +620,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         }
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaisopenstaand")) {
-                        if (cmdBuilder.getCommands().length == 3) {
+                        if (cmdBuilder.getCommands().length == 2) {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.setBoeteOpenstaand(Integer.parseInt(cmdBuilder.getCommands()[1])));
                             runCommandMessage(cmdBuilder.getSendMessage());
                             break COMMAND_CONTROL;
@@ -652,7 +631,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         }
                     }
                     if (cmdBuilder.getCommands()[0].equals("/rodaverwijder")) {
-                        if (cmdBuilder.getCommands().length == 3) {
+                        if (cmdBuilder.getCommands().length == 2) {
                             cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.verwijderBoete(Integer.parseInt(cmdBuilder.getCommands()[1])));
                             runCommandMessage(cmdBuilder.getSendMessage());
                             break COMMAND_CONTROL;
@@ -683,8 +662,13 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                         runCommandMessage(cmdBuilder.getSendMessage());
                         break COMMAND_CONTROL;
                     }
+                    if (cmdBuilder.getCommands()[0].equals("/rodanieuweboete")) {
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Boete.voegNieuweBoeteToe(Arrays.copyOfRange(cmdBuilder.getCommands(), 1, cmdBuilder.getCommands().length)));
+                        runCommandMessage(cmdBuilder.getSendMessage());
+                        break COMMAND_CONTROL;
+                    }
                     if (cmdBuilder.getCommands()[0].equals("/rodahelp")) {
-                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText("/rodainfo, /rodalijst, /rodaisbetaald, /rodaallesbetaald, /rodaisopenstaand, /rodaboete, /rodalijstopenstaand, /rodalijstbetaald, /rodaverwijder, /rodatotaalopenstaand, /rodatotaalbetaald");
+                        cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(R_Help.getRodaHelp());
                         runCommandMessage(cmdBuilder.getSendMessage());
                     }
                 }

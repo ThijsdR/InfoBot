@@ -1,6 +1,7 @@
 package clashofclans;
 
 import com.vdurmont.emoji.EmojiParser;
+import help.H_Help;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -144,7 +145,7 @@ public class CoC_Clan {
                         stmt.close();
                         con.close();
                     } catch (SQLException | ClassNotFoundException | IOException e) {
-                        e.printStackTrace();
+                        System.out.println(H_Help.exceptionStacktraceToString(e));
                     }
 
                     for (Map.Entry<String, String> entry : blacklistMap.entrySet()) {

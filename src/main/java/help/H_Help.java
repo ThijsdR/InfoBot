@@ -2,6 +2,9 @@ package help;
 
 import utility.TextFormatting;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 /**
  * Deze klasse bevat methode(s) met betrekking tot het /help commando
  */
@@ -33,5 +36,18 @@ public class H_Help {
         botResponse.append("/hallo - Begroeting en credits");
 
         return String.valueOf(botResponse);
+    }
+
+    /***
+     *
+     * @param e
+     * @return
+     */
+    public static String exceptionStacktraceToString(Exception e) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        e.printStackTrace(ps);
+        ps.close();
+        return baos.toString();
     }
 }
