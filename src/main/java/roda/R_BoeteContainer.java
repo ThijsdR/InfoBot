@@ -9,6 +9,7 @@ public class R_BoeteContainer {
     private boolean isBetaald;
     private double boeteBedrag;
     private String boeteOmschrijving;
+    private String boeteOpmerking;
 
     private int spelerId;
     private String boeteCode;
@@ -22,13 +23,14 @@ public class R_BoeteContainer {
         this.datum = datum;
     }
 
-    public R_BoeteContainer(int boeteId, String spelerNaam, boolean isBetaald, String boeteOmschrijving, double boeteBedrag, String datum) {
+    public R_BoeteContainer(int boeteId, String spelerNaam, boolean isBetaald, String boeteOmschrijving, double boeteBedrag, String datum, String boeteOpmerking) {
         this.boeteId = boeteId;
         this.spelerNaam = spelerNaam;
         this.isBetaald = isBetaald;
         this.boeteOmschrijving = boeteOmschrijving;
         this.boeteBedrag = boeteBedrag;
         this.datum = datum;
+        this.boeteOpmerking = boeteOpmerking;
     }
 
     public int getBoeteId() {
@@ -93,5 +95,13 @@ public class R_BoeteContainer {
 
     public void setBoeteBedrag(double boeteBedrag) {
         this.boeteBedrag = boeteBedrag;
+    }
+
+    public String getBoeteOpmerking() {
+        return boeteOpmerking;
+    }
+
+    public void setBoeteOpmerking(String boeteOpmerking) {
+        this.boeteOpmerking = boeteOpmerking;
     }
 }

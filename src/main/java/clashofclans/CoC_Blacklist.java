@@ -42,7 +42,7 @@ public class CoC_Blacklist {
         /* Voeg de opgegeven speler, tag en reden toe aan de database */
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             stmt.execute("INSERT INTO blacklist (Tag, Name, Reason) VALUES ('" + playerTag + "','" + playerName + "','" + String.valueOf(reasonBuilder) + "')");
             stmt.close();
@@ -66,7 +66,7 @@ public class CoC_Blacklist {
         String player = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Name FROM blacklist WHERE Tag = '" + playerTag + "'");
             while (rs.next()) {
@@ -103,7 +103,7 @@ public class CoC_Blacklist {
         String reason = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Name, Reason FROM blacklist WHERE Tag = '" + playerTag + "'");
 
@@ -137,7 +137,7 @@ public class CoC_Blacklist {
         StringBuilder blacklistBuilder = new StringBuilder();
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM blacklist");
             while (rs.next()) {

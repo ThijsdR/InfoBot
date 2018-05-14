@@ -26,7 +26,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM boetespecificatieroda");
 
@@ -65,7 +65,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Id, Naam FROM boetepotroda");
 
@@ -88,7 +88,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM boeteoverzichtroda");
 
@@ -150,31 +150,49 @@ public class R_Boete {
 
     //ToDo: Uitbreiden met datumvak
     public static File getAlleBoetes() {
+        return getAlleBoetes(null);
+    }
+
+    public static File getAlleBoetes(String naam) {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
-        File boeteFile = new File("/home/thijs/Infobotfiles/" + String.valueOf(sdfTitle.format(timestamp)) + "_boetelijst.xlsx");
+        File boeteFile = new File("C:/Users/Administrator/Documents/InfoBotfiles/Rodalijsten/" + String.valueOf(sdfTitle.format(timestamp)) + "_boetelijst" + (naam != null ? "_" + naam : "") + ".xlsx");
 
         ArrayList<R_BoeteContainer> boeteLijst = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT boeteoverzichtroda.BoeteId, boetepotroda.Naam, boeteoverzichtroda.Betaald, boetespecificatieroda.Omschrijving, boetespecificatieroda.BoeteBedrag, boeteoverzichtroda.Datum " +
+            ResultSet rs = stmt.executeQuery("SELECT boeteoverzichtroda.BoeteId, boetepotroda.Naam, boeteoverzichtroda.Betaald, boetespecificatieroda.Omschrijving, boetespecificatieroda.BoeteBedrag, boeteoverzichtroda.Datum, boeteoverzichtroda.Opmerking " +
                     "FROM boeteoverzichtroda " +
                     "INNER JOIN boetepotroda ON boeteoverzichtroda.SpelerId = boetepotroda.Id " +
                     "INNER JOIN boetespecificatieroda ON boeteoverzichtroda.Boetecode = boetespecificatieroda.Code");
 
             while (rs.next()) {
-                boeteLijst.add(new R_BoeteContainer(rs.getInt("BoeteId"),
-                        rs.getString("Naam"),
-                        rs.getString("Betaald").equals("Ja"),
-                        rs.getString("Omschrijving"),
-                        rs.getDouble("BoeteBedrag"),
-                        rs.getString("Datum")));
+                if (naam == null) {
+                    boeteLijst.add(new R_BoeteContainer(rs.getInt("BoeteId"),
+                            rs.getString("Naam"),
+                            rs.getString("Betaald").equals("Ja"),
+                            rs.getString("Omschrijving"),
+                            rs.getDouble("BoeteBedrag"),
+                            rs.getString("Datum"),
+                            rs.getString("Opmerking")));
+                } else {
+                    if (naam.equals(rs.getString("Naam"))) {
+                        boeteLijst.add(new R_BoeteContainer(rs.getInt("BoeteId"),
+                                rs.getString("Naam"),
+                                rs.getString("Betaald").equals("Ja"),
+                                rs.getString("Omschrijving"),
+                                rs.getDouble("BoeteBedrag"),
+                                rs.getString("Datum"),
+                                rs.getString("Opmerking")));
+                    }
+                }
             }
 
             boeteLijst.sort(Comparator.comparing(R_BoeteContainer::getBoeteId));
+            Collections.reverse(boeteLijst);
 
             rs.close();
             stmt.close();
@@ -194,6 +212,10 @@ public class R_Boete {
 
         DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
 
+        Font cellFont = workbook.createFont();
+        cellFont.setColor(IndexedColors.BLACK.getIndex());
+        cellFont.setFontName("Serif");
+
         /* Stijl van de bovenste rij */
         CellStyle style = workbook.createCellStyle();
         style.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
@@ -201,11 +223,16 @@ public class R_Boete {
 
         CellStyle doubleStyle = workbook.createCellStyle();
         doubleStyle.setDataFormat(workbook.createDataFormat().getFormat("0.00"));
+        doubleStyle.setFont(cellFont);
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFont(cellFont);
 
         /* Kleur van de bovenste rij */
         Font font = workbook.createFont();
         font.setColor(IndexedColors.BLACK.getIndex());
         font.setBold(true);
+        font.setFontName("Serif");
         style.setFont(font);
 
         /* De opmaak voor de bovenste rij */
@@ -236,6 +263,10 @@ public class R_Boete {
         omschrijvingCell.setCellValue("Omschrijving");
         omschrijvingCell.setCellStyle(style);
 
+        Cell opmerkingCell = descRow.createCell(6);
+        opmerkingCell.setCellValue("Opmerking");
+        opmerkingCell.setCellStyle(style);
+
         /* Loop door alle spelers in de lijst */
         for (R_BoeteContainer boete : boeteLijst) {
             Row row = sheet.createRow(rowNum++);
@@ -250,6 +281,7 @@ public class R_Boete {
                         Object obj = field.get(boete);
 
                         Cell cell = row.createCell(colNum++);
+                        cell.setCellStyle(cellStyle);
 
                         if (type == String.class) {
                             cell.setCellValue((String) obj);
@@ -261,10 +293,13 @@ public class R_Boete {
                         } else if (type == boolean.class) {
                             cell.setCellValue((Boolean) obj ? "Ja" : "Nee");
                         }
-
-                        sheet.autoSizeColumn(colNum);
                     }
                 }
+
+                for (int i = 0; i < colNum; i++) {
+                    sheet.autoSizeColumn(i);
+                }
+
             } catch (IllegalAccessException e) {
                 System.out.println(H_Help.exceptionStacktraceToString(e));
             }
@@ -285,7 +320,7 @@ public class R_Boete {
     public static String setBoeteBetaald(int boeteId) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
 
             PreparedStatement ps = con.prepareStatement(
                     "UPDATE boeteoverzichtroda SET Betaald = ? WHERE BoeteId = ?"
@@ -310,7 +345,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
 
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Id, Naam FROM boetepotroda");
@@ -358,7 +393,7 @@ public class R_Boete {
     public static String setBoeteOpenstaand(int boeteId) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
 
             PreparedStatement ps = con.prepareStatement(
                     "UPDATE boeteoverzichtroda SET Betaald = ? WHERE BoeteId = ?"
@@ -381,7 +416,7 @@ public class R_Boete {
     public static String verwijderBoete(int boeteId) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             PreparedStatement ps = con.prepareStatement(
                     "DELETE FROM boeteoverzichtroda WHERE BoeteId = ?"
             );
@@ -404,15 +439,15 @@ public class R_Boete {
     public static File getOpenstaandeBoetes() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
-        File boeteFile = new File("/home/thijs/Infobotfiles/" + String.valueOf(sdfTitle.format(timestamp)) + "_boetelijst_openstaand.xlsx");
+        File boeteFile = new File("C:/Users/Administrator/Documents/InfoBotfiles/Rodalijsten/" + String.valueOf(sdfTitle.format(timestamp)) + "_boetelijst_openstaand.xlsx");
 
         ArrayList<R_BoeteContainer> boeteLijst = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT boeteoverzichtroda.BoeteId, boetepotroda.Naam, boeteoverzichtroda.Betaald, boetespecificatieroda.Omschrijving, boetespecificatieroda.BoeteBedrag, boeteoverzichtroda.Datum " +
+            ResultSet rs = stmt.executeQuery("SELECT boeteoverzichtroda.BoeteId, boetepotroda.Naam, boeteoverzichtroda.Betaald, boetespecificatieroda.Omschrijving, boetespecificatieroda.BoeteBedrag, boeteoverzichtroda.Datum, boeteoverzichtroda.Opmerking " +
                     "FROM boeteoverzichtroda " +
                     "INNER JOIN boetepotroda ON boeteoverzichtroda.SpelerId = boetepotroda.Id " +
                     "INNER JOIN boetespecificatieroda ON boeteoverzichtroda.Boetecode = boetespecificatieroda.Code");
@@ -424,11 +459,13 @@ public class R_Boete {
                             rs.getString("Betaald").equals("Ja"),
                             rs.getString("Omschrijving"),
                             rs.getDouble("BoeteBedrag"),
-                            rs.getString("Datum")));
+                            rs.getString("Datum"),
+                            rs.getString("Opmerking")));
                 }
             }
 
             boeteLijst.sort(Comparator.comparing(R_BoeteContainer::getBoeteId));
+            Collections.reverse(boeteLijst);
 
             rs.close();
             stmt.close();
@@ -448,6 +485,10 @@ public class R_Boete {
 
         DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
 
+        Font cellFont = workbook.createFont();
+        cellFont.setColor(IndexedColors.BLACK.getIndex());
+        cellFont.setFontName("Serif");
+
         /* Stijl van de bovenste rij */
         CellStyle style = workbook.createCellStyle();
         style.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
@@ -455,11 +496,16 @@ public class R_Boete {
 
         CellStyle doubleStyle = workbook.createCellStyle();
         doubleStyle.setDataFormat(workbook.createDataFormat().getFormat("0.00"));
+        doubleStyle.setFont(cellFont);
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFont(cellFont);
 
         /* Kleur van de bovenste rij */
         Font font = workbook.createFont();
         font.setColor(IndexedColors.BLACK.getIndex());
         font.setBold(true);
+        font.setFontName("Serif");
         style.setFont(font);
 
         /* De opmaak voor de bovenste rij */
@@ -490,6 +536,10 @@ public class R_Boete {
         omschrijvingCell.setCellValue("Omschrijving");
         omschrijvingCell.setCellStyle(style);
 
+        Cell opmerkingCell = descRow.createCell(6);
+        opmerkingCell.setCellValue("Opmerking");
+        opmerkingCell.setCellStyle(style);
+
         /* Loop door alle spelers in de lijst */
         for (R_BoeteContainer boete : boeteLijst) {
             Row row = sheet.createRow(rowNum++);
@@ -504,6 +554,7 @@ public class R_Boete {
                         Object obj = field.get(boete);
 
                         Cell cell = row.createCell(colNum++);
+                        cell.setCellStyle(cellStyle);
 
                         if (type == String.class) {
                             cell.setCellValue((String) obj);
@@ -515,10 +566,13 @@ public class R_Boete {
                         } else if (type == boolean.class) {
                             cell.setCellValue((Boolean) obj ? "Ja" : "Nee");
                         }
-
-                        sheet.autoSizeColumn(colNum);
                     }
                 }
+
+                for (int i = 0; i < colNum; i++) {
+                    sheet.autoSizeColumn(i);
+                }
+
             } catch (IllegalAccessException e) {
                 System.out.println(H_Help.exceptionStacktraceToString(e));
             }
@@ -539,15 +593,15 @@ public class R_Boete {
     public static File getBetaaldeBoetes() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
-        File boeteFile = new File("/home/thijs/Infobotfiles/" + String.valueOf(sdfTitle.format(timestamp)) + "_boetelijst_betaald.xlsx");
+        File boeteFile = new File("C:/Users/Administrator/Documents/InfoBotfiles/Rodalijsten/" + String.valueOf(sdfTitle.format(timestamp)) + "_boetelijst_betaald.xlsx");
 
         ArrayList<R_BoeteContainer> boeteLijst = new ArrayList<>();
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT boeteoverzichtroda.BoeteId, boetepotroda.Naam, boeteoverzichtroda.Betaald, boetespecificatieroda.Omschrijving, boetespecificatieroda.BoeteBedrag, boeteoverzichtroda.Datum " +
+            ResultSet rs = stmt.executeQuery("SELECT boeteoverzichtroda.BoeteId, boetepotroda.Naam, boeteoverzichtroda.Betaald, boetespecificatieroda.Omschrijving, boetespecificatieroda.BoeteBedrag, boeteoverzichtroda.Datum, boeteoverzichtroda.Opmerking " +
                     "FROM boeteoverzichtroda " +
                     "INNER JOIN boetepotroda ON boeteoverzichtroda.SpelerId = boetepotroda.Id " +
                     "INNER JOIN boetespecificatieroda ON boeteoverzichtroda.Boetecode = boetespecificatieroda.Code");
@@ -559,11 +613,13 @@ public class R_Boete {
                             rs.getString("Betaald").equals("Ja"),
                             rs.getString("Omschrijving"),
                             rs.getDouble("BoeteBedrag"),
-                            rs.getString("Datum")));
+                            rs.getString("Datum"),
+                            rs.getString("Opmerking")));
                 }
             }
 
             boeteLijst.sort(Comparator.comparing(R_BoeteContainer::getBoeteId));
+            Collections.reverse(boeteLijst);
 
             rs.close();
             stmt.close();
@@ -583,6 +639,10 @@ public class R_Boete {
 
         DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
 
+        Font cellFont = workbook.createFont();
+        cellFont.setColor(IndexedColors.BLACK.getIndex());
+        cellFont.setFontName("Serif");
+
         /* Stijl van de bovenste rij */
         CellStyle style = workbook.createCellStyle();
         style.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
@@ -590,6 +650,10 @@ public class R_Boete {
 
         CellStyle doubleStyle = workbook.createCellStyle();
         doubleStyle.setDataFormat(workbook.createDataFormat().getFormat("0.00"));
+        doubleStyle.setFont(cellFont);
+
+        CellStyle cellStyle = workbook.createCellStyle();
+        cellStyle.setFont(cellFont);
 
         /* Kleur van de bovenste rij */
         Font font = workbook.createFont();
@@ -625,6 +689,10 @@ public class R_Boete {
         omschrijvingCell.setCellValue("Omschrijving");
         omschrijvingCell.setCellStyle(style);
 
+        Cell opmerkingCell = descRow.createCell(6);
+        opmerkingCell.setCellValue("Opmerking");
+        opmerkingCell.setCellStyle(style);
+
         /* Loop door alle spelers in de lijst */
         for (R_BoeteContainer boete : boeteLijst) {
             Row row = sheet.createRow(rowNum++);
@@ -639,6 +707,7 @@ public class R_Boete {
                         Object obj = field.get(boete);
 
                         Cell cell = row.createCell(colNum++);
+                        cell.setCellStyle(cellStyle);
 
                         if (type == String.class) {
                             cell.setCellValue((String) obj);
@@ -650,10 +719,13 @@ public class R_Boete {
                         } else if (type == boolean.class) {
                             cell.setCellValue((Boolean) obj ? "Ja" : "Nee");
                         }
-
-                        sheet.autoSizeColumn(colNum);
                     }
                 }
+
+                for (int i = 0; i < colNum; i++) {
+                    sheet.autoSizeColumn(i);
+                }
+
             } catch (IllegalAccessException e) {
                 System.out.println(H_Help.exceptionStacktraceToString(e));
             }
@@ -678,7 +750,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM boetepotroda");
 
@@ -716,7 +788,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM boetepotroda");
 
@@ -753,7 +825,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT boetepotroda.Id, boetepotroda.Naam, boeteoverzichtroda.Betaald, " +
                     "CASE WHEN boeteoverzichtroda.Betaald = 'Ja' THEN SUM(boetespecificatieroda.BoeteBedrag) END AS 'BetaaldBedrag', " +
@@ -798,7 +870,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM boetepotroda");
 
@@ -847,7 +919,7 @@ public class R_Boete {
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT Code FROM boetespecificatieroda");
 
@@ -875,6 +947,30 @@ public class R_Boete {
                     + String.valueOf(omschrijvingBuilder) + "\n"
                     + boeteBedrag + "\n"
                     + (isKratje ? "Ja" : "Nee"));
+        } catch (SQLException | ClassNotFoundException | IOException e) {
+            System.out.println(H_Help.exceptionStacktraceToString(e));
+            return TextFormatting.toItalic("Er is iets fout gegaan");
+        }
+    }
+
+    public static String voegOpmerkingToe(String[] opmerkingArray) {
+        int boeteID = Integer.parseInt(opmerkingArray[0]);
+        StringBuilder opmerking = new StringBuilder();
+        for (String s : Arrays.copyOfRange(opmerkingArray, 1, opmerkingArray.length)) {
+            opmerking.append(s).append(" ");
+        }
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
+            PreparedStatement pstmt = con.prepareStatement("UPDATE boeteoverzichtroda SET Opmerking = '" + String.valueOf(opmerking) + "' WHERE BoeteId = " + boeteID);
+            pstmt.executeUpdate();
+
+            pstmt.close();
+            con.close();
+
+            updateBoeteLijst();
+            return TextFormatting.toItalic("Gelukt!");
         } catch (SQLException | ClassNotFoundException | IOException e) {
             System.out.println(H_Help.exceptionStacktraceToString(e));
             return TextFormatting.toItalic("Er is iets fout gegaan");

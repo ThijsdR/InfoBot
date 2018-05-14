@@ -40,7 +40,7 @@ public class CoC_ClanFile {
         SimpleDateFormat sdfTitle = new SimpleDateFormat("yyyy-MM-dd");
 
         /* Bepaal de naam van het bestand op basis of het een periodiek gegenereerd bestand is of niet */
-        File clanOverviewFile = new File("/home/thijs/Infobotfiles/Logs/Reports/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
+        File clanOverviewFile = new File("C:/Users/Administrator/Documents/InfoBotfiles/Clanfiles/" + String.valueOf(sdfTitle.format(timestamp)) + "_clanlog.xlsx");
 
         /* Maak een nieuw workbook en voeg daar een nieuwe sheet aan toe */
         XSSFWorkbook workbook = new XSSFWorkbook();
@@ -201,9 +201,12 @@ public class CoC_ClanFile {
                             cell.setCellValue((Double) obj);
                         }
                     }
-
-                    sheet.autoSizeColumn(colNum);
                 }
+
+                for (int i = 0; i < colNum; i++) {
+                    sheet.autoSizeColumn(i);
+                }
+
             } catch (IllegalAccessException e) {
                 System.out.println(H_Help.exceptionStacktraceToString(e));
             }

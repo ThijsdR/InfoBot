@@ -11,12 +11,21 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 
 public class CoC_War {
     public static String getCurrentWarState(String warData) {
         JSONObject warJson = new JSONObject(warData);
         return warJson.getString("state");
+    }
+
+    public static int getCurrentNumberClanAttacks(String warData) {
+        return new JSONObject(warData).getJSONObject("clan").getInt("attacks");
+    }
+
+    public static int getCurrentNumberOpponentAttacks(String warData) {
+        return new JSONObject(warData).getJSONObject("opponent").getInt("attacks");
     }
 
     public static ArrayList<CoC_WarAttackContainer> getCurrentClanAttacks(String warData) {
@@ -75,228 +84,6 @@ public class CoC_War {
         return allAttacks;
     }
 
-    public static String warAttacksUpdate(String warData, ArrayList<CoC_WarAttackContainer> currentClanAttacks, ArrayList<CoC_WarAttackContainer> currentOpponentAttacks, String cocApiKey) {
-        StringBuilder attackString = new StringBuilder();
-        JSONObject warJson = new JSONObject(warData);
-
-        JSONObject clanJson = warJson.getJSONObject("clan");
-        JSONArray clanJsonJSONArray = clanJson.getJSONArray("members");
-        ArrayList<CoC_PlayerContainer> clanWarPlayers = new ArrayList<>();
-
-        for (int i = 0; i < clanJsonJSONArray.length(); i++) {
-            clanWarPlayers.add(new CoC_PlayerContainer(clanJsonJSONArray.getJSONObject(i).getInt("mapPosition"),
-                    clanJsonJSONArray.getJSONObject(i).getString("tag"),
-                    clanJsonJSONArray.getJSONObject(i).getString("name")));
-        }
-
-        JSONObject opponentJson = warJson.getJSONObject("opponent");
-        JSONArray opponentJsonJSONArray = opponentJson.getJSONArray("members");
-        ArrayList<CoC_PlayerContainer> opponentWarPlayers = new ArrayList<>();
-
-        for (int i = 0; i < opponentJsonJSONArray.length(); i++) {
-            opponentWarPlayers.add(new CoC_PlayerContainer(opponentJsonJSONArray.getJSONObject(i).getInt("mapPosition"),
-                    opponentJsonJSONArray.getJSONObject(i).getString("tag"),
-                    opponentJsonJSONArray.getJSONObject(i).getString("name")));
-        }
-
-        try {
-            ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
-            ArrayList<CoC_WarAttackContainer> opponentWarAttacks = getCurrentOpponentAttacks(warData);
-
-            CoC_WarAttackContainer lastAttack;
-            String clanPlayerName;
-            String clanPlayerTag;
-            String opponentPlayerName;
-            String opponentPlayerTag;
-
-            if (clanWarAttacks.size() != currentClanAttacks.size() || opponentWarAttacks.size() != currentOpponentAttacks.size()) {
-                attackString.append(EmojiParser.parseToUnicode(":crossed_swords:"))
-                        .append(TextFormatting.toBold("Oorlogsupdate!"))
-                        .append("\n\n");
-                attackString.append(TextFormatting.toItalic("Huidige stand: "))
-                        .append(checkWarScore(warData))
-                        .append("\n\n");
-            }
-
-            if (clanWarAttacks.size() > currentClanAttacks.size()) {
-                for (int i = 1; i <= (clanWarAttacks.size() - currentClanAttacks.size()); i++) {
-                    lastAttack = clanWarAttacks.get(clanWarAttacks.size() - i);
-                    String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
-                    JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
-                    clanPlayerName = clanPlayerJson.getString("name");
-                    clanPlayerTag = lastAttack.getAttackerTag();
-
-                    String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
-                    JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
-                    opponentPlayerName = opponentPlayerJson.getString("name");
-                    opponentPlayerTag = lastAttack.getDefenderTag();
-
-                    switch (lastAttack.getStars()) {
-                        case 0:
-                            attackString.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "));
-                            break;
-                        case 1:
-                            attackString.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "));
-                            break;
-                        case 2:
-                            attackString.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "));
-                            break;
-                        case 3:
-                            attackString.append(EmojiParser.parseToUnicode(":star::star::star: "));
-                            break;
-                    }
-
-                    attackString.append(lastAttack.getDestructionPercentage()).append("% \n");
-
-                    for (CoC_PlayerContainer player : clanWarPlayers) {
-                        if (player.getPlayerTag().equals(clanPlayerTag)) {
-                            attackString.append(TextFormatting.toBold(player.getPositionInClan() + ". ")).append(clanPlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
-                        }
-                    }
-
-                    for (CoC_PlayerContainer opponent : opponentWarPlayers) {
-                        if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                            attackString.append(TextFormatting.toBold(opponent.getPositionInClan() + ". ")).append(opponentPlayerName).append("\n\n");
-                        }
-                    }
-                }
-            }
-
-            if (opponentWarAttacks.size() > currentOpponentAttacks.size()) {
-                for (int i = 1; i <= (opponentWarAttacks.size() - currentOpponentAttacks.size()); i++) {
-                    lastAttack = opponentWarAttacks.get(opponentWarAttacks.size() - i);
-
-                    String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
-                    JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
-                    opponentPlayerName = opponentPlayerJson.getString("name");
-                    opponentPlayerTag = lastAttack.getAttackerTag();
-
-                    String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
-                    JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
-                    clanPlayerName = clanPlayerJson.getString("name");
-                    clanPlayerTag = lastAttack.getDefenderTag();
-
-                    switch (lastAttack.getStars()) {
-                        case 0:
-                            attackString.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "));
-                            break;
-                        case 1:
-                            attackString.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "));
-                            break;
-                        case 2:
-                            attackString.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "));
-                            break;
-                        case 3:
-                            attackString.append(EmojiParser.parseToUnicode(":star::star::star: "));
-                            break;
-                    }
-
-                    attackString.append(lastAttack.getDestructionPercentage()).append("% \n");
-
-                    for (CoC_PlayerContainer player : clanWarPlayers) {
-                        if (player.getPlayerTag().equals(clanPlayerTag)) {
-                            attackString.append(TextFormatting.toBold(player.getPositionInClan() + ". "))
-                                    .append(clanPlayerName)
-                                    .append(EmojiParser.parseToUnicode(" :arrow_backward: "));
-                        }
-                    }
-
-                    for (CoC_PlayerContainer opponent : opponentWarPlayers) {
-                        if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                            attackString.append(TextFormatting.toBold(opponent.getPositionInClan() + ". "))
-                                    .append(opponentPlayerName)
-                                    .append("\n\n");
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(H_Help.exceptionStacktraceToString(e));
-        }
-
-        return String.valueOf(attackString);
-    }
-
-    public static String war3StarUpdate(String warData, ArrayList<CoC_WarAttackContainer> currentClanAttacks, String cocApiKey) {
-        StringBuilder attackString = new StringBuilder();
-
-        JSONObject warJson = new JSONObject(warData);
-
-        JSONObject clanJson = warJson.getJSONObject("clan");
-        JSONArray clanJsonJSONArray = clanJson.getJSONArray("members");
-        ArrayList<CoC_PlayerContainer> clanWarPlayers = new ArrayList<>();
-
-        for (int i = 0; i < clanJsonJSONArray.length(); i++) {
-            clanWarPlayers.add(new CoC_PlayerContainer(clanJsonJSONArray.getJSONObject(i).getInt("mapPosition"),
-                    clanJsonJSONArray.getJSONObject(i).getString("tag"),
-                    clanJsonJSONArray.getJSONObject(i).getString("name")));
-        }
-
-        JSONObject opponentJson = warJson.getJSONObject("opponent");
-        JSONArray opponentJsonJSONArray = opponentJson.getJSONArray("members");
-        ArrayList<CoC_PlayerContainer> opponentWarPlayers = new ArrayList<>();
-
-        for (int i = 0; i < opponentJsonJSONArray.length(); i++) {
-            opponentWarPlayers.add(new CoC_PlayerContainer(opponentJsonJSONArray.getJSONObject(i).getInt("mapPosition"),
-                    opponentJsonJSONArray.getJSONObject(i).getString("tag"),
-                    opponentJsonJSONArray.getJSONObject(i).getString("name")));
-        }
-
-        try {
-            ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
-
-            if (clanWarAttacks.size() > currentClanAttacks.size()) {
-                CoC_WarAttackContainer lastAttack;
-                String clanPlayerName;
-                String clanPlayerTag;
-                String opponentPlayerName;
-                String opponentPlayerTag;
-
-                for (int i = 1; i <= (clanWarAttacks.size() - currentClanAttacks.size()); i++) {
-                    lastAttack = clanWarAttacks.get(clanWarAttacks.size() - i);
-
-                    if (lastAttack.getDestructionPercentage() == 100) {
-                        attackString.append(EmojiParser.parseToUnicode(":confetti_ball::tada: "))
-                                .append(TextFormatting.toBold("NIEUWE 3-STER AANVAL!"))
-                                .append("\n\n");
-
-                        String clanPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getAttackerTag().replace("#", "%23"), cocApiKey);
-                        JSONObject clanPlayerJson = new JSONObject(clanPlayerData);
-                        clanPlayerName = clanPlayerJson.getString("name");
-                        clanPlayerTag = lastAttack.getAttackerTag();
-
-                        String opponentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + lastAttack.getDefenderTag().replace("#", "%23"), cocApiKey);
-                        JSONObject opponentPlayerJson = new JSONObject(opponentPlayerData);
-                        opponentPlayerName = opponentPlayerJson.getString("name");
-                        opponentPlayerTag = lastAttack.getDefenderTag();
-
-                        attackString.append(EmojiParser.parseToUnicode(":star::star::star: :100:%\n"));
-
-                        for (CoC_PlayerContainer player : clanWarPlayers) {
-                            if (player.getPlayerTag().equals(clanPlayerTag)) {
-                                attackString.append(TextFormatting.toBold(player.getPositionInClan() + ". "))
-                                        .append(clanPlayerName)
-                                        .append(EmojiParser.parseToUnicode(" :arrow_forward: "));
-                            }
-                        }
-
-                        for (CoC_PlayerContainer opponent : opponentWarPlayers) {
-                            if (opponent.getPlayerTag().equals(opponentPlayerTag)) {
-                                attackString.append(TextFormatting.toBold(opponent.getPositionInClan() + ". "))
-                                        .append(opponentPlayerName)
-                                        .append("\n\n");
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(H_Help.exceptionStacktraceToString(e));
-        }
-
-        return String.valueOf(attackString);
-    }
-
     public static String warStartMessage(String warData) {
         JSONObject warJson = new JSONObject(warData);
         JSONObject opponentJson = warJson.getJSONObject("opponent");
@@ -313,7 +100,7 @@ public class CoC_War {
                 TextFormatting.toBold(" is afgelopen!");
     }
 
-    private static String checkWarScore(String warData) {
+    static String checkWarScore(String warData) {
         JSONObject warJson = new JSONObject(warData);
         JSONObject clanJson = warJson.getJSONObject("clan");
         JSONObject opponentJson = warJson.getJSONObject("opponent");
@@ -332,10 +119,7 @@ public class CoC_War {
         }};
     }
 
-    public static String endWarRecap(String warData, String cocApiKey) {
-        JSONObject warJson = new JSONObject(warData);
-        JSONObject clanJson = warJson.getJSONObject("clan");
-        JSONArray clanJsonJSONArray = clanJson.getJSONArray("members");
+    private static ArrayList<CoC_PlayerContainer> getClanWarPlayers(JSONArray clanJsonJSONArray) {
         ArrayList<CoC_PlayerContainer> clanWarPlayers = new ArrayList<>();
 
         for (int i = 0; i < clanJsonJSONArray.length(); i++) {
@@ -344,8 +128,10 @@ public class CoC_War {
                     clanJsonJSONArray.getJSONObject(i).getString("name")));
         }
 
-        JSONObject opponentJson = warJson.getJSONObject("opponent");
-        JSONArray opponentJsonJSONArray = opponentJson.getJSONArray("members");
+        return clanWarPlayers;
+    }
+
+    private static ArrayList<CoC_PlayerContainer> getClanWarOpponent(JSONArray opponentJsonJSONArray) {
         ArrayList<CoC_PlayerContainer> opponentWarPlayers = new ArrayList<>();
 
         for (int i = 0; i < opponentJsonJSONArray.length(); i++) {
@@ -354,15 +140,19 @@ public class CoC_War {
                     opponentJsonJSONArray.getJSONObject(i).getString("name")));
         }
 
+        return opponentWarPlayers;
+    }
+
+    private static ArrayList<Integer> getWarStarAttacks(JSONArray clanJsonJSONArray, JSONArray opponentJsonJSONArray) {
         int clanZeroStarAttacks = 0;
         int clanOneStarAttacks = 0;
         int clanTwoStarAttacks = 0;
         int clanThreeStarAttacks = 0;
 
         for (int i = 0; i < opponentJsonJSONArray.length(); i++) {
-            JSONObject bestAttack = opponentJsonJSONArray.getJSONObject(i).getJSONObject("bestOpponentAttack");
+            int bestAttackStars = opponentJsonJSONArray.getJSONObject(i).getJSONObject("bestOpponentAttack").getInt("stars");
 
-            switch (bestAttack.getInt("stars")) {
+            switch (bestAttackStars) {
                 case 0: clanZeroStarAttacks++; break;
                 case 1: clanOneStarAttacks++; break;
                 case 2: clanTwoStarAttacks++; break;
@@ -376,15 +166,86 @@ public class CoC_War {
         int opponentThreeStarAttacks = 0;
 
         for (int i = 0; i < clanJsonJSONArray.length(); i++) {
-            JSONObject bestAttack = clanJsonJSONArray.getJSONObject(i).getJSONObject("bestOpponentAttack");
+            int bestAttackStars = clanJsonJSONArray.getJSONObject(i).getJSONObject("bestOpponentAttack").getInt("stars");
 
-            switch (bestAttack.getInt("stars")) {
+            switch (bestAttackStars) {
                 case 0: opponentZeroStarAttacks++; break;
                 case 1: opponentOneStarAttacks++; break;
                 case 2: opponentTwoStarAttacks++; break;
                 case 3: opponentThreeStarAttacks++; break;
             }
         }
+
+        return new ArrayList<>(Arrays.asList(clanThreeStarAttacks, clanTwoStarAttacks, clanOneStarAttacks, clanZeroStarAttacks,
+                opponentThreeStarAttacks, opponentTwoStarAttacks, opponentOneStarAttacks, opponentZeroStarAttacks));
+    }
+
+    private static String getBassieWinner(ArrayList<CoC_WarAttackContainer> clanWarAttacks, ArrayList<CoC_PlayerContainer> clanWarPlayers, ArrayList<CoC_PlayerContainer> opponentWarPlayers, String cocApiKey) {
+        StringBuilder bassieBuilder = new StringBuilder();
+
+        String bassiePlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getAttackerTag().replace("#", "%23"), cocApiKey);
+        JSONObject bassiePlayerJson = new JSONObject(bassiePlayerData);
+        String bassiePlayerName = bassiePlayerJson.getString("name");
+        String bassiePlayerTag = clanWarAttacks.get(0).getAttackerTag();
+
+        String bassieOppoonentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getDefenderTag().replace("#", "%23"), cocApiKey);
+        JSONObject bassiepponentPlayerJson = new JSONObject(bassieOppoonentPlayerData);
+        String bassieOpponentPlayerName = bassiepponentPlayerJson.getString("name");
+        String bassieOpponentPlayerTag = clanWarAttacks.get(0).getDefenderTag();
+
+        bassieBuilder.append(TextFormatting.toBold("WINNAAR VAN DE BASSIE-AWARD ")).append(EmojiParser.parseToUnicode(":clown::trophy:")).append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~-~-~-~\n"));
+
+        switch (clanWarAttacks.get(0).getStars()) {
+            case 0:
+                bassieBuilder.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+            case 1:
+                bassieBuilder.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+            case 2:
+                bassieBuilder.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+            case 3:
+                bassieBuilder.append(EmojiParser.parseToUnicode(":star::star::star: "))
+                        .append(clanWarAttacks.get(0).getDestructionPercentage())
+                        .append("%");
+                break;
+        }
+
+        bassieBuilder.append("\n");
+
+        for (CoC_PlayerContainer player : clanWarPlayers) {
+            if (player.getPlayerTag().equals(bassiePlayerTag)) {
+                bassieBuilder.append(TextFormatting.toBold(player.getPositionInClan() + ". ")).append(bassiePlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
+            }
+        }
+
+        for (CoC_PlayerContainer opponent : opponentWarPlayers) {
+            if (opponent.getPlayerTag().equals(bassieOpponentPlayerTag)) {
+                bassieBuilder.append(TextFormatting.toBold(opponent.getPositionInClan() + ". ")).append(bassieOpponentPlayerName).append("\n");
+            }
+        }
+
+        return String.valueOf(bassieBuilder);
+    }
+
+    public static String endWarRecap(String warData, String cocApiKey) {
+        JSONObject warJson = new JSONObject(warData);
+
+        JSONObject clanJson = warJson.getJSONObject("clan");
+        JSONArray clanJsonJSONArray = clanJson.getJSONArray("members");
+
+        JSONObject opponentJson = warJson.getJSONObject("opponent");
+        JSONArray opponentJsonJSONArray = opponentJson.getJSONArray("members");
+
+        ArrayList<CoC_PlayerContainer> clanWarPlayers = getClanWarPlayers(clanJsonJSONArray);
+        ArrayList<CoC_PlayerContainer> opponentWarPlayers = getClanWarOpponent(opponentJsonJSONArray);
 
         ArrayList<CoC_WarAttackContainer> clanWarAttacks = getCurrentClanAttacks(warData);
         clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
@@ -513,76 +374,78 @@ public class CoC_War {
         recap.append("--------------------\n");
         recap.append("| ");
 
-        if (clanThreeStarAttacks >= 10) {
-            recap.append(clanThreeStarAttacks);
+        ArrayList<Integer> warAttacks = getWarStarAttacks(clanJsonJSONArray, opponentJsonJSONArray);
+
+        if (warAttacks.get(0) >= 10) {
+            recap.append(warAttacks.get(0));
         } else {
-            recap.append(" ").append(clanThreeStarAttacks);
+            recap.append(" ").append(warAttacks.get(0));
         }
         recap.append(" |");
         recap.append(EmojiParser.parseToUnicode(" :star::star::star: "));
         recap.append("| ");
 
-        if (opponentThreeStarAttacks >= 10) {
-            recap.append(opponentThreeStarAttacks);
+        if (warAttacks.get(4) >= 10) {
+            recap.append(warAttacks.get(4));
         } else {
-            recap.append(opponentThreeStarAttacks).append(" ");
+            recap.append(warAttacks.get(4)).append(" ");
         }
         recap.append(" |");
         recap.append("\n");
         recap.append("--------------------\n");
         recap.append("| ");
 
-        if (clanTwoStarAttacks >= 10) {
-            recap.append(clanTwoStarAttacks);
+        if (warAttacks.get(1) >= 10) {
+            recap.append(warAttacks.get(1));
         } else {
-            recap.append(" ").append(clanTwoStarAttacks);
+            recap.append(" ").append(warAttacks.get(1));
         }
         recap.append(" |");
         recap.append(EmojiParser.parseToUnicode(" :star::star::heavy_multiplication_x: "));
         recap.append("| ");
 
-        if (opponentTwoStarAttacks >= 10) {
-            recap.append(opponentTwoStarAttacks);
+        if (warAttacks.get(5) >= 10) {
+            recap.append(warAttacks.get(5));
         } else {
-            recap.append(opponentTwoStarAttacks).append(" ");
+            recap.append(warAttacks.get(5)).append(" ");
         }
         recap.append(" |");
         recap.append("\n");
         recap.append("--------------------\n");
         recap.append("| ");
 
-        if (clanOneStarAttacks >= 10) {
-            recap.append(clanOneStarAttacks);
+        if (warAttacks.get(2) >= 10) {
+            recap.append(warAttacks.get(2));
         } else {
-            recap.append(" ").append(clanOneStarAttacks);
+            recap.append(" ").append(warAttacks.get(2));
         }
         recap.append(" |");
         recap.append(EmojiParser.parseToUnicode(" :star::heavy_multiplication_x::heavy_multiplication_x: "));
         recap.append("| ");
 
-        if (opponentOneStarAttacks >= 10) {
-            recap.append(opponentOneStarAttacks);
+        if (warAttacks.get(6) >= 10) {
+            recap.append(warAttacks.get(6));
         } else {
-            recap.append(opponentOneStarAttacks).append(" ");
+            recap.append(warAttacks.get(6)).append(" ");
         }
         recap.append(" |");
         recap.append("\n");
         recap.append("--------------------\n");
         recap.append("| ");
 
-        if (clanZeroStarAttacks >= 10) {
-            recap.append(clanZeroStarAttacks);
+        if (warAttacks.get(3) >= 10) {
+            recap.append(warAttacks.get(3));
         } else {
-            recap.append(" ").append(clanZeroStarAttacks);
+            recap.append(" ").append(warAttacks.get(3));
         }
         recap.append(" |");
         recap.append(EmojiParser.parseToUnicode(" :heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "));
         recap.append("| ");
 
-        if (opponentZeroStarAttacks >= 10) {
-            recap.append(opponentZeroStarAttacks);
+        if (warAttacks.get(7) >= 10) {
+            recap.append(warAttacks.get(7));
         } else {
-            recap.append(opponentZeroStarAttacks).append(" ");
+            recap.append(warAttacks.get(7)).append(" ");
         }
         recap.append(" |");
         recap.append("\n");
@@ -592,55 +455,6 @@ public class CoC_War {
 
         recap.append("\n");
 
-        String bassiePlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getAttackerTag().replace("#", "%23"), cocApiKey);
-        JSONObject bassiePlayerJson = new JSONObject(bassiePlayerData);
-        String bassiePlayerName = bassiePlayerJson.getString("name");
-        String bassiePlayerTag = clanWarAttacks.get(0).getAttackerTag();
-
-        String bassieOppoonentPlayerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(0).getDefenderTag().replace("#", "%23"), cocApiKey);
-        JSONObject bassiepponentPlayerJson = new JSONObject(bassieOppoonentPlayerData);
-        String bassieOpponentPlayerName = bassiepponentPlayerJson.getString("name");
-        String bassieOpponentPlayerTag = clanWarAttacks.get(0).getDefenderTag();
-
-        recap.append(TextFormatting.toBold("WINNAAR VAN DE BASSIE-AWARD ")).append(EmojiParser.parseToUnicode(":clown::trophy:")).append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~-~-~-~\n"));
-
-        switch (clanWarAttacks.get(0).getStars()) {
-            case 0:
-                recap.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "))
-                        .append(clanWarAttacks.get(0).getDestructionPercentage())
-                        .append("%");
-                break;
-            case 1:
-                recap.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "))
-                        .append(clanWarAttacks.get(0).getDestructionPercentage())
-                        .append("%");
-                break;
-            case 2:
-                recap.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "))
-                        .append(clanWarAttacks.get(0).getDestructionPercentage())
-                        .append("%");
-                break;
-            case 3:
-                recap.append(EmojiParser.parseToUnicode(":star::star::star: "))
-                        .append(clanWarAttacks.get(0).getDestructionPercentage())
-                        .append("%");
-                break;
-        }
-
-        recap.append("\n");
-
-        for (CoC_PlayerContainer player : clanWarPlayers) {
-            if (player.getPlayerTag().equals(bassiePlayerTag)) {
-                recap.append(TextFormatting.toBold(player.getPositionInClan() + ". ")).append(bassiePlayerName).append(EmojiParser.parseToUnicode(" :arrow_forward: "));
-            }
-        }
-
-        for (CoC_PlayerContainer opponent : opponentWarPlayers) {
-            if (opponent.getPlayerTag().equals(bassieOpponentPlayerTag)) {
-                recap.append(TextFormatting.toBold(opponent.getPositionInClan() + ". ")).append(bassieOpponentPlayerName).append("\n");
-            }
-        }
-
         ArrayList<CoC_WarAttackContainer> perfectAttacks = new ArrayList<>();
 
         for (CoC_WarAttackContainer clanWarAttack : clanWarAttacks) {
@@ -648,6 +462,8 @@ public class CoC_War {
                 perfectAttacks.add(clanWarAttack);
             }
         }
+
+        recap.append(getBassieWinner(clanWarAttacks, clanWarPlayers, opponentWarPlayers, cocApiKey));
 
         if (!perfectAttacks.isEmpty()) {
             recap.append(TextFormatting.toBold("\nEERVOLLE VERMELDINGEN")).append(EmojiParser.parseToUnicode(" :speech_balloon:")).append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~-~-~-~\n"));
@@ -843,7 +659,7 @@ public class CoC_War {
         try {
             ArrayList<Long> chatIDs = new ArrayList<>();
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
             while (rs.next()) {
@@ -874,7 +690,7 @@ public class CoC_War {
         try {
             ArrayList<Long> chatIDs = new ArrayList<>();
             Class.forName("com.mysql.jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
             while (rs.next()) {

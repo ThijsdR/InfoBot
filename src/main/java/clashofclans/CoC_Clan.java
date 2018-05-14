@@ -19,6 +19,12 @@ import java.util.Map;
  */
 public class CoC_Clan {
 
+    public static int getClanSize(String cocApiKey) {
+        String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY", cocApiKey);
+        JSONObject json = new JSONObject(returnJson);
+        return json.getInt("members");
+    }
+
     public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(String cocApiKey) {
         ArrayList<CoC_PlayerContainer> playerList = new ArrayList<>();
 
@@ -135,7 +141,7 @@ public class CoC_Clan {
 
                     try {
                         Class.forName("com.mysql.jdbc.Driver");
-                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("/home/thijs/Infobotfiles/dbpass.txt")));
+                        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
                         while (rs.next()) {

@@ -7,6 +7,7 @@ public class R_Help {
         return TextFormatting.toItalic("Commando's met betrekking tot de Roda HS boetepot\n\n") +
                 TextFormatting.toBold("- /rodainfo -\n") + "Een lijst met alle boetes (codes, omschrijvingen en boetebedragen)\n\n" +
                 TextFormatting.toBold("- /rodaboete -\n") + "Voeg een nieuwe boete toe aan de database (format: <commando naam boetecode>)\n\n" +
+                TextFormatting.toBold("- /rodaopmerking -\n") + "Voeg een opmerking toe aan de opgegeven boete (format: <commando boeteID opmerking>)\n\n" +
                 TextFormatting.toBold("- /rodaverwijder -\n") + "Verwijder een boete uit de database (format: <commando boeteID>)\n\n" +
                 TextFormatting.toBold("- /rodalijst -\n") + "Een Exceldocument met alle huidige openstaande en betaalde boetes\n\n" +
                 TextFormatting.toBold("- /rodalijstopenstaand -\n") + "Een Exceldocument met alle huidige openstaande boetes\n\n" +
