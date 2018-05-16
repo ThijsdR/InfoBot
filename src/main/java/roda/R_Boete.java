@@ -46,7 +46,7 @@ public class R_Boete {
             System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
-        DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+        DecimalFormat format = new DecimalFormat("0.00");
 
         for (R_BoeteSpecificatieContainer boete : boetes) {
             boeteLijst.append(TextFormatting.toCode("Code: " )).append(boete.getCode()).append("\n");
@@ -128,7 +128,7 @@ public class R_Boete {
             stmt = con.createStatement();
             ResultSet rs2 = stmt.executeQuery("SELECT boeteBedrag FROM boetespecificatieroda WHERE Code = " + boeteContainer.getBoeteCode());
             String boeteBedrag = null;
-            DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+            DecimalFormat format = new DecimalFormat("0.00");
 
             while (rs2.next()) {
                 boeteBedrag = format.format(rs2.getDouble("boeteBedrag"));
@@ -210,7 +210,7 @@ public class R_Boete {
         sheet.getFooter().setRight(String.valueOf(sdf.format(timestamp)));
         sheet.getFooter().setLeft("Boeteoverzicht");
 
-        DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+        DecimalFormat format = new DecimalFormat("0.00");
 
         Font cellFont = workbook.createFont();
         cellFont.setColor(IndexedColors.BLACK.getIndex());
@@ -483,7 +483,7 @@ public class R_Boete {
         sheet.getFooter().setRight(String.valueOf(sdf.format(timestamp)));
         sheet.getFooter().setLeft("Boeteoverzicht");
 
-        DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+        DecimalFormat format = new DecimalFormat("0.00");
 
         Font cellFont = workbook.createFont();
         cellFont.setColor(IndexedColors.BLACK.getIndex());
@@ -637,7 +637,7 @@ public class R_Boete {
         sheet.getFooter().setRight(String.valueOf(sdf.format(timestamp)));
         sheet.getFooter().setLeft("Boeteoverzicht");
 
-        DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+        DecimalFormat format = new DecimalFormat("0.00");
 
         Font cellFont = workbook.createFont();
         cellFont.setColor(IndexedColors.BLACK.getIndex());
@@ -746,7 +746,7 @@ public class R_Boete {
     public static String getTotaalOpenstaand() {
         StringBuilder totaalBuilder = new StringBuilder(TextFormatting.toBold("Openstaande bedragen per persoon\n\n"));
         ArrayList<R_SpelerContainer> spelersLijst = new ArrayList<>();
-        DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+        DecimalFormat format = new DecimalFormat("0.00");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -784,7 +784,7 @@ public class R_Boete {
     public static String getTotaalBetaald() {
         StringBuilder totaalBuilder = new StringBuilder(TextFormatting.toBold("Betaalde bedragen per persoon\n\n"));
         ArrayList<R_SpelerContainer> spelersLijst = new ArrayList<>();
-        DecimalFormat format = new DecimalFormat("0.00", new DecimalFormatSymbols(Locale.getDefault()));
+        DecimalFormat format = new DecimalFormat("0.00");
 
         try {
             Class.forName("com.mysql.jdbc.Driver");

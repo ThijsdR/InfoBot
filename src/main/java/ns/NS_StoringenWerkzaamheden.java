@@ -42,12 +42,12 @@ public class NS_StoringenWerkzaamheden {
                     botResponse.append("\n\n").append(storing.getBericht());
                 }
 
-                botResponse.append("\n\n`Laatste update: ")
+                botResponse.append("\n\n<code>Laatste update: ")
                         .append(String.format("%02d", storing.getDatum().getDate())).append("-")
                         .append(String.format("%02d", storing.getDatum().getMonth() + 1)).append("-")
                         .append(String.format("%02d", storing.getDatum().getYear() - 100 + 2000)).append(" ")
                         .append(String.format("%02d", storing.getDatum().getHours())).append(":")
-                        .append(String.format("%02d", storing.getDatum().getMinutes())).append("`");
+                        .append(String.format("%02d", storing.getDatum().getMinutes())).append("</code>");
 
                 botResponse.append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~\n"));
             }

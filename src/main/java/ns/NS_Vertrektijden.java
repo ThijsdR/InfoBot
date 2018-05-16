@@ -42,7 +42,7 @@ public class NS_Vertrektijden {
                     .append(":").append(String.format("%02d", trein.getVertrekTijd().getMinutes()));
 
             if (trein.getVertrekVertragingMinuten() != 0) {
-                botResponse.append(" `+").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + "`:exclamation:"));
+                botResponse.append(" <code>+").append(EmojiParser.parseToUnicode(trein.getVertrekVertragingMinuten() + "</code>:exclamation:"));
             }
 
             if (trein.isGewijzigdVertrekspoor()) {

@@ -291,7 +291,7 @@ public class CoC_War {
 
         recap.append(TextFormatting.toBold(clanJson.getString("name"))).append(EmojiParser.parseToUnicode("\t\t:family:\t\t")).append(TextFormatting.toBold(opponentJson.getString("name"))).append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~-~-~-~"));
 
-        recap.append("```\n\n");
+        recap.append("<pre>\n\n");
         recap.append("[   Statistieken   ]\n");
         recap.append("--------------------\n");
         recap.append("|");
@@ -451,7 +451,7 @@ public class CoC_War {
         recap.append("\n");
         recap.append("--------------------\n");
 
-        recap.append("```");
+        recap.append("</pre>");
 
         recap.append("\n");
 
@@ -534,84 +534,43 @@ public class CoC_War {
         return String.valueOf(opponentOverview);
     }
 
-    public static String getCurrentOpponentOverview(String warData) {
+    public static String getCurrentWarStats(String warData) {
         JSONObject warJson = new JSONObject(warData);
         String state = warJson.getString("state");
         StringBuilder botResponse = new StringBuilder();
 
         if (state.equals("inWar")) {
             ArrayList<CoC_PlayerContainer> opponentPlayers = new ArrayList<>();
+            ArrayList<CoC_PlayerContainer> clanPlayers = new ArrayList<>();
+
             JSONObject opponentJson = warJson.getJSONObject("opponent");
             JSONArray opponentMemberJsonArray = opponentJson.getJSONArray("members");
+
+            JSONObject clanJson = warJson.getJSONObject("clan");
+            JSONArray clanMemberJsonArray = clanJson.getJSONArray("members");
+
             botResponse.append(TextFormatting.toBold("Tegenstander: "))
                     .append(TextFormatting.toItalic(opponentJson.getString("name")))
                     .append("\n\n");
             botResponse.append(TextFormatting.toItalic("Huidige stand: " + checkWarScore(warData)))
                     .append("\n\n");
 
-            JSONObject clanJson = warJson.getJSONObject("clan");
+            opponentPlayers = getBestAttackPerPlayer(opponentPlayers, opponentMemberJsonArray);
+            clanPlayers = getBestAttackPerPlayer(clanPlayers, clanMemberJsonArray);
+
+
+            botResponse.append(EmojiParser.parseToUnicode(":family: ")).append(TextFormatting.toBold(clanJson.getString("name"))).append("\n").append(TextFormatting.toBold("~~~~~~~~~~~~~~~~~~~\n\n"));
+            botResponse.append(EmojiParser.parseToUnicode(":star2: ")).append(clanJson.getInt("stars")).append(" ");
             botResponse.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(clanJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append(" ");
             botResponse.append(EmojiParser.parseToUnicode(":collision: ")).append(String.format("%.2f",clanJson.getDouble("destructionPercentage"))).append("%\n");
+            botResponse.append(getBestAttacks(opponentPlayers, false, false));
+            botResponse.append("\n\n");
 
-            for (int j = 0; j < opponentMemberJsonArray.length(); j++) {
-                JSONObject opponentMemberJson = opponentMemberJsonArray.getJSONObject(j);
-                JSONObject opponentBestAttack = null;
-
-                if (opponentMemberJson.has("bestOpponentAttack")) {
-                    opponentBestAttack = opponentMemberJson.getJSONObject("bestOpponentAttack");
-                }
-
-                opponentPlayers.add(new CoC_PlayerContainer(opponentMemberJson.getInt("mapPosition"),
-                        opponentMemberJson.getString("name"),
-                        opponentMemberJson.getInt("townhallLevel"),
-                        new CoC_WarAttackContainer(opponentBestAttack == null ? 0 : opponentBestAttack.getInt("stars"),
-                                opponentBestAttack == null ? 0 : opponentBestAttack.getInt("destructionPercentage"))));
-            }
-
-            opponentPlayers.sort(Comparator.comparing(CoC_PlayerContainer::getPositionInClan));
-
-            for (CoC_PlayerContainer player : opponentPlayers) {
-                botResponse.append("\n");
-                if (player.getPositionInClan() < 10) {
-                    botResponse.append("0").append(player.getPositionInClan()).append(")");
-                } else {
-                    botResponse.append(player.getPositionInClan()).append(")");
-                }
-
-                if (player.getTownhallLevel() < 10) {
-                    botResponse.append(EmojiParser.parseToUnicode(" :house:"))
-                            .append("0")
-                            .append(player.getTownhallLevel())
-                            .append(" ");
-                } else {
-                    botResponse.append(EmojiParser.parseToUnicode(" :house:"))
-                            .append(player.getTownhallLevel())
-                            .append(" ");
-                }
-
-                switch (player.getBestAttack().getStars()) {
-                    case 0:
-                        botResponse.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "))
-                                .append(player.getBestAttack().getDestructionPercentage())
-                                .append("%");
-                        break;
-                    case 1:
-                        botResponse.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "))
-                                .append(player.getBestAttack().getDestructionPercentage())
-                                .append("%");
-                        break;
-                    case 2:
-                        botResponse.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "))
-                                .append(player.getBestAttack().getDestructionPercentage())
-                                .append("%");
-                        break;
-                    case 3:
-                        botResponse.append(EmojiParser.parseToUnicode(":star::star::star: "))
-                                .append(player.getBestAttack().getDestructionPercentage())
-                                .append("%");
-                        break;
-                }
-            }
+            botResponse.append(EmojiParser.parseToUnicode(":family: ")).append(TextFormatting.toBold(opponentJson.getString("name"))).append("\n").append(TextFormatting.toBold("~~~~~~~~~~~~~~~~~~~\n\n"));
+            botResponse.append(EmojiParser.parseToUnicode(":star2: ")).append(opponentJson.getInt("stars")).append(" ");
+            botResponse.append(EmojiParser.parseToUnicode(":crossed_swords: ")).append(opponentJson.getInt("attacks")).append("/").append(warJson.getInt("teamSize") * 2).append(" ");
+            botResponse.append(EmojiParser.parseToUnicode(":collision: ")).append(String.format("%.2f",opponentJson.getDouble("destructionPercentage"))).append("%\n");
+            botResponse.append(getBestAttacks(clanPlayers, true, true));
 
             return String.valueOf(botResponse);
         }
@@ -621,6 +580,95 @@ public class CoC_War {
         }
     }
 
+    private static ArrayList<CoC_PlayerContainer> getBestAttackPerPlayer(ArrayList<CoC_PlayerContainer> players, JSONArray jsonArray) {
+        for (int j = 0; j < jsonArray.length(); j++) {
+            JSONObject memberJson = jsonArray.getJSONObject(j);
+            JSONObject bestAttack = null;
+
+            if (memberJson.has("bestOpponentAttack")) {
+                bestAttack = memberJson.getJSONObject("bestOpponentAttack");
+            }
+
+            players.add(new CoC_PlayerContainer(memberJson.getInt("mapPosition"),
+                    memberJson.getString("name"),
+                    memberJson.getInt("townhallLevel"),
+                    new CoC_WarAttackContainer(bestAttack == null ? 0 : bestAttack.getInt("stars"),
+                            bestAttack == null ? 0 : bestAttack.getInt("destructionPercentage"))));
+        }
+
+        return players;
+    }
+
+    private static String getBestAttacks(ArrayList<CoC_PlayerContainer> players, boolean isBrabant, boolean threeStarOnly) {
+        StringBuilder stringBuilder = new StringBuilder();
+        players.sort(Comparator.comparing(CoC_PlayerContainer::getPositionInClan));
+
+        for (CoC_PlayerContainer player : players) {
+            if (!isBrabant) {
+                stringBuilder.append("\n");
+                if (player.getPositionInClan() < 10) {
+                    stringBuilder.append("0").append(player.getPositionInClan()).append(")");
+                } else {
+                    stringBuilder.append(player.getPositionInClan()).append(")");
+                }
+
+                if (player.getTownhallLevel() < 10) {
+                    stringBuilder.append(EmojiParser.parseToUnicode(" :house:"))
+                            .append("0")
+                            .append(player.getTownhallLevel())
+                            .append(" ");
+                } else {
+                    stringBuilder.append(EmojiParser.parseToUnicode(" :house:"))
+                            .append(player.getTownhallLevel())
+                            .append(" ");
+                }
+            } else {
+                stringBuilder.append(" ");
+            }
+
+            if (!threeStarOnly) {
+                switch (player.getBestAttack().getStars()) {
+                    case 0:
+                        stringBuilder.append(EmojiParser.parseToUnicode(":heavy_multiplication_x::heavy_multiplication_x::heavy_multiplication_x: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
+                        break;
+                    case 1:
+                        stringBuilder.append(EmojiParser.parseToUnicode(":star::heavy_multiplication_x::heavy_multiplication_x: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
+                        break;
+                    case 2:
+                        stringBuilder.append(EmojiParser.parseToUnicode(":star::star::heavy_multiplication_x: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
+                        break;
+                    case 3:
+                        stringBuilder.append(EmojiParser.parseToUnicode(":star::star::star: "))
+                                .append(player.getBestAttack().getDestructionPercentage())
+                                .append("%");
+                        break;
+                }
+            } else {
+                if (player.getBestAttack().getStars() == 3) {
+                    stringBuilder.append("\n");
+                    if (player.getPositionInClan() < 10) {
+                        stringBuilder.append("0").append(player.getPositionInClan()).append(")");
+                    } else {
+                        stringBuilder.append(player.getPositionInClan()).append(")");
+                    }
+
+                    stringBuilder.append(EmojiParser.parseToUnicode(" :star::star::star: "))
+                            .append(player.getBestAttack().getDestructionPercentage())
+                            .append("%")
+                            .append(" - ")
+                            .append(player.getName());
+                }
+            }
+        }
+        return String.valueOf(stringBuilder);
+    }
+
     public static String getBassieAwardTopDrie(ArrayList<CoC_WarAttackContainer> clanWarAttacks, String warState, String cocApiKey) {
         if (warState.equals("inWar") || warState.equals("warEnded")) {
             if (clanWarAttacks.size() >= 3) {
@@ -628,7 +676,7 @@ public class CoC_War {
                 clanWarAttacks.sort(Comparator.comparing(CoC_WarAttackContainer::getDestructionPercentage));
 
                 StringBuilder bassieBuilder = new StringBuilder(EmojiParser.parseToUnicode(":trophy:"));
-                bassieBuilder.append(TextFormatting.toBold("Bassie-award huidige top 3")).append("\n");
+                bassieBuilder.append(TextFormatting.toBold(" Bassie-award huidige top 3\n~~~~~~~~~~~~~~~~~~~")).append("\n");
                 for (int i = 0; i < 3; i++) {
                     JSONObject bassieJson = new JSONObject(CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/" + clanWarAttacks.get(i).getAttackerTag().replace("#", "%23"), cocApiKey));
                     String bassieAwardName = bassieJson.getString("name");

@@ -368,7 +368,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
      */
     private void runCommandMessage(SendMessage sendMessage) {
         try {
-            sendMessage.setParseMode(ParseMode.MARKDOWN);
+            sendMessage.setParseMode(ParseMode.HTML);
             execute(sendMessage);
         } catch (TelegramApiException tea) {
             System.out.println(H_Help.exceptionStacktraceToString(tea));
@@ -467,9 +467,9 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                             }
                             break COMMAND_CONTROL;
                         }
-                        if (cmdBuilder.getCommands()[0].startsWith(Commands.COCWAROPPONENT.getCommand())) {
+                        if (cmdBuilder.getCommands()[0].equals(Commands.COCWAROPPONENT.getCommand())) {
                             if (cmdBuilder.getCommands().length == 1) {
-                                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getCurrentOpponentOverview(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey)));
+                                cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(CoC_War.getCurrentWarStats(CoC_PROC.retrieveDataSupercellAPI(Commands.COCWAROPPONENT.getDefaultURL(), cocApiKey)));
                                 runCommandMessage(cmdBuilder.getSendMessage());
                             }
                             break COMMAND_CONTROL;
@@ -538,6 +538,10 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     runCommandMessage(new SendMessage().setChatId(brabantTelegramChatID).setText(cmdBuilder.getLocatieCommands()[1]));
                     break COMMAND_CONTROL;
                 }
+                if (cmdBuilder.getLocatieCommands()[0].equals("/echo") && cmdBuilder.getLocatieCommands().length > 1 && cmdBuilder.getChatID() == 315876545) {
+                    runCommandMessage(new SendMessage().setChatId(cmdBuilder.getChatID()).setText(cmdBuilder.getLocatieCommands()[1]));
+                    break COMMAND_CONTROL;
+                }
                 if (cmdBuilder.getCommands()[0].startsWith(Commands.HELP.getCommand())) {
                     cmdBuilder.getSendMessage().setChatId(cmdBuilder.getChatID()).setText(H_Help.getHelp());
                     runCommandMessage(cmdBuilder.getSendMessage());
@@ -558,7 +562,7 @@ public class Inf0_B0t extends TelegramLongPollingBot {
                     SendDocument sendDocumentrequest = new SendDocument();
                     sendDocumentrequest.setChatId(cmdBuilder.getChatID());
                     if (SystemUtils.IS_OS_WINDOWS) {
-                        sendDocumentrequest.setNewDocument(new File("C:/Users/Administrator/Documents/InfoBotfiles/cocapikey.txt"));
+                        sendDocumentrequest.setNewDocument(new File("C:/Users/Administrator/Documents/InfoBotfiles/output.txt"));
                     } else if (SystemUtils.IS_OS_LINUX) {
                         sendDocumentrequest.setNewDocument(new File("/home/thijs/Infobotfiles/output.txt"));
                     }

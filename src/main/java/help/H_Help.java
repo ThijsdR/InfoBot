@@ -25,7 +25,7 @@ public class H_Help {
         botResponse.append("/cocblacklistremove - Verwijder een speler van de zwarte lijst (spelerstag)\n");
         botResponse.append("/cocblacklistview - Een tekst bestand met alle spelerstags op de zwarte lijst\n");
         botResponse.append("/cocblacklistcheck - Controleer of de opgegeven speler op de zwarte lijst staat (spelerstag)\n");
-        botResponse.append("/cocwaropponent - Overzicht van de huidige tegenstander in de clanoorlog\n");
+        botResponse.append("/cocwar - Overzicht van de huidige tegenstander in de clanoorlog\n");
         botResponse.append("/cocbassie - De huidige top 3 voor de Bassie-award\n");
         botResponse.append("/cocwarsubscribe - Abonneer jezelf op de oorlogsupdates\n");
         botResponse.append("/cocwarunsubscribe - Verwijder jezelf van de oorlogsupdateslijst\n\n");
