@@ -5,7 +5,8 @@ import org.telegram.telegrambots.api.methods.send.SendMessage;
 /**
  * Een klasse noodzakelijk om een commando op te bouwen
  */
-public class CommandContainer {
+public class CommandContainer
+{
 
     /* Velden */
     private String messageText;
@@ -15,7 +16,8 @@ public class CommandContainer {
     private long chatID;
 
     /* Constructor */
-    public CommandContainer(String messageText, String[] commands, String[] locatieCommands, SendMessage sendMessage, long chatID) {
+    public CommandContainer(String messageText, String[] commands, String[] locatieCommands, SendMessage sendMessage, long chatID)
+    {
         this.messageText = messageText;
         this.commands = commands;
         this.locatieCommands = locatieCommands;
@@ -24,19 +26,28 @@ public class CommandContainer {
     }
 
     /* Getters */
-    public String getMessageText() {
+    public String getMessageText()
+    {
         return messageText;
     }
-    public String[] getCommands() {
+
+    public String[] getCommands()
+    {
         return commands;
     }
-    public String[] getLocatieCommands() {
+
+    public String[] getLocatieCommands()
+    {
         return locatieCommands;
     }
-    public SendMessage getSendMessage() {
+
+    public SendMessage getSendMessage()
+    {
         return sendMessage;
     }
-    public long getChatID() {
+
+    public long getChatID()
+    {
         return chatID;
     }
 }

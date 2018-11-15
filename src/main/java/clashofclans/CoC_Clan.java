@@ -17,15 +17,18 @@ import java.util.Map;
 /**
  * Deze klasse bevat methode(s) welke betrekking hebben op de gehele clan
  */
-public class CoC_Clan {
+public class CoC_Clan
+{
 
-    public static int getClanSize(String cocApiKey) {
+    public static int getClanSize(String cocApiKey)
+    {
         String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY", cocApiKey);
         JSONObject json = new JSONObject(returnJson);
         return json.getInt("members");
     }
 
-    public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(String cocApiKey) {
+    public static ArrayList<CoC_PlayerContainer> getCoCPlayerList(String cocApiKey)
+    {
         ArrayList<CoC_PlayerContainer> playerList = new ArrayList<>();
 
         String returnJson = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/clans/%23J0C9CPY/members", cocApiKey);
@@ -33,7 +36,8 @@ public class CoC_Clan {
         JSONObject json = new JSONObject(returnJson);
         JSONArray jsonArray = json.getJSONArray("items");
 
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
             String playerData = CoC_PROC.retrieveDataSupercellAPI("https://api.clashofclans.com/v1/players/%23" + jsonArray.getJSONObject(i).getString("tag").substring(1), cocApiKey);
             JSONObject playerJson = new JSONObject(playerData);
             JSONArray heroesJsonArray = playerJson.getJSONArray("heroes");
@@ -45,7 +49,8 @@ public class CoC_Clan {
 
             ArrayList<CoC_Hero> heroList = new ArrayList<>();
 
-            for (int j = 0; j < heroesJsonArray.length(); j++) {
+            for (int j = 0; j < heroesJsonArray.length(); j++)
+            {
                 heroList.add(new CoC_Hero(heroesJsonArray.getJSONObject(j).getString("name"),
                         heroesJsonArray.getJSONObject(j).getInt("level")));
             }
@@ -56,39 +61,50 @@ public class CoC_Clan {
         return playerList;
     }
 
-    public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList) {
+    public static String getClanChange(ArrayList<CoC_PlayerContainer> cocPlayersList, ArrayList<CoC_PlayerContainer> updatedList)
+    {
         ArrayList<CoC_PlayerContainer> uniqueMembers = new ArrayList<>();
 
         boolean memberJoined = false;
 
-        if (updatedList.size() > cocPlayersList.size()) {
-            for (CoC_PlayerContainer player2 : updatedList) {
+        if (updatedList.size() > cocPlayersList.size())
+        {
+            for (CoC_PlayerContainer player2 : updatedList)
+            {
                 boolean flag = false;
-                for (CoC_PlayerContainer player1 : cocPlayersList) {
-                    if (player2.getPlayerTag().equals(player1.getPlayerTag())) {
+                for (CoC_PlayerContainer player1 : cocPlayersList)
+                {
+                    if (player2.getPlayerTag().equals(player1.getPlayerTag()))
+                    {
                         flag = true;
                         break;
                     }
                 }
 
-                if (!flag) {
+                if (!flag)
+                {
                     uniqueMembers.add(player2);
                 }
             }
             memberJoined = true;
         }
 
-        if (updatedList.size() < cocPlayersList.size()) {
-            for (CoC_PlayerContainer player1 : cocPlayersList) {
+        if (updatedList.size() < cocPlayersList.size())
+        {
+            for (CoC_PlayerContainer player1 : cocPlayersList)
+            {
                 boolean flag = false;
-                for (CoC_PlayerContainer player2 : updatedList) {
-                    if (player1.getPlayerTag().equals(player2.getPlayerTag())) {
+                for (CoC_PlayerContainer player2 : updatedList)
+                {
+                    if (player1.getPlayerTag().equals(player2.getPlayerTag()))
+                    {
                         flag = true;
                         break;
                     }
                 }
 
-                if (!flag) {
+                if (!flag)
+                {
                     uniqueMembers.add(player1);
                 }
             }
@@ -96,14 +112,18 @@ public class CoC_Clan {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        if (!uniqueMembers.isEmpty()) {
-            if (memberJoined) {
+        if (!uniqueMembers.isEmpty())
+        {
+            if (memberJoined)
+            {
                 stringBuilder = new StringBuilder(TextFormatting.toBold("Een speler heeft zich bij de clan aangesloten!"));
-            } else {
+            } else
+            {
                 stringBuilder = new StringBuilder(TextFormatting.toBold("Een speler zit niet langer meer bij de clan!"));
             }
 
-            for (CoC_PlayerContainer player : uniqueMembers) {
+            for (CoC_PlayerContainer player : uniqueMembers)
+            {
                 stringBuilder.append("\n\n");
                 stringBuilder.append(player.getName());
                 stringBuilder.append(" (")
@@ -116,9 +136,11 @@ public class CoC_Clan {
                         .append(player.getTrophyCount())
                         .append(" ");
 
-                for (CoC_Hero hero : player.getHeroLevels()) {
+                for (CoC_Hero hero : player.getHeroLevels())
+                {
                     String heroName = hero.getName();
-                    switch (heroName) {
+                    switch (heroName)
+                    {
                         case "Barbarian King":
                             stringBuilder.append(EmojiParser.parseToUnicode(":prince: "))
                                     .append(hero.getLevel())
@@ -136,26 +158,32 @@ public class CoC_Clan {
                     }
                 }
 
-                if (memberJoined) {
+                if (memberJoined)
+                {
                     Map<String, String> blacklistMap = new HashMap<>();
 
-                    try {
+                    try
+                    {
                         Class.forName("com.mysql.jdbc.Driver");
                         Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
                         Statement stmt = con.createStatement();
                         ResultSet rs = stmt.executeQuery("SELECT Tag, Reason FROM blacklist");
-                        while (rs.next()) {
+                        while (rs.next())
+                        {
                             blacklistMap.put(rs.getString("Tag"), rs.getString("Reason"));
                         }
                         rs.close();
                         stmt.close();
                         con.close();
-                    } catch (SQLException | ClassNotFoundException | IOException e) {
+                    } catch (SQLException | ClassNotFoundException | IOException e)
+                    {
                         System.out.println(H_Help.exceptionStacktraceToString(e));
                     }
 
-                    for (Map.Entry<String, String> entry : blacklistMap.entrySet()) {
-                        if (entry.getKey().toLowerCase().equals(player.getPlayerTag().toLowerCase())) {
+                    for (Map.Entry<String, String> entry : blacklistMap.entrySet())
+                    {
+                        if (entry.getKey().toLowerCase().equals(player.getPlayerTag().toLowerCase()))
+                        {
                             stringBuilder.append("\n\n >> ")
                                     .append(EmojiParser.parseToUnicode(" :warning: "))
                                     .append(TextFormatting.toBold("Deze speler staat op de zwarte lijst!"))
@@ -170,7 +198,7 @@ public class CoC_Clan {
                             .append(playerName)
                             .append("-")
                             .append(player.getPlayerTag().substring(1))
-                            .append("/profile#playerHistory");
+                            .append("/profile/clans-history#tabs");
                 }
             }
         }

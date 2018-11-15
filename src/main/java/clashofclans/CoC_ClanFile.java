@@ -22,16 +22,18 @@ import java.util.Locale;
 /**
  * Deze klasse bevat methode(s) die clangegevens kunnen exporteren naar bestanden
  */
-public class CoC_ClanFile {
+public class CoC_ClanFile
+{
 
     /**
      * Deze methode haalt alle informatie op omtrent clanleden van de opgegeven clan.
      * Na het ophalen van deze data wordt de data geplaatst in een Excel bestand.
      *
-     * @param urlString             String om de request naar toe te sturen
-     * @return                      Een Excel bestand met alle informatie over clanleden
+     * @param urlString String om de request naar toe te sturen
+     * @return Een Excel bestand met alle informatie over clanleden
      */
-    public static File getClanMembersFileXLSX(String urlString, String cocApiKey) {
+    public static File getClanMembersFileXLSX(String urlString, String cocApiKey)
+    {
 
         /* Bepaal het huidige tijdstip */
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -69,19 +71,24 @@ public class CoC_ClanFile {
         DecimalFormat format = new DecimalFormat(".##", new DecimalFormatSymbols(Locale.US));
 
         /* Voor ieder jsonobject in de array met items */
-        for (int i = 0; i < jsonArray.length(); i++) {
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
 
             /* Bepaal de ratio van een speler en rondt deze af op twee decimalen.
                Als een speler niks heeft ontvangen is de ratio gelijk aan wat gedoneerd is. */
             double ratio;
-            if (jsonArray.getJSONObject(i).getInt("donationsReceived") == 0) {
+            if (jsonArray.getJSONObject(i).getInt("donationsReceived") == 0)
+            {
                 ratio = jsonArray.getJSONObject(i).getInt("donations");
-            } else {
+            } else
+            {
                 ratio = jsonArray.getJSONObject(i).getDouble("donations") / jsonArray.getJSONObject(i).getDouble("donationsReceived");
 
-                try {
+                try
+                {
                     ratio = Double.valueOf(format.format(ratio));
-                } catch (NumberFormatException nex) {
+                } catch (NumberFormatException nex)
+                {
                     System.out.println(H_Help.exceptionStacktraceToString(nex));
                 }
             }
@@ -165,59 +172,75 @@ public class CoC_ClanFile {
         cellStyleString.setFillPattern(CellStyle.SOLID_FOREGROUND);
 
         /* Loop door alle spelers in de lijst */
-        for (CoC_PlayerContainer player : playersList) {
+        for (CoC_PlayerContainer player : playersList)
+        {
             Row row = sheet.createRow(rowNum++);
             int colNum = 0;
 
             /* Ga alle velden langs die een speler heeft en voeg deze toe aan een rij in de File */
-            try {
-                for (Field field : player.getClass().getDeclaredFields()) {
+            try
+            {
+                for (Field field : player.getClass().getDeclaredFields())
+                {
                     field.setAccessible(true);
                     Class type = field.getType();
                     Object obj = field.get(player);
 
                     Cell cell = row.createCell(colNum++);
-                    if (type == String.class) {
-                        if (cell.getRow().getRowNum() % 2 == 0) {
+                    if (type == String.class)
+                    {
+                        if (cell.getRow().getRowNum() % 2 == 0)
+                        {
                             cell.setCellStyle(cellStyleString);
                             cell.setCellValue((String) obj);
-                        } else {
+                        } else
+                        {
                             cell.setCellValue((String) obj);
                         }
-                    } else if (type == int.class) {
-                        if (cell.getRow().getRowNum() % 2 == 0) {
+                    } else if (type == int.class)
+                    {
+                        if (cell.getRow().getRowNum() % 2 == 0)
+                        {
                             cell.setCellStyle(cellStyleEven);
                             cell.setCellValue((Integer) obj);
-                        } else {
+                        } else
+                        {
                             cell.setCellStyle(cellStyleOdd);
                             cell.setCellValue((Integer) obj);
                         }
-                    } else if (type == double.class) {
-                        if (cell.getRow().getRowNum() % 2 == 0) {
+                    } else if (type == double.class)
+                    {
+                        if (cell.getRow().getRowNum() % 2 == 0)
+                        {
                             cell.setCellStyle(cellStyleEven);
                             cell.setCellValue((Double) obj);
-                        } else {
+                        } else
+                        {
                             cell.setCellStyle(cellStyleOdd);
                             cell.setCellValue((Double) obj);
                         }
                     }
                 }
 
-                for (int i = 0; i < colNum; i++) {
+                for (int i = 0; i < colNum; i++)
+                {
                     sheet.autoSizeColumn(i);
                 }
 
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException e)
+            {
                 System.out.println(H_Help.exceptionStacktraceToString(e));
             }
         }
 
         /* Exporteer de gemaakte file */
-        try {
+        try
+        {
             FileOutputStream outputStream = new FileOutputStream(clanOverviewFile);
             workbook.write(outputStream);
             workbook.close();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 

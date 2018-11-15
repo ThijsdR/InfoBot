@@ -1,13 +1,15 @@
 package clashofclans;
 
-public class CoC_WarAttackContainer implements Comparable {
+public class CoC_WarAttackContainer implements Comparable
+{
     private String attackerTag;
     private String defenderTag;
     private int stars;
     private int destructionPercentage;
     private int order;
 
-    CoC_WarAttackContainer(String attackerTag, String defenderTag, int stars, int destructionPercentage, int order) {
+    CoC_WarAttackContainer(String attackerTag, String defenderTag, int stars, int destructionPercentage, int order)
+    {
         this.attackerTag = attackerTag;
         this.defenderTag = defenderTag;
         this.stars = stars;
@@ -15,27 +17,40 @@ public class CoC_WarAttackContainer implements Comparable {
         this.order = order;
     }
 
-    CoC_WarAttackContainer(int stars, int destructionPercentage) {
+    CoC_WarAttackContainer(int stars, int destructionPercentage)
+    {
         this.stars = stars;
         this.destructionPercentage = destructionPercentage;
     }
 
-    String getAttackerTag() {
+    String getAttackerTag()
+    {
         return attackerTag;
     }
-    String getDefenderTag() {
+
+    String getDefenderTag()
+    {
         return defenderTag;
     }
-    int getStars() {
+
+    int getStars()
+    {
         return stars;
     }
-    int getDestructionPercentage() {
+
+    int getDestructionPercentage()
+    {
         return destructionPercentage;
     }
-    int getOrder() { return order; }
+
+    int getOrder()
+    {
+        return order;
+    }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Object o)
+    {
         return 0;
     }
 }

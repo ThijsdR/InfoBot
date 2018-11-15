@@ -15,7 +15,8 @@ import java.util.ArrayList;
 /**
  * Deze klasse bevat hulpmethode(s) voor de verschillende Clash of Clans klassen
  */
-public class CoC_PROC {
+public class CoC_PROC
+{
 
     /* Velden */
     private static int httpsCode;
@@ -24,13 +25,15 @@ public class CoC_PROC {
     /**
      * Deze methode voert de verzoeken uit naar de server
      *
-     * @param urlString     String om de request naar toe te sturen
-     * @return              Response van de server
+     * @param urlString String om de request naar toe te sturen
+     * @return Response van de server
      */
-    public static String retrieveDataSupercellAPI(String urlString, String apiKey) {
+    public static String retrieveDataSupercellAPI(String urlString, String apiKey)
+    {
         StringBuffer content = new StringBuffer();
 
-        try {
+        try
+        {
             URL url = new URL(urlString);
             HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
             con.setRequestMethod("GET");
@@ -38,21 +41,24 @@ public class CoC_PROC {
             con.setRequestProperty("Authorization", "Bearer " + apiKey);
 
             int responseCode = con.getResponseCode();
-            if (responseCode == 503) {
+            if (responseCode == 503)
+            {
                 return "SERVER ERROR";
             }
 
             BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
 
-            while ((inputLine = in.readLine()) != null) {
+            while ((inputLine = in.readLine()) != null)
+            {
                 content.append(inputLine);
             }
 
             in.close();
             con.disconnect();
 
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
@@ -64,12 +70,14 @@ public class CoC_PROC {
      * De methode kijkt niet alleen of de server online of offline is,
      * maar ook of de server net een andere status heeft ingenomen.
      *
-     * @return      Huidige serverstatus
+     * @return Huidige serverstatus
      */
-    public static CoC_ServerState getServerStatusCoC(String cocApiKey) {
+    public static CoC_ServerState getServerStatusCoC(String cocApiKey)
+    {
 
         /* Probeer verbinding te maken met de server */
-        try {
+        try
+        {
             URL url = new URL("https://api.clashofclans.com/v1/clans?name=%23J0C9CPY");
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
             httpsURLConnection.setRequestMethod("GET");
@@ -79,44 +87,52 @@ public class CoC_PROC {
             httpsCode = httpsURLConnection.getResponseCode();
 
             httpsURLConnection.disconnect();
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
         /* Onderneem actie aan de hand van de gekregen code */
-        if (isServerOnline && httpsCode == 503) {
+        if (isServerOnline && httpsCode == 503)
+        {
             isServerOnline = false;
             return CoC_ServerState.COCWENTOFFLINE;
         }
-        if (!isServerOnline && httpsCode == 503) {
+        if (!isServerOnline && httpsCode == 503)
+        {
             return CoC_ServerState.COCOFFLINE;
         }
-        if (!isServerOnline && httpsCode == 200) {
+        if (!isServerOnline && httpsCode == 200)
+        {
             isServerOnline = true;
             return CoC_ServerState.COCWENTONLINE;
-        }
-        else {
+        } else
+        {
             return CoC_ServerState.COCONLINE;
         }
     }
 
-    public static ArrayList<Long> getSubscribedIds() {
+    public static ArrayList<Long> getSubscribedIds()
+    {
         ArrayList<Long> ids = new ArrayList<>();
 
-        try {
+        try
+        {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/infobotdb", "root", FileUtils.readFileToString(new File("C:/Users/Administrator/Documents/InfoBotfiles/dbpass.txt")));
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT ChatID FROM subscriberswar");
 
-            while (rs.next()) {
+            while (rs.next())
+            {
                 ids.add((long) rs.getInt("ChatID"));
             }
 
             rs.close();
             stmt.close();
             con.close();
-        } catch (SQLException | ClassNotFoundException | IOException e) {
+        } catch (SQLException | ClassNotFoundException | IOException e)
+        {
             System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 

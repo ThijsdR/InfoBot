@@ -1,18 +1,23 @@
 package clashofclans;
 
-class CoC_Hero {
+class CoC_Hero
+{
     private String name;
     private int level;
 
-    CoC_Hero(String name, int level) {
+    CoC_Hero(String name, int level)
+    {
         this.name = name;
         this.level = level;
     }
 
-    String getName() {
+    String getName()
+    {
         return name;
     }
-    int getLevel() {
+
+    int getLevel()
+    {
         return level;
     }
 }

@@ -7,22 +7,24 @@ import nl.pvanassen.ns.NsApi;
 import nl.pvanassen.ns.RequestBuilder;
 import nl.pvanassen.ns.model.storingen.Storing;
 import nl.pvanassen.ns.model.storingen.Storingen;
-import org.apache.commons.io.FileUtils;
 import utility.TextFormatting;
 
-import java.io.File;
 import java.io.IOException;
 
-public class NS_StoringenWerkzaamheden {
+public class NS_StoringenWerkzaamheden
+{
 
-    public static String getStoringen(NsApi nsApi) {
+    public static String getStoringen(NsApi nsApi)
+    {
 
         ApiRequest<Storingen> request = RequestBuilder.getActueleStoringen();
         Storingen storingen = null;
 
-        try {
+        try
+        {
             storingen = nsApi.getApiResponse(request);
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             System.out.println(H_Help.exceptionStacktraceToString(e));
         }
 
@@ -33,12 +35,15 @@ public class NS_StoringenWerkzaamheden {
         botResponse.append("\n------------------------\n");
 
 
-        if (!storingen.getOngeplandeStoringen().isEmpty()) {
-            for (Storing storing : storingen.getOngeplandeStoringen()) {
-                botResponse.append("<< ").append(TextFormatting.toItalic(storing.getTraject())).append(" >>");
+        if (!storingen.getOngeplandeStoringen().isEmpty())
+        {
+            for (Storing storing : storingen.getOngeplandeStoringen())
+            {
+                botResponse.append(TextFormatting.toItalic(storing.getTraject()));
                 botResponse.append("\n\n").append(storing.getReden());
 
-                if (!storing.getBericht().isEmpty()) {
+                if (!storing.getBericht().isEmpty())
+                {
                     botResponse.append("\n\n").append(storing.getBericht());
                 }
 
@@ -51,7 +56,8 @@ public class NS_StoringenWerkzaamheden {
 
                 botResponse.append(TextFormatting.toBold("\n-~-~-~-~-~-~-~-~\n"));
             }
-        } else {
+        } else
+        {
             botResponse.append(EmojiParser.parseToUnicode(TextFormatting.toItalic("\nEr zijn momenteel GEEN storingen :grimacing::muscle:")));
         }
 

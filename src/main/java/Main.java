@@ -3,8 +3,10 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.exceptions.TelegramApiException;
 
-public class Main {
-    public static void main(String[] args) {
+public class Main
+{
+    public static void main(String[] args)
+    {
 
         /* Initialize Api Context */
         ApiContextInitializer.init();
@@ -13,9 +15,11 @@ public class Main {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
         /* Register Inf0_B0t */
-        try {
+        try
+        {
             telegramBotsApi.registerBot(new Inf0_B0t());
-        } catch (TelegramApiException tea) {
+        } catch (TelegramApiException tea)
+        {
             System.out.println(H_Help.exceptionStacktraceToString(tea));
         }
 
